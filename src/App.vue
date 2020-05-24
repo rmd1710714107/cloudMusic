@@ -1,28 +1,58 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <el-container>
+      <el-header height="30px" style="-webkit-app-region: drag;">
+        <header-info></header-info>
+      </el-header>
+      <el-container>
+        <el-aside width="200px">
+          <aside-content></aside-content>
+        </el-aside>
+        <el-main>
+        </el-main>
+      </el-container>
+    </el-container>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import headerInfo from "./view/header/headerInfo"
+import asideContent from "./view/aside/asideContent"
+import mainContent from "./view/main/mainContent"
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
+    headerInfo,
+    asideContent,
+    mainContent
+  },
+  data() {
+    return {
+    };
   }
-}
+};
 </script>
 
 <style>
+/* img {
+  background-color: black;
+} */
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  height: 100%;
+}
+.el-container {
+  height: 100%;
+}
+.el-main {
+  height: 100%;
+  background-color: #fffbf0;
+}
+.el-header {
+  width: 100%;
+  padding: 0 10px;
+}
+.el-aside {
+  background-color: #99CCFF;
+  height: 100%;
 }
 </style>
