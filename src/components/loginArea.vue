@@ -4,23 +4,18 @@
       <img :src="src" alt="头像" />
       <!-- <img src="../assets/img/icon.svg" alt="头像"> -->
     </div>
-    <div class="operate">
-      <span @click="dialogVisible = true" class="signIn">登录</span>
+    <div class="operate" v-if="operate">
+      <span @click="signIn" class="signIn">登录</span>
       <span>/</span>
       <span class="signUp">注册</span>
     </div>
-    <el-dialog title="登录" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
-      <sign-in-form @ref="SignInForm"></sign-in-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="reset">重填</el-button>
-        <el-button type="primary" @click="dialogVisible = false">登录</el-button>
-      </span>
-    </el-dialog>
+    <div class="nickname" v-else>{{nickname}}</div>
+    <sign-in-form :dialogVisible="dialogVisible" @close="close" @sendData="getData"></sign-in-form>
   </div>
 </template>
 
 <script>
-const src = require("../assets/img/icon.svg");
+let src = require("../assets/img/icon.svg");
 import signInForm from "./signInForm"
 export default {
   name: "login",
@@ -31,21 +26,22 @@ export default {
     return {
       src: src,
       dialogVisible:false,
-      form:{}
+      operate:true,
+      nickname:""
     };
   },
   methods:{
-    handleClose(){
-      console.log("handleClose");
+    signIn(){
+      this.dialogVisible = true;
     },
-    SignInForm(index){
-      this.form=index;
+    close(){
+      this.dialogVisible=false;
     },
-    reset(){
-      //console.log(this.$refs.signInForm);
-      this.form.resetFields();
-      console.log("ok");
-
+    getData(param){
+      console.log(param);
+      this.operate=false;
+      this.src=param.avatarUrl;
+      this.nickname=param.nickname;
     }
   }
 };
@@ -68,5 +64,12 @@ export default {
 .dialog-footer{
   display: flex;
   justify-content:center;
+}
+.icon{
+  width: 64px;
+  height: 64px;
+}
+.nickname{
+  text-align: center;
 }
 </style>
