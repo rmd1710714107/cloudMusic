@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>file</title>
+</head>
+<body>
+  
+  <input id="file" type="file" multiple="true"></input>
+  <script>
+    let file=document.getElementById("file");
+    file.addEventListener("change",hanlde,false);
+    function hanlde(){
+      let fileList=this.files;
+      console.log(fileList);
+      console.log(fileList[0].path);
+      // let reader=new FileReader();
+      // reader.readAsBinaryString(fileList[0]);
+      // reader.onload=e=>{
+      //   console.log(reader);
+      // }
+    }
+    
+
+  </script>
+</body>
+</html>

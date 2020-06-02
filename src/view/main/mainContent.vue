@@ -1,6 +1,8 @@
 <template>
     <div class="main">
-      
+      <div>main</div>
+      <p v-for="(item,nameIndex) in $store.state.musicName" :key="nameIndex">{{item}}</p>
+      <audio v-for="(item,index) in $store.state.path" :key="index" controls :src="'local-resource://'+item"></audio>
     </div>
 </template>
 
@@ -10,7 +12,7 @@ export default {
   components: {},
   data() {
     return {
-
+      //path:this.$store.state.path
     };
   },
 }

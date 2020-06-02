@@ -1,13 +1,12 @@
 <template>
   <div class="loginArea">
     <div class="icon">
-      <img :src="src" alt="头像" />
+      <img :src="src" alt="头像" class="avatar"/>
       <!-- <img src="../assets/img/icon.svg" alt="头像"> -->
     </div>
     <div class="operate" v-if="operate">
-      <span @click="signIn" class="signIn">登录</span>
-      <span>/</span>
-      <span class="signUp">注册</span>
+      <el-button round size="small" @click="signIn">登录</el-button>
+      <!-- <span @click="signIn" class="signIn">登录</span> -->
     </div>
     <div class="nickname" v-else>{{nickname}}</div>
     <sign-in-form :dialogVisible="dialogVisible" @close="close" @sendData="getData"></sign-in-form>
@@ -48,7 +47,7 @@ export default {
 </script>
 <style scoped>
 .loginArea {
-  width: 80px;
+  width: 100%;
   margin: 0 auto;
   margin-top: 60px;
   text-align: center;
@@ -58,18 +57,27 @@ export default {
   cursor: pointer;
   color: #fff;
 }
-.signIn:hover,.signUp:hover{
+.signIn:hover{
   color:#ff0000;
 }
 .dialog-footer{
   display: flex;
   justify-content:center;
 }
-.icon{
+.icon,.icon .avatar{
   width: 64px;
   height: 64px;
+  border-radius: 50%;
+}
+.icon{
+  margin: 0 auto;
 }
 .nickname{
   text-align: center;
+  margin-top: 10px;
+  color: #fff;
+}
+.el-button--small, .el-button--small.is-round{
+  padding: 6px 15px;
 }
 </style>

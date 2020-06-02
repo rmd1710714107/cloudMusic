@@ -5,10 +5,11 @@
         <header-info></header-info>
       </el-header>
       <el-container>
-        <el-aside width="200px">
+        <el-aside width="150px">
           <aside-content></aside-content>
         </el-aside>
         <el-main>
+          <main-content></main-content>
         </el-main>
       </el-container>
     </el-container>
