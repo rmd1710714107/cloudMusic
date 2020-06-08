@@ -4,7 +4,8 @@ import mutations from "./mutation"
 Vue.use(Vuex);
 const state={
   path:[],
-  musicName:[]
+  musicName:[],
+  suggest:{}
 }
 const store=new Vuex.Store({
   state,

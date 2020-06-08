@@ -9,7 +9,8 @@ import {
   Dialog,
   Form,
   FormItem,
-  Input} from "element-ui";
+  Input,
+  Card} from "element-ui";
 Vue.use(Container)
 Vue.use(Footer)
 Vue.use(Aside)
@@ -20,3 +21,4 @@ Vue.use(Dialog)
 Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Input)
+Vue.use(Card)

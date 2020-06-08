@@ -1,6 +1,7 @@
 module.exports = {
   presets: [
-    '@vue/cli-plugin-babel/preset'
+    '@vue/cli-plugin-babel/preset',
+    ["@babel/preset-env", { "modules": false }]
   ],
   "plugins": [
     [
@@ -9,6 +10,11 @@ module.exports = {
         "libraryName": "element-ui",
         "styleLibraryName": "theme-chalk"
       }
-    ]
+    ],
+    ["import", {
+      "libraryName": "muse-ui",
+      "libraryDirectory": "lib",
+      "camel2DashComponentName": false
+    }]
   ]
 }
