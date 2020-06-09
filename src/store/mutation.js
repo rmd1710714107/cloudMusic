@@ -7,6 +7,9 @@ const mutations={
   },
   showSuggest(state,payload){
     state.suggest=payload
+  },
+  getSearVal(state,payload){
+    state.searVal=payload;
   }
 }
 export default mutations;

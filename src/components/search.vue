@@ -3,52 +3,6 @@
     <el-input v-model="music" :clearable="true" @input="searchTips">
       <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
     </el-input>
-    <!-- <div class="suggest">
-      <mu-list>
-        <mu-sub-header>
-          <i class="icon" style>
-          </i> 专辑
-        </mu-sub-header>
-        <mu-divider></mu-divider>
-        <mu-list-item button :ripple="false">
-          <mu-list-item-title>Stared</mu-list-item-title>
-        </mu-list-item>
-        <mu-list-item button :ripple="false">
-          <mu-list-item-title>Stared</mu-list-item-title>
-        </mu-list-item>
-        <mu-list-item button :ripple="false">
-          <mu-list-item-title>Stared</mu-list-item-title>
-        </mu-list-item>
-        <mu-divider></mu-divider>
-      </mu-list>
-      <mu-list>
-        <mu-sub-header>专辑</mu-sub-header>
-        <mu-divider></mu-divider>
-        <mu-list-item button :ripple="false">
-          <mu-list-item-title>Stared</mu-list-item-title>
-        </mu-list-item>
-        <mu-list-item button :ripple="false">
-          <mu-list-item-title>Stared</mu-list-item-title>
-        </mu-list-item>
-        <mu-list-item button :ripple="false">
-          <mu-list-item-title>Stared</mu-list-item-title>
-        </mu-list-item>
-        <mu-divider></mu-divider>
-      </mu-list>
-      <mu-list>
-        <mu-sub-header>专辑</mu-sub-header>
-        <mu-divider></mu-divider>
-        <mu-list-item button :ripple="false">
-          <mu-list-item-title>Stared</mu-list-item-title>
-        </mu-list-item>
-        <mu-list-item button :ripple="false">
-          <mu-list-item-title>Stared</mu-list-item-title>
-        </mu-list-item>
-        <mu-list-item button :ripple="false">
-          <mu-list-item-title>Stared</mu-list-item-title>
-        </mu-list-item>
-      </mu-list>
-    </div>-->
     <search-sug :suggestItem="suggestItem" v-if="showSugg"></search-sug>
   </div>
 </template>
@@ -56,23 +10,23 @@
 <script>
 import { searchMusic, searchSuggest } from "../netWork/request";
 import searchSug from "./searchSug";
+import debounce from "../plugins/utils"
 export default {
   name: "search",
   data() {
     return {
       music: "",
       suggest: {},
-      showSugg:false
-    };
-  },
-  computed: {
-    suggestItem() {
-      return [
+      showSugg:false,
+      suggestItem:[
         { title: "专辑", icon: "album.svg", category: "albums" },
         { title: "艺术家", icon: "artist.svg", category: "artists" },
         { title: "MV", icon: "video.svg", category: "mvs" }
-      ];
+      ]
     }
+  },
+  computed: {
+    
   },
   components: {
     searchSug
@@ -82,19 +36,19 @@ export default {
       searchMusic(this.music).then(res => {});
     },
     searchTips() {
+      debounce(this.input,3000)();
+    },
+    input(){
       if (!this.music) {
         this.showSugg=false;
       }else{
+        this.$store.commit("getSearVal",this.music)
         searchSuggest(this.music).then(res => {
+          if(!res.data) return;
           this.suggest = res.data.result;
+          console.log(this.suggest);
           this.$store.commit("showSuggest", this.suggest);
           this.showSugg=true;
-          // this.suggest.albums.forEach(item => {
-          //   (item.name + item.artist.name).replace(
-          //     this.music,
-          //     `<span style="color:red">this.music</span>`
-          //   );
-          // });
         });
       }
     }

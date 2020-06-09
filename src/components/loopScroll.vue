@@ -7,7 +7,8 @@
           :key="index"
           :ref="'p'+index"
           @click="aaa"
-        >{{content.name}}</p>
+          v-html="res"
+        ></p>
       </div>
   </div>
 </template>
@@ -28,14 +29,15 @@ export default {
     return {
       number: 1,
       animation:null,
-      animeTarget:[]
+      animeTarget:[],
+      queryInfo:""
     };
   },
   mounted(){
     if(Math.abs(this.$refs.p0[0].offsetWidth)>this.$refs.loopScroll.offsetWidth){
       this.number=2;
       this.$refs.div1.classList.add("run"+this.content.id);
-      console.log(this.$refs.div1.classList);
+      //console.log(this.$refs.div1.classList);
       this.animation=anime({
         targets:".run"+this.content.id,
         translateX: [0,-this.$refs.p0[0].offsetWidth-10],
@@ -43,18 +45,20 @@ export default {
         duration: 4000,
         easing: 'linear'
       })
-      console.log("ok");
     }
-  },
-  beforeDestroy(){
-    if(this.animation){
-      console.log(this.animation);
-      //this.animation.remove(this.animeTarget[0]);
-    }
+    console.log(this.$store.state.searVal);
   },
   methods:{
     aaa(){
       console.log(this.content);
+    }
+  },
+  computed:{
+    res(){
+      let reg=new RegExp(this.$store.state.searVal,"g");
+      let micName=this.content.name.replace(reg,`<span style="color:red;">${this.$store.state.searVal}</span>`);
+      console.log(micName);
+      return micName;
     }
   }
 };

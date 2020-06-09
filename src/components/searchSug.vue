@@ -16,9 +16,6 @@
           v-for="(childItem) in $store.state.suggest[item.category]"
           :key="childItem.id"
         >
-          <!-- <div class="content">
-            <mu-list-item-title>{{childItem.name}}</mu-list-item-title>
-          </div> -->
           <loop-scroll :content="childItem"></loop-scroll>
         </mu-list-item>
       </mu-list>

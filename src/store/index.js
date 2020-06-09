@@ -5,7 +5,8 @@ Vue.use(Vuex);
 const state={
   path:[],
   musicName:[],
-  suggest:{}
+  suggest:{},
+  searVal:""
 }
 const store=new Vuex.Store({
   state,
