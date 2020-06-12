@@ -35,9 +35,6 @@ export default {
 </script>
 
 <style>
-/* img {
-  background-color: black;
-} */
 #app {
   height: 100%;
 }
@@ -54,6 +51,22 @@ export default {
 }
 .el-aside {
   background-color: #99CCFF;
+  height: 100%;
+}
+.mu-list .p{
+  text-align: center;
+  width: 100%;
+}
+.mu-list .mu-icon{
+  margin: 0 auto;
+}
+.el-popover .div1{
+  height: 100%;
+  padding: calc(calc(48px - 30px) / 2) 0;
+  text-align: center;
+}
+.el-popover .wrap{
+  width: 100%;
   height: 100%;
 }
 </style>

@@ -10,7 +10,11 @@ import {
   Form,
   FormItem,
   Input,
-  Card} from "element-ui";
+  Card,
+  Popover,
+  Table,
+  TableColumn,
+  Switch} from "element-ui";
 Vue.use(Container)
 Vue.use(Footer)
 Vue.use(Aside)
@@ -22,3 +26,7 @@ Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Input)
 Vue.use(Card)
+Vue.use(Popover)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(Switch)

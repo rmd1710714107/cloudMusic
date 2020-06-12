@@ -10,7 +10,6 @@
 <script>
 import { searchMusic, searchSuggest } from "../netWork/request";
 import searchSug from "./searchSug";
-import debounce from "../plugins/utils"
 export default {
   name: "search",
   data() {
@@ -18,15 +17,22 @@ export default {
       music: "",
       suggest: {},
       showSugg:false,
-      suggestItem:[
-        { title: "专辑", icon: "album.svg", category: "albums" },
-        { title: "艺术家", icon: "artist.svg", category: "artists" },
-        { title: "MV", icon: "video.svg", category: "mvs" }
-      ]
+      
     }
   },
-  computed: {
-    
+  computed:{
+    suggestItem(){
+      if(JSON.stringify(this.suggest)=='{}'){
+        return [{name:"请输入正确的信息"}];
+      }else{
+        return [
+          { title: "专辑", icon: "album.svg", category: "albums" },
+          { title: "艺术家", icon: "artist.svg", category: "artists" },
+          { title: "MV", icon: "video.svg", category: "mvs" }
+        ]
+      }
+      
+    }
   },
   components: {
     searchSug
@@ -36,9 +42,6 @@ export default {
       searchMusic(this.music).then(res => {});
     },
     searchTips() {
-      debounce(this.input,3000)();
-    },
-    input(){
       if (!this.music) {
         this.showSugg=false;
       }else{
@@ -46,8 +49,9 @@ export default {
         searchSuggest(this.music).then(res => {
           if(!res.data) return;
           this.suggest = res.data.result;
-          console.log(this.suggest);
           this.$store.commit("showSuggest", this.suggest);
+          console.log("ok");
+
           this.showSugg=true;
         });
       }

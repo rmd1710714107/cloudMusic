@@ -10,6 +10,9 @@ const mutations={
   },
   getSearVal(state,payload){
     state.searVal=payload;
+  },
+  getPlayList(state,payload){
+    state.playList=payload;
   }
 }
 export default mutations;

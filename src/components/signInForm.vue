@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import {phone} from "../netWork/request"
+import {phone,getUsrInfo} from "../netWork/request"
 export default {
   name: "SignInForm",
   components: {},
@@ -46,7 +46,6 @@ export default {
     let phoneReg = (rule, value, callback) => {
       const reg = /^1[3578][0-9]{9}$/;
       if (reg.test(value)) {
-        console.log("ok");
         callback();
       } else {
         callback(new Error("请输入正确的手机号"));
@@ -73,9 +72,8 @@ export default {
             return;
         }else{
           phone(this.form).then((res)=>{
-            console.log(res);
-            console.log(document.cookie.split(";")[1].split("=")[1]);
-            this.$emit("sendData",res.data.profile)
+            this.$emit("sendData",res.data.profile);
+            this.getUsrInfo(res.data.account.id)
             this.close();
           })
         }
@@ -86,6 +84,12 @@ export default {
     close() {
       this.$refs.SignInForm.resetFields();
       this.$emit("close");
+    },
+    getUsrInfo(usrId){
+      getUsrInfo(usrId).then(res=>{
+        console.log(res);
+        this.$store.commit("getPlayList",res.data.playlist)
+      })
     }
   }
 };

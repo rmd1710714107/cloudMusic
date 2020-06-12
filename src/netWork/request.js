@@ -3,28 +3,45 @@ const instance = axios.create({
   baseURL: 'http://localhost:3000',
   withCredentials: true,
 });
-function phone(parm){
+function phone(arg){
   return instance.post("/login/cellphone",{
-    phone:parm.phone,
-    password:parm.pwd
+    phone:arg.phone,
+    password:arg.pwd
   })
 }
-function searchMusic(param){
+function searchMusic(arg){
   return instance.get("/search",{
     params:{
-      keywords:param
+      keywords:arg
     }
   })
 }
-function searchSuggest(param){
+function searchSuggest(arg){
   return instance.get("/search/suggest",{
     params:{
-      keywords:param
+      keywords:arg
+    }
+  })
+}
+function getUsrInfo(usrId){
+  return instance.get("/user/playlist",{
+    params:{
+      uid:usrId
+    }
+  })
+}
+function addPlayList(arg){
+  return instance.get("/playlist/create",{
+    params:{
+      name:arg.listName,
+      privacy:arg.privacy?arg.privacy:""
     }
   })
 }
 export{
-  phone,
-  searchMusic,
-  searchSuggest
+  phone,//手机号登录
+  searchMusic,//搜索音乐
+  searchSuggest,//搜索建议
+  getUsrInfo,//获取用户信息
+  addPlayList//添加歌单
 }
