@@ -36,38 +36,47 @@ export default {
       number: 1,
       animation: null,
       animeTarget: [],
-      queryInfo: ""
+      queryInfo: "",
+      size:0,
+      thimer:null
     };
   },
   mounted() {
     if (JSON.stringify(this.content) == "{}") return;
-    // console.log(
-    //   Math.abs(this.$refs.p0[0].offsetWidth),
-    //   this.$refs.loopScroll.offsetWidth
-    // );
-    console.log(
-      this.$refs.loopScroll.offsetWidth
-    );
-    if (
-      Math.abs(this.$refs.p0[0].offsetWidth) > this.$refs.loopScroll.offsetWidth
-    ) {
-      this.number = 2;
-      this.$refs.div1.classList.add("run" + this.content.id);
-      this.animation = anime({
-        targets: ".run" + this.content.id,
-        translateX: [0, -this.$refs.p0[0].offsetWidth - 10],
-        loop: true,
-        duration: 4000,
-        easing: "linear"
-      });
-    }
+    new Promise((resolve,reject) => {
+      this.timer = setInterval(() => {
+        console.log(this.size);
+        if (this.size === this.$refs.p0[0].offsetWidth && this.size !== 0) {
+          clearInterval(this.timer);
+          resolve();
+        } else {
+          this.size = this.$refs.p0[0].offsetWidth;
+        }
+      }, 100);
+    }).then(()=>{
+      this.animated();
+    });
   },
   methods: {
     aaa() {
-      console.log(
-        Math.abs(this.$refs.p0[0].offsetWidth),
+      console.log(this.$refs);
+    },
+    animated() {
+      console.log("开始动画");
+      if (
+        Math.abs(this.$refs.p0[0].offsetWidth) >
         this.$refs.loopScroll.offsetWidth
-      );
+      ) {
+        this.number = 2;
+        this.$refs.div1.classList.add("run" + this.content.id);
+        this.animation = anime({
+          targets: ".run" + this.content.id,
+          translateX: [0, -this.$refs.p0[0].offsetWidth - 10],
+          loop: true,
+          duration: 4000,
+          easing: "linear"
+        });
+      }
     }
   },
   computed: {
@@ -81,11 +90,6 @@ export default {
       }
       return this.content.name;
     }
-  },
-  beforeDestroy () {
-    console.log(
-      this.$refs.loopScroll.offsetWidth
-    );
   }
 };
 </script>
