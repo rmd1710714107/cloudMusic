@@ -8,7 +8,8 @@ import {
   Icon,
   Divider,
   Menu,
-  Button   } from 'muse-ui';
+  Button ,
+  Slider  } from 'muse-ui';
  
 Vue.use(Paper);
 Vue.use(List);
@@ -17,3 +18,4 @@ Vue.use(Icon);
 Vue.use(Divider);
 Vue.use(Menu);
 Vue.use(Button);
+Vue.use(Slider);
