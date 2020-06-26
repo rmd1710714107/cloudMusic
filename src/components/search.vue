@@ -10,28 +10,27 @@
 <script>
 import { searchMusic, searchSuggest } from "../netWork/request";
 import searchSug from "./searchSug";
+import debounce from "../plugins/utils";
 export default {
   name: "search",
   data() {
     return {
       music: "",
       suggest: {},
-      showSugg:false,
-      
-    }
+      showSugg: false
+    };
   },
-  computed:{
-    suggestItem(){
-      if(JSON.stringify(this.suggest)=='{}'){
-        return [{name:"请输入正确的信息"}];
-      }else{
+  computed: {
+    suggestItem() {
+      if (JSON.stringify(this.suggest) === "{}") {
+        return [{ name: "请输入正确的信息" }];
+      } else {
         return [
           { title: "专辑", icon: "album.svg", category: "albums" },
           { title: "艺术家", icon: "artist.svg", category: "artists" },
           { title: "MV", icon: "video.svg", category: "mvs" }
-        ]
+        ];
       }
-      
     }
   },
   components: {
@@ -42,19 +41,21 @@ export default {
       searchMusic(this.music).then(res => {});
     },
     searchTips() {
-      if (!this.music) {
-        this.showSugg=false;
-      }else{
-        this.$store.commit("getSearVal",this.music)
-        searchSuggest(this.music).then(res => {
-          if(!res.data) return;
-          this.suggest = res.data.result;
-          this.$store.commit("showSuggest", this.suggest);
-          console.log("ok");
+      debounce(() => {
+        if (!this.music) {
+          this.showSugg = false;
+        } else {
+          this.$store.commit("getSearVal", this.music);
+          searchSuggest(this.music).then(res => {
+            if (!res.data) return;
+            this.suggest = res.data.result;
+            this.$store.commit("showSuggest", this.suggest);
 
-          this.showSugg=true;
-        });
-      }
+            this.showSugg = true;
+          });
+        }
+        console.log("run");
+      }, 2000)();
     }
   }
 };

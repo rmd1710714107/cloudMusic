@@ -42,12 +42,18 @@ export default {
           properties: ["openFile", "multiSelections"]
         })
         .then(res => {
-          this.path = res.filePaths.map(index => index.replace(/\\/g, "/"));
-          this.$store.commit("addPath", this.path);
-          this.musicName = this.path.map(index => {
-            return path.basename(index).replace(/\.mp3/g, "");
+          this.path = res.filePaths.map(index => {
+            let music={};
+            music.path=index.replace(/\\/g, "/");
+            music.name=path.basename(index).replace(/\.mp3/g, "");
+            return music;
           });
-          this.$store.commit("addMusicName", this.musicName);
+          this.$store.commit("addMusic", this.path);
+          // this.$store.commit("addPath", this.path);
+          // this.musicName = this.path.map(index => {
+          //   return path.basename(index).replace(/\.mp3/g, "");
+          // });
+          // this.$store.commit("addMusicName", this.musicName);
         });
     },
     // ifShow(arg){

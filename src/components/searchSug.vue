@@ -19,14 +19,14 @@
           <loop-scroll :content="childItem"></loop-scroll>
         </mu-list-item>
       </mu-list>
-      <mu-list v-else>
+      <!-- <mu-list v-else>
         <mu-list-item
           button
           :ripple="false"
         >
           <loop-scroll :content="item"></loop-scroll>
         </mu-list-item>
-      </mu-list>
+      </mu-list> -->
     </div>
   </div>
 </template>

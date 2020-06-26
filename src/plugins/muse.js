@@ -9,7 +9,8 @@ import {
   Divider,
   Menu,
   Button ,
-  Slider  } from 'muse-ui';
+  Slider,
+  DataTable  } from 'muse-ui';
  
 Vue.use(Paper);
 Vue.use(List);
@@ -19,3 +20,4 @@ Vue.use(Divider);
 Vue.use(Menu);
 Vue.use(Button);
 Vue.use(Slider);
+Vue.use(DataTable);

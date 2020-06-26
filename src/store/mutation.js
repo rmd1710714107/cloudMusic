@@ -1,9 +1,6 @@
 const mutations={
-  addPath(state,payload){
-    state.path=payload;
-  },
-  addMusicName(state,payload){
-    state.musicName=payload
+  addMusic(state,payload){
+    state.musicList=payload
   },
   showSuggest(state,payload){
     state.suggest=payload
@@ -13,6 +10,9 @@ const mutations={
   },
   getPlayList(state,payload){
     state.playList=payload;
+  },
+  addPlayUrl(state,payload){
+    state.playUrl=payload
   }
 }
 export default mutations;

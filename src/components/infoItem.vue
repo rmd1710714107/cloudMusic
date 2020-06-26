@@ -1,6 +1,6 @@
 <template>
   <div class="infoItem">
-    <el-popover placement="right" width="200" trigger="click" v-if="content.list">
+    <el-popover placement="right" width="200" trigger="manual" v-model="isShow" v-if="content.list">
       <mu-list>
         <mu-list-item button v-for="item in $store.state.playList" :key="item.id" :ripple="false">
             <loop-scroll :content="item" :exam="false" v-if="isShow"></loop-scroll>
@@ -72,6 +72,7 @@ export default {
   methods:{
     show(){
         this.isShow=!this.isShow;
+        console.log("ok");
     },
     addPlayListForm(){
       this.dialogVisible=!this.dialogVisible;

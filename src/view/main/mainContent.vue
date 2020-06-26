@@ -1,8 +1,6 @@
 <template>
   <div class="main">
-      <p v-for="(item,index) in $store.state.musicName" :key="index+1">{{item}}</p>
-      <audio v-for="(item,index) in $store.state.path" :key="index" controls :src="'local-resource://'+item"></audio>
-      <button @click="Show">按钮</button>
+      <music-list></music-list>
       <play-music></play-music>
       
   </div>
@@ -11,11 +9,13 @@
 <script>
 import loopScroll from "../../components/loopScroll"
 import playMusic from "../../components/playMusic"
+import musicList from "../../components/musicList"
 export default {
   name: "mainContent",
   components: {
     loopScroll,
-    playMusic
+    playMusic,
+    musicList
   },
   data() {
     return {

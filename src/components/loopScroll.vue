@@ -1,14 +1,7 @@
 <template>
   <div class="loopScroll" ref="loopScroll">
     <div class="div1" ref="div1">
-      <p
-        class="p"
-        v-for="(item,index) in number"
-        :key="index"
-        :ref="'p'+index"
-        @click="aaa"
-        v-html="res"
-      ></p>
+      <p class="p" v-for="(item,index) in number" :key="index" :ref="'p'+index" v-html="res"></p>
     </div>
   </div>
 </template>
@@ -37,15 +30,14 @@ export default {
       animation: null,
       animeTarget: [],
       queryInfo: "",
-      size:0,
-      thimer:null
+      size: 0,
+      timer: null
     };
   },
   mounted() {
     if (JSON.stringify(this.content) == "{}") return;
-    new Promise((resolve,reject) => {
+    new Promise((resolve, reject) => {
       this.timer = setInterval(() => {
-        console.log(this.size);
         if (this.size === this.$refs.p0[0].offsetWidth && this.size !== 0) {
           clearInterval(this.timer);
           resolve();
@@ -53,16 +45,12 @@ export default {
           this.size = this.$refs.p0[0].offsetWidth;
         }
       }, 100);
-    }).then(()=>{
+    }).then(() => {
       this.animated();
-    });
+    })
   },
   methods: {
-    aaa() {
-      console.log(this.$refs);
-    },
     animated() {
-      console.log("开始动画");
       if (
         Math.abs(this.$refs.p0[0].offsetWidth) >
         this.$refs.loopScroll.offsetWidth
@@ -102,10 +90,13 @@ export default {
 }
 .div1 {
   position: absolute;
-  height: 100%;
-  padding: 0px;
+  height: 30px;
   display: flex;
-  margin: 0;
+  margin: auto;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
 }
 .p {
   padding: 4px 0;

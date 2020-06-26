@@ -1,5 +1,6 @@
 <template>
   <div class="playMusic">
+    <audio ref="audio"></audio>
     <div>
       <img src="../assets/img/CD.svg" class="imgHolder" />
     </div>

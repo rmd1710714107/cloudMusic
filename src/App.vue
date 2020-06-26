@@ -54,8 +54,8 @@ export default {
   height: 100%;
 }
 .mu-list .p{
-  text-align: center;
-  width: 100%;
+  /* text-align: center; */
+  /* width: 100%; */
 }
 .mu-list .mu-icon{
   margin: 0 auto;

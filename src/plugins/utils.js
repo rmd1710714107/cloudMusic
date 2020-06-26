@@ -9,7 +9,4 @@ function debounce(fn,delay) {
     }, delay);
   }
 }
-function process(dis,){
-
-}
 export default debounce;
