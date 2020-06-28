@@ -9,4 +9,24 @@ function debounce(fn,delay) {
     }, delay);
   }
 }
-export default debounce;
+function handleMusicTinme(time){
+  let second,minute;
+  second=parseInt(time)>=60?parseInt(time)%60:parseInt(time);
+  console.log(second);
+  minute=parseInt(parseInt(time)/60);
+  return timeFormat(minute,second);
+}
+function timeFormat(min,sec){
+  let time=[...arguments].map(item=>{
+    item=item.toString();
+    if(item.length===1){
+      item="0"+item
+    }
+    return item;
+  })
+  return time.join(":")
+}
+export {
+  debounce,
+  handleMusicTinme
+} ;

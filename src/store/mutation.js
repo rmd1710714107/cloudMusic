@@ -1,3 +1,4 @@
+import Vue from "vue";
 const mutations={
   addMusic(state,payload){
     state.musicList=payload
@@ -11,8 +12,11 @@ const mutations={
   getPlayList(state,payload){
     state.playList=payload;
   },
-  addPlayUrl(state,payload){
-    state.playUrl=payload
+  addPlayInfo(state,payload){
+    for (const key in payload) {
+      Vue.set(state.musicInfo,key,payload[key])
+    }
+    console.log(state.musicInfo);
   }
 }
 export default mutations;

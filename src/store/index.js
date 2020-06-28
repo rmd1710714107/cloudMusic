@@ -7,7 +7,7 @@ const state={
   suggest:{},
   searVal:"",
   playList:[],
-  playUrl:""
+  musicInfo:{}
 }
 const store=new Vuex.Store({
   state,

@@ -7,7 +7,7 @@ export const mixin={
         };
       }
     },
-    changePosition(dis) {
+    changePosition(dis,isDown=true) {
       if (
         this.domNode.offsetWidth < 0
       ) {
@@ -17,7 +17,11 @@ export const mixin={
         this.domNode.style.width = this.$refs.bottom.offsetWidth + "px";
         this.clean();
       } else {
-        this.domNode.style.width=(dis-this.disX-this.offset+6)+"px";
+        if(isDown){
+          this.domNode.style.width=(dis-this.disX-this.offset+6)+"px";
+        }else{
+          this.domNode.style.width=dis+"px";
+        }
       }
     },
     clean() {

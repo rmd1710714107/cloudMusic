@@ -1,6 +1,7 @@
 <template>
   <div class="main">
       <music-list></music-list>
+      <p>{{this.$store.state.musicInfo}}</p>
       <play-music></play-music>
       
   </div>

@@ -6,17 +6,16 @@
       @sort-change="handleSortChange"
       :data="this.$store.state.musicList"
       :min-col-width="60"
-      no-data-text="未知"
       selectable select-all 
       :selects.sync="selects" 
       :checkbox="false"
     >
       <template slot-scope="scope">
         <td>删除</td>
-        <td>
+        <td @click="play(scope.row)">
           <loop-scroll :content="scope.row" :exam="false"></loop-scroll>
-          </td>
-        <td>无</td>
+        </td>
+        <td>{{scope.row.artists||"无"}}</td>
         <td>无</td>
         <td>无</td>
       </template>
@@ -50,6 +49,9 @@ export default {
   methods: {
     handleSortChange ({name, order}) {
       this.list = this.list.sort((a, b) => order === 'asc' ? a[name] - b[name] : b[name] - a[name]);
+    },
+    play(arg){
+      this.$store.commit("addPlayInfo",arg);
     }
   }
 };

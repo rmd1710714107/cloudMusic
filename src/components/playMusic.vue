@@ -1,6 +1,6 @@
 <template>
   <div class="playMusic">
-    <audio ref="audio"></audio>
+    <audio ref="audio" :src="musicSrc"></audio>
     <div>
       <img src="../assets/img/CD.svg" class="imgHolder" />
     </div>
@@ -10,12 +10,16 @@
           <div class="tabControl">
             <img class="prev" src="../assets/img/prev.svg" />
           </div>
-          <div class="tabControl" @click="change">
+          <div class="tabControl" @click="playMusic">
             <img class="play" :src="src" />
           </div>
           <div class="tabControl">
             <img class="next" src="../assets/img/next.svg" />
           </div>
+        </div>
+        <div class="musicName">
+          <loop-scroll :content="this.$store.state.musicInfo" :exam="false"></loop-scroll>
+          <!-- <p>{{this.$store.state.musicInfo.name}}</p> -->
         </div>
         <div class="playSet">
           <div class="volumeControl">
@@ -39,21 +43,42 @@
 
 <script>
 import playProgress from "./playProgress"
+import loopScroll from "./loopScroll"
+import {handleMusicTinme} from "../plugins/utils"
 export default {
   name: "playMusic",
   components: {
-    playProgress
+    playProgress,
+    loopScroll
   },
   data() {
     return {
       flag: false,
       index: 0,
-      value: 0
+      value: 0,
+      audioDom:null,
+      timer:null
     };
   },
+  mounted(){
+    this.audioDom=this.$refs.audio;
+  },
   methods: {
-    change() {
+    playMusic() {
       this.flag = !this.flag;
+      if(this.flag){
+        this.audioDom.play();
+      }else{
+        this.audioDom.pause();
+      }
+      this.$store.commit("addPlayInfo",{duration:handleMusicTinme(this.audioDom.duration)});
+      this.timer=setInterval(() => {
+        if(parseInt(this.audioDom.duration)===parseInt(this.audioDom.currentTime)){
+          this.timer=null;
+          return ;
+        }
+        this.$store.commit("addPlayInfo",{currentTime:handleMusicTinme(this.audioDom.currentTime)});
+      }, 1000);
     },
     playSort() {
       ++this.index;
@@ -85,6 +110,9 @@ export default {
           return require("../assets/img/loop.svg");
           break;
       }
+    },
+    musicSrc(){
+      return 'local-resource://'+this.$store.state.musicInfo.path;
     }
   }
 };
@@ -200,5 +228,8 @@ export default {
   height: 4px;
   position: absolute;
   right: 0px;
+}
+.playMusic .musicName{
+  width: 200px;
 }
 </style>
