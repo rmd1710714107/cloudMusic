@@ -21,8 +21,7 @@ export default {
         {name:"我的歌单",list:true},
         {name:"我的收藏",list:false}
       ],
-      path: [],
-      musicName: []
+      LocalMusic: []
     };
   },
   computed: {
@@ -42,25 +41,16 @@ export default {
           properties: ["openFile", "multiSelections"]
         })
         .then(res => {
-          this.path = res.filePaths.map(index => {
+          this.LocalMusic = res.filePaths.map((item,index) => {
             let music={};
-            music.path=index.replace(/\\/g, "/");
-            music.name=path.basename(index).replace(/\.mp3/g, "");
+            music.id=index;
+            music.path=item.replace(/\\/g, "/");
+            music.name=path.basename(item).replace(/\.mp3/g, "");
             return music;
           });
-          this.$store.commit("addMusic", this.path);
-          // this.$store.commit("addPath", this.path);
-          // this.musicName = this.path.map(index => {
-          //   return path.basename(index).replace(/\.mp3/g, "");
-          // });
-          // this.$store.commit("addMusicName", this.musicName);
+          this.$store.commit("addMusic", this.LocalMusic);
         });
     },
-    // ifShow(arg){
-    //   if(arg){
-
-    //   }
-    // }
   }
 };
 </script>

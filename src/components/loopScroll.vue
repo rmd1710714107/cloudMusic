@@ -57,12 +57,11 @@ export default {
       ) {
         this.number = 2;
         this.$refs.div1.classList.add("run" + this.content.id);
-        console.log(this.$refs.p0[0].offsetWidth);
         this.animation = anime({
           targets: ".run" + this.content.id,
           translateX: [0, -this.$refs.p0[0].offsetWidth - 10],
           loop: true,
-          duration: 10000,
+          duration: 4000,
           easing: "linear"
         });
       }

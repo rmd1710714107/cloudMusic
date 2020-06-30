@@ -38,10 +38,26 @@ function addPlayList(arg){
     }
   })
 }
+function getPlayListDetails(id){
+  return instance.get("/playlist/detail",{
+    params:{
+      id:id
+    }
+  })
+}
+function getmusicUrl(id){
+  return instance.get("/song/url",{
+    params:{
+      id:id
+    }
+  })
+}
 export{
   phone,//手机号登录
   searchMusic,//搜索音乐
   searchSuggest,//搜索建议
   getUsrInfo,//获取用户信息
-  addPlayList//添加歌单
+  addPlayList,//添加歌单
+  getPlayListDetails,//获取歌单详情
+  getmusicUrl//获取歌曲url
 }

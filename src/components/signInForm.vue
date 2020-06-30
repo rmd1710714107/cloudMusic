@@ -53,8 +53,8 @@ export default {
     };
     return {
       form: {
-        phone: "18844216693",
-        pwd: "rmd730913"
+        phone: "",
+        pwd: ""
       },
       signInRule: {
         phone: [{ validator: phoneReg, trigger: "blur" }],
@@ -78,8 +78,6 @@ export default {
           })
         }
       })
-      
-      //phone();
     },
     close() {
       this.$refs.SignInForm.resetFields();

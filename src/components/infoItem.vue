@@ -2,7 +2,7 @@
   <div class="infoItem">
     <el-popover placement="right" width="200" trigger="manual" v-model="isShow" v-if="content.list">
       <mu-list>
-        <mu-list-item button v-for="item in $store.state.playList" :key="item.id" :ripple="false">
+        <mu-list-item button v-for="item in $store.state.playList" :key="item.id" :ripple="false" @click="getMusic(item.id)">
             <loop-scroll :content="item" :exam="false" v-if="isShow"></loop-scroll>
         </mu-list-item>
         <mu-list-item button @click="addPlayListForm">
@@ -44,7 +44,7 @@
 
 <script>
 import loopScroll from "./loopScroll"
-import {addPlayList} from "../netWork/request"
+import {addPlayList,getPlayListDetails} from "../netWork/request"
 export default {
   name: "infoItem",
   props: {
@@ -72,7 +72,6 @@ export default {
   methods:{
     show(){
         this.isShow=!this.isShow;
-        console.log("ok");
     },
     addPlayListForm(){
       this.dialogVisible=!this.dialogVisible;
@@ -80,6 +79,13 @@ export default {
     addPlayList(){
       addPlayList(this.form).then(res=>{
         console.log(res);
+      })
+    },
+    getMusic(id){
+      getPlayListDetails(id).then(res=>{
+        console.log(res.data.playlist.tracks);
+        this.$store.commit("addMusic",res.data.playlist.tracks)
+
       })
     }
   },

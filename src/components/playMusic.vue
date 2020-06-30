@@ -1,6 +1,6 @@
 <template>
   <div class="playMusic">
-    <audio ref="audio" :src="musicSrc"></audio>
+    <audio ref="audio" :src="localSrc||netSrc"></audio>
     <div>
       <img src="../assets/img/CD.svg" class="imgHolder" />
     </div>
@@ -19,7 +19,6 @@
         </div>
         <div class="musicName">
           <loop-scroll :content="this.$store.state.musicInfo" :exam="false"></loop-scroll>
-          <!-- <p>{{this.$store.state.musicInfo.name}}</p> -->
         </div>
         <div class="playSet">
           <div class="volumeControl">
@@ -42,9 +41,10 @@
 
 
 <script>
-import playProgress from "./playProgress"
-import loopScroll from "./loopScroll"
-import {handleMusicTinme} from "../plugins/utils"
+import playProgress from "./playProgress";
+import loopScroll from "./loopScroll";
+import { getmusicUrl } from "../netWork/request";
+import { handleMusicTinme } from "../plugins/utils";
 export default {
   name: "playMusic",
   components: {
@@ -56,33 +56,53 @@ export default {
       flag: false,
       index: 0,
       value: 0,
-      audioDom:null,
-      timer:null
+      audioDom: null,
+      timer: null,
+      netSrc: ""
     };
   },
-  mounted(){
-    this.audioDom=this.$refs.audio;
+  mounted() {
+    this.audioDom = this.$refs.audio;
   },
   methods: {
     playMusic() {
       this.flag = !this.flag;
-      if(this.flag){
+      if (this.flag) {
+        // if (this.$store.state.musicInfo.id) {
+        //   console.log("ok");
+        //   getmusicUrl(this.$store.state.musicInfo.id).then(res => {
+        //     console.log(res.data.data[0].url);
+        //     this.netSrc= res.data.data[0].url;
+        //     this.audioDom.play();
+        //   });
+        // }else{
+        //   this.audioDom.play();
+        // }
+        this.$store.commit("addPlayInfo", {
+          duration: handleMusicTinme(this.audioDom.duration)
+        });
+        this.timer = setInterval(() => {
+          if (
+            parseInt(this.audioDom.duration) ===
+            parseInt(this.audioDom.currentTime)
+          ) {
+            this.timer = null;
+            return;
+          }
+          this.$store.commit("addPlayInfo", {
+            currentTime: handleMusicTinme(this.audioDom.currentTime)
+          });
+        }, 1000);
         this.audioDom.play();
-      }else{
+      } else {
         this.audioDom.pause();
+        clearInterval(this.timer)
+        this.timer = null;
       }
-      this.$store.commit("addPlayInfo",{duration:handleMusicTinme(this.audioDom.duration)});
-      this.timer=setInterval(() => {
-        if(parseInt(this.audioDom.duration)===parseInt(this.audioDom.currentTime)){
-          this.timer=null;
-          return ;
-        }
-        this.$store.commit("addPlayInfo",{currentTime:handleMusicTinme(this.audioDom.currentTime)});
-      }, 1000);
     },
     playSort() {
       ++this.index;
-     },
+    }
   },
   computed: {
     src() {
@@ -111,8 +131,10 @@ export default {
           break;
       }
     },
-    musicSrc(){
-      return 'local-resource://'+this.$store.state.musicInfo.path;
+    localSrc() {
+      if (this.$store.state.musicInfo.path) {
+        return "local-resource://" + this.$store.state.musicInfo.path;
+      }
     }
   }
 };
@@ -176,7 +198,7 @@ export default {
 .volumeControl {
   display: flex;
   width: 120px;
-  justify-content:space-between
+  justify-content: space-between;
 }
 .valume {
   position: relative;
@@ -214,7 +236,7 @@ export default {
   cursor: pointer;
 }
 .bottom:hover .circleImg,
-.valume:hover .circleImg{
+.valume:hover .circleImg {
   width: 12px;
   height: 12px;
   position: absolute;
@@ -223,13 +245,13 @@ export default {
   border-radius: 50%;
   background-color: red;
 }
-.circleImg{
+.circleImg {
   width: 4px;
   height: 4px;
   position: absolute;
   right: 0px;
 }
-.playMusic .musicName{
+.playMusic .musicName {
   width: 200px;
 }
 </style>
