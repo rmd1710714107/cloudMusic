@@ -2,7 +2,7 @@
   <div class="playMusic">
     <audio ref="audio" :src="localSrc||netSrc"></audio>
     <div>
-      <img src="../assets/img/CD.svg" class="imgHolder" />
+      <img :src="musicImg" class="imgHolder" />
     </div>
     <div class="control">
       <div class="topControl">
@@ -136,6 +136,13 @@ export default {
       }else{
         return this.$store.state.musicInfo.url;
       }
+    },
+    musicImg(){
+      if(this.$store.state.musicInfo.url){
+        return this.$store.state.musicInfo.picUrl;
+      }else{
+        return require("../assets/img/CD.svg");
+      }
     }
   }
 };
@@ -152,8 +159,7 @@ export default {
 }
 .playMusic .imgHolder {
   width: 80px;
-  height: 99%;
-  padding: 0.25% 5px;
+  height: 100%;
 }
 .playMusic .control {
   height: 100%;

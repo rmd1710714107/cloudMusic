@@ -52,6 +52,13 @@ function getmusicUrl(id){
     }
   })
 }
+function getmusicDetails(id) {
+  return instance.get("/song/detail",{
+    params:{
+      ids:id
+    }
+  })
+}
 export{
   phone,//手机号登录
   searchMusic,//搜索音乐
@@ -59,5 +66,6 @@ export{
   getUsrInfo,//获取用户信息
   addPlayList,//添加歌单
   getPlayListDetails,//获取歌单详情
-  getmusicUrl//获取歌曲url
+  getmusicUrl,//获取歌曲url
+  getmusicDetails//获取歌曲详情
 }
