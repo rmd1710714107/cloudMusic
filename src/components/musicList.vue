@@ -4,9 +4,7 @@
       :columns="columns"
       :data="this.$store.state.musicList"
       :min-col-width="60"
-      selectable select-all 
-      :selects.sync="selects" 
-      :checkbox="false"
+      
     >
       <template slot-scope="scope">
         <td>{{scope.$index+1}}</td>
@@ -15,7 +13,7 @@
         </td>
         <td>{{"未知"}}</td>
         <td>{{"未知"}}</td>
-        <td>无</td>
+        <td>{{"未知"}}</td>
       </template>
     </mu-data-table>
   </div>
@@ -23,6 +21,7 @@
 
 <script>
 import loopScroll from "./loopScroll";
+import { getmusicUrl } from "../netWork/request";
 export default {
   name: "musicList",
   components: {
@@ -46,7 +45,20 @@ export default {
   },
   methods: {
     play(arg){
-      this.$store.commit("addPlayInfo",arg);
+      if(!arg.path){
+        let musicInfo={};
+        getmusicUrl(arg.id).then(res=>{
+          console.log(res);
+          musicInfo.id=res.data.data[0].id;
+          musicInfo.name=arg.name;
+          musicInfo.url=res.data.data[0].url;
+          this.$store.commit("addPlayInfo",musicInfo);
+          musicInfo=null;
+        })
+        console.log(arg);
+      }else{
+        this.$store.commit("addPlayInfo",arg);
+      }
     }
   }
 };

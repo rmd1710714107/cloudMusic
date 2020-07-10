@@ -43,7 +43,6 @@
 <script>
 import playProgress from "./playProgress";
 import loopScroll from "./loopScroll";
-import { getmusicUrl } from "../netWork/request";
 import { handleMusicTinme } from "../plugins/utils";
 export default {
   name: "playMusic",
@@ -134,6 +133,8 @@ export default {
     localSrc() {
       if (this.$store.state.musicInfo.path) {
         return "local-resource://" + this.$store.state.musicInfo.path;
+      }else{
+        return this.$store.state.musicInfo.url;
       }
     }
   }

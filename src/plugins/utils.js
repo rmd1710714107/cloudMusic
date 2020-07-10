@@ -12,7 +12,6 @@ function debounce(fn,delay) {
 function handleMusicTinme(time){
   let second,minute;
   second=parseInt(time)>=60?parseInt(time)%60:parseInt(time);
-  console.log(second);
   minute=parseInt(parseInt(time)/60);
   return timeFormat(minute,second);
 }

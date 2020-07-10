@@ -16,7 +16,6 @@ const mutations={
     for (const key in payload) {
       Vue.set(state.musicInfo,key,payload[key])
     }
-    console.log(state.musicInfo);
   }
 }
 export default mutations;
