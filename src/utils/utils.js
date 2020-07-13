@@ -25,7 +25,17 @@ function timeFormat(min,sec){
   })
   return time.join(":")
 }
+
+import {Message} from "element-ui";
+function message(type,msg,showClose=false){
+  Message({
+    type:type,
+    message:msg,
+    showClose:showClose
+  })
+}
 export {
   debounce,
-  handleMusicTinme
+  handleMusicTinme,
+  message
 } ;

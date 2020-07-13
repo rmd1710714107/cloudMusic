@@ -9,31 +9,34 @@
 </template>
 
 <script>
-import {mixin} from "../plugins/mixin"
+import { mixin } from "../plugins/mixin";
 export default {
   name: "playProgress",
-  props:{
-    offset:{
-      type:Number,
-      default(){
+  props: {
+    offset: {
+      type: Number,
+      default() {
         return 0;
       }
     }
   },
-  mounted(){
-    this.domNode=this.$refs.top
+  mounted() {
+    this.domNode = this.$refs.top;
   },
   data() {
     return {
       isDown: false,
       disX: 0,
-      domNode:null
+      domNode: null
     };
   },
-  mixins:[mixin],
+  mixins: [mixin]
 };
 </script>
 <style scoped>
+.playProgress{
+  width: calc(100% - 70px);
+}
 .top {
   width: 80%;
   position: absolute;
@@ -47,13 +50,15 @@ export default {
   background-color: blue;
   cursor: pointer;
 }
-.circleImg{
-  width: 4px;
+.circleImg {
+  /* width: 4px;
   height: 4px;
   position: absolute;
-  right: 0px;
+  right: 0px; */
+  display: none;
 }
-.bottom:hover .circleImg{
+.bottom:hover .circleImg {
+  display: block;                                                          
   width: 12px;
   height: 12px;
   position: absolute;
@@ -61,5 +66,8 @@ export default {
   right: -6px;
   border-radius: 50%;
   background-color: red;
+}
+.item {
+  margin: 4px;
 }
 </style>

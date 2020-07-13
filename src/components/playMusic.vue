@@ -7,13 +7,13 @@
     <div class="control">
       <div class="topControl">
         <div class="changeSong">
-          <div class="tabControl">
+          <div class="tabControl" @click="switchSong('prevMusic')">
             <img class="prev" src="../assets/img/prev.svg" />
           </div>
           <div class="tabControl" @click="playMusic">
             <img class="play" :src="src" />
           </div>
-          <div class="tabControl">
+          <div class="tabControl" @click="switchSong('nextMusic') ">
             <img class="next" src="../assets/img/next.svg" />
           </div>
         </div>
@@ -33,7 +33,9 @@
         </div>
       </div>
       <div class="progress">
+        <p class="time">{{this.$store.state.musicTime.currentTime}}</p>
         <play-progress :offset="240"></play-progress>
+        <p class="time">{{this.$store.state.musicTime.duration}}</p>
       </div>
     </div>
   </div>
@@ -43,7 +45,7 @@
 <script>
 import playProgress from "./playProgress";
 import loopScroll from "./loopScroll";
-import { handleMusicTinme } from "../plugins/utils";
+import { handleMusicTinme } from "../utils/utils";
 export default {
   name: "playMusic",
   components: {
@@ -67,17 +69,7 @@ export default {
     playMusic() {
       this.flag = !this.flag;
       if (this.flag) {
-        // if (this.$store.state.musicInfo.id) {
-        //   console.log("ok");
-        //   getmusicUrl(this.$store.state.musicInfo.id).then(res => {
-        //     console.log(res.data.data[0].url);
-        //     this.netSrc= res.data.data[0].url;
-        //     this.audioDom.play();
-        //   });
-        // }else{
-        //   this.audioDom.play();
-        // }
-        this.$store.commit("addPlayInfo", {
+        this.$store.commit("setMusicTime", {
           duration: handleMusicTinme(this.audioDom.duration)
         });
         this.timer = setInterval(() => {
@@ -85,22 +77,32 @@ export default {
             parseInt(this.audioDom.duration) ===
             parseInt(this.audioDom.currentTime)
           ) {
-            this.timer = null;
-            return;
+            this.pause();
           }
-          this.$store.commit("addPlayInfo", {
+          this.$store.commit("setMusicTime", {
             currentTime: handleMusicTinme(this.audioDom.currentTime)
           });
         }, 1000);
         this.audioDom.play();
       } else {
-        this.audioDom.pause();
-        clearInterval(this.timer)
-        this.timer = null;
+        this.pause();
       }
     },
     playSort() {
       ++this.index;
+    },
+    pause() {
+      this.flag = !this.flag;
+      this.audioDom.pause();
+      clearInterval(this.timer);
+      this.timer = null;
+      this.$store.commit("setMusicTime", {
+        currentTime: handleMusicTinme(this.audioDom.currentTime)
+      });
+    },
+    switchSong(type){
+      this.$bus.$emit("switchSong",type)
+      
     }
   },
   computed: {
@@ -133,14 +135,14 @@ export default {
     localSrc() {
       if (this.$store.state.musicInfo.path) {
         return "local-resource://" + this.$store.state.musicInfo.path;
-      }else{
+      } else {
         return this.$store.state.musicInfo.url;
       }
     },
-    musicImg(){
-      if(this.$store.state.musicInfo.url){
+    musicImg() {
+      if (this.$store.state.musicInfo.url) {
         return this.$store.state.musicInfo.picUrl;
-      }else{
+      } else {
         return require("../assets/img/CD.svg");
       }
     }
@@ -189,6 +191,9 @@ export default {
   width: 100%;
   height: 40px;
   padding: calc(calc(40px - 5px) / 2) 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .prev,
 .play,
@@ -260,5 +265,11 @@ export default {
 }
 .playMusic .musicName {
   width: 200px;
+}
+.time {
+  width: 30px;
+  height: 12px;
+  font-size: 10px;
+  text-align: center;
 }
 </style>

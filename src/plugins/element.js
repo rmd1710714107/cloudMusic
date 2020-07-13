@@ -14,7 +14,8 @@ import {
   Popover,
   Table,
   TableColumn,
-  Switch} from "element-ui";
+  Switch,
+  Tooltip} from "element-ui";
 Vue.use(Container)
 Vue.use(Footer)
 Vue.use(Aside)
@@ -30,3 +31,4 @@ Vue.use(Popover)
 Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Switch)
+Vue.use(Tooltip)

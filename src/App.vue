@@ -20,6 +20,7 @@
 import headerInfo from "./view/header/headerInfo"
 import asideContent from "./view/aside/asideContent"
 import mainContent from "./view/main/mainContent"
+import mounted from "./plugins/mounted"
 export default {
   name: "App",
   components: {
@@ -27,6 +28,7 @@ export default {
     asideContent,
     mainContent
   },
+  mixins: [mounted],
   data() {
     return {
     };

@@ -9,7 +9,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win
+let win,oldMicLisSta,newMicLisSta,renderRethods;
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }])
@@ -33,7 +33,9 @@ function createWindow() {
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
   }
-
+  win.on("close",()=>{
+    win.webContents.send("close")
+  })
   win.on('closed', () => {
     win = null
   })

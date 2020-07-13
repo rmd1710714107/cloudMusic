@@ -31,6 +31,7 @@
 
 <script>
 import {phone,getUsrInfo} from "../netWork/request"
+import {message} from "../utils/utils"
 export default {
   name: "SignInForm",
   components: {},
@@ -72,9 +73,15 @@ export default {
             return;
         }else{
           phone(this.form).then((res)=>{
-            this.$emit("sendData",res.data.profile);
-            this.getUsrInfo(res.data.account.id)
-            this.close();
+            if(res.data.code!==200){
+              message("error",res.data.msg);
+              //this.$refs.SignInForm.resetFields();
+            }else{
+              this.$emit("sendData",res.data.profile);
+              this.getUsrInfo(res.data.account.id)
+              this.close();
+            };
+            
           })
         }
       })
@@ -85,7 +92,6 @@ export default {
     },
     getUsrInfo(usrId){
       getUsrInfo(usrId).then(res=>{
-        console.log(res);
         this.$store.commit("getPlayList",res.data.playlist)
       })
     }

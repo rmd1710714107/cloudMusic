@@ -56,9 +56,9 @@ export default {
         this.$refs.loopScroll.offsetWidth
       ) {
         this.number = 2;
-        this.$refs.div1.classList.add("run" + this.content.id);
+        this.$refs.div1.classList.add("run" + (this.content.id||this.content._id));
         this.animation = anime({
-          targets: ".run" + this.content.id,
+          targets: ".run" + (this.content.id||this.content._id),
           translateX: [0, -this.$refs.p0[0].offsetWidth - 10],
           loop: true,
           duration: 4000,

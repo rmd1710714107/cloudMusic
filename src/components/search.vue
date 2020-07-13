@@ -10,7 +10,7 @@
 <script>
 import { searchMusic, searchSuggest } from "../netWork/request";
 import searchSug from "./searchSug";
-import {debounce} from "../plugins/utils";
+import {debounce} from "../utils/utils";
 export default {
   name: "search",
   data() {
