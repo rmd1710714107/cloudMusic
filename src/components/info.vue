@@ -38,6 +38,18 @@ export default {
       }
     }
   },
+  mounted(){
+    localSetting.find({flag:{$exists:true}}).then(res=>{
+      if(res.length===0){
+        localSetting.insert({flag:this.flag});
+      }else{
+        this.flag=res[0].flag;
+      }
+    })
+    // ipc.on("close",()=>{
+
+    // })
+  },
   methods: {
     importMusic() {
       if (this.flag) {
@@ -72,16 +84,17 @@ export default {
             }else{
               this.insertMusic(this.LocalMusic)
             }
-            
-            //this.flag = !this.flag;
+            this.flag = !this.flag;
+            localSetting.update({flag:!this.flag},{flag:this.flag}).then(res=>{
+              message("info",res+"条记录被影响");
+            })
           });
       }
-      localSetting.find({ micLisSta: /[a-zA-Z]+/ }).then(
+      localSetting.find({ micLisSta: "localMusic" }).then(
         doc => {
           if (doc.length === 0) {
-            // ipc.send("micLisSta","localMusic");
+            this.$store.commit("updateMicLisSta", "localMusic");
           }
-          //this.$store.commit("updateMicLisSta", doc[0].micLisSta);
         },
         err => {
           message("error", err);

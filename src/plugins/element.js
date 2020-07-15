@@ -15,7 +15,9 @@ import {
   Table,
   TableColumn,
   Switch,
-  Tooltip} from "element-ui";
+  Tooltip,
+  Checkbox,
+  CheckboxGroup} from "element-ui";
 Vue.use(Container)
 Vue.use(Footer)
 Vue.use(Aside)
@@ -32,3 +34,5 @@ Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Switch)
 Vue.use(Tooltip)
+Vue.use(Checkbox)
+Vue.use(CheckboxGroup)

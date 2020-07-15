@@ -95,19 +95,11 @@ export default {
     getMusic(id) {
       localSetting.insert({ songMenuId: id });
       getPlayListDetails(id).then(res => {
-        // db.musicList.insert(res.data.playlist.tracks,(err,doc)=>{
-        //   if(err){
-        //     message("error","获取失败")
-        //   }else{
-        //     console.log(doc);
-        //   }
-
-        // })
-        localSetting.find({ micLisSta: /[0-9]+/ }).then(doc => {
+        localSetting.find({ micLisSta: "online" }).then(
+          doc => {
             if (doc.length === 0) {
-              // ipc.send("micLisSta","onLine")
+              this.$store.commit("updateMicLisSta", "online");
             }
-            //this.$store.commit("updateMicLisSta", doc[0].micLisSta);
           },
           err => {
             message("error", err);

@@ -66,7 +66,6 @@ export default {
         musicInfo.url = musicUrl.data.data[0].url;
         musicInfo.picUrl=picUrl.data.songs[0].al.picUrl;
         musicInfo.index=arg;
-        
         this.$store.commit("addPlayInfo",musicInfo);
         musicInfo=null;
       } else {
