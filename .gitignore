@@ -2,7 +2,7 @@
 node_modules
 /dist
 serve/
-src/utils/encode.js
+/src/utils/encode.js
 # local env files
 .env.local
 .env.*.local
