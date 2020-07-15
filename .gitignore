@@ -1,8 +1,8 @@
 .DS_Store
 node_modules
 /dist
-/serve/
-
+serve/
+src/utils/encode.js
 # local env files
 .env.local
 .env.*.local
