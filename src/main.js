@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import store from "./store/index"
+import router from "./router/index"
 import './plugins/element.js'
 import "./plugins/muse"
 import "normalize.css"
@@ -11,5 +12,6 @@ Vue.prototype.$bus=new Vue();
 Vue.prototype.update={}
 new Vue({
   render: h => h(App),
-  store
+  store,
+  router
 }).$mount('#app')

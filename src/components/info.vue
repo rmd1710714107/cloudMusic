@@ -88,8 +88,11 @@ export default {
             localSetting.update({flag:!this.flag},{flag:this.flag}).then(res=>{
               message("info",res+"条记录被影响");
             })
+            
           });
+        
       }
+      this.$router.push('/musicList');
       localSetting.find({ micLisSta: "localMusic" }).then(
         doc => {
           if (doc.length === 0) {

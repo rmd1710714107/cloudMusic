@@ -59,6 +59,9 @@ function getmusicDetails(id) {
     }
   })
 }
+function getAlbumlist() {
+  return instance.get("/album/sublist")
+}
 export{
   phone,//手机号登录
   searchMusic,//搜索音乐
@@ -67,5 +70,6 @@ export{
   addPlayList,//添加歌单
   getPlayListDetails,//获取歌单详情
   getmusicUrl,//获取歌曲url
-  getmusicDetails//获取歌曲详情
+  getmusicDetails,//获取歌曲详情
+  getAlbumlist//获取用户收藏
 }

@@ -21,7 +21,7 @@ const mounted = {
     // })
     localSetting.find({ micLisSta: /[a-zA-Z]+/ }).then(
       doc => {
-        console.log(doc);
+        //console.log(doc);
         if (doc.length === 0) {//设定一些默认配置
           localSetting.insert({ micLisSta: "localMusic" })
         }
@@ -40,30 +40,30 @@ const mounted = {
       }, err => {
         message("error", err);
       });
-    (async ()=>{
-      let musicInfo=await localSetting.find({ index: { $exists: true }, name: { $exists: true }, }),
-          time=await localSetting.find({ currentTime: { $exists: true }, duration: { $exists: true }, });
-      this.$store.commit("setMusicTime", time[0]);
-      this.$store.commit("addPlayInfo", musicInfo[0]);
-    })()
-    ipc.on("close", (res) => {
-      // localSetting.update({ micLisSta: /[a-zA-Z]+/},{micLisSta:this.$store.state.micLisSta}).then(res=>{
-      //   console.log(res+"条记录被影响");
-      // })
-      //console.log("ok");
-      localSetting.find({ index: { $exists: true }, name: { $exists: true }, }).then(
-        async (musicInfo) => {
-          //console.log(res);
-          if (musicInfo.length === 0) {
-            localSetting.insert([this.$store.state.musicInfo, this.$store.state.musicTime]);
-          } else {
-            let time = await localSetting.find({ currentTime: { $exists: true }, duration: { $exists: true }, })
-            localSetting.update(musicInfo[0],this.$store.state.musicInfo)
-            localSetting.update(time[0],this.$store.state.musicTime)
-            console.log("ok");
-          }
-        })
-    })
+    // (async ()=>{
+    //   let musicInfo=await localSetting.find({ index: { $exists: true }, name: { $exists: true }, }),
+    //       time=await localSetting.find({ currentTime: { $exists: true }, duration: { $exists: true }, });
+    //   this.$store.commit("setMusicTime", time[0]);
+    //   this.$store.commit("addPlayInfo", musicInfo[0]);
+    // })()
+    // ipc.on("close", (res) => {
+    //   // localSetting.update({ micLisSta: /[a-zA-Z]+/},{micLisSta:this.$store.state.micLisSta}).then(res=>{
+    //   //   console.log(res+"条记录被影响");
+    //   // })
+    //   //console.log("ok");
+    //   localSetting.find({ index: { $exists: true }, name: { $exists: true }, }).then(
+    //     async (musicInfo) => {
+    //       //console.log(res);
+    //       if (musicInfo.length === 0) {
+    //         localSetting.insert([this.$store.state.musicInfo, this.$store.state.musicTime]);
+    //       } else {
+    //         let time = await localSetting.find({ currentTime: { $exists: true }, duration: { $exists: true }, })
+    //         localSetting.update(musicInfo[0],this.$store.state.musicInfo)
+    //         localSetting.update(time[0],this.$store.state.musicTime)
+    //         console.log("ok");
+    //       }
+    //     })
+    // })
     //console.log("ok");
 
   },

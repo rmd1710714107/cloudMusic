@@ -1,32 +1,17 @@
 <template>
   <div id="app">
-    <el-container>
-      <el-header height="30px" style="-webkit-app-region: drag;">
-        <header-info></header-info>
-      </el-header>
-      <el-container>
-        <el-aside width="150px">
-          <aside-content></aside-content>
-        </el-aside>
-        <el-main>
-          <main-content></main-content>
-        </el-main>
-      </el-container>
-    </el-container>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import headerInfo from "./view/header/headerInfo"
-import asideContent from "./view/aside/asideContent"
-import mainContent from "./view/main/mainContent"
+import home from "./view/home"
 import mounted from "./plugins/mounted"
 export default {
   name: "App",
   components: {
-    headerInfo,
-    asideContent,
-    mainContent
+    
+    home
   },
   mixins: [mounted],
   data() {
@@ -43,21 +28,6 @@ export default {
 *{
   margin: 0;
   padding: 0;
-}
-.el-container {
-  height: 100%;
-}
-.el-main {
-  height: 100%;
-  background-color: #fffbf0;
-}
-.el-header {
-  width: 100%;
-  padding: 0 10px;
-}
-.el-aside {
-  background-color: #99CCFF;
-  height: 100%;
 }
 .mu-list .p{
   /* text-align: center; */

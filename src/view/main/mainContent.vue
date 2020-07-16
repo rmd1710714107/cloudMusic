@@ -1,19 +1,20 @@
 <template>
   <div class="main">
-      <music-list></music-list>
+      <router-view></router-view>
+      <!-- <music-list></music-list> -->
       <play-music></play-music>
       
   </div>
 </template>
 
 <script>
-import loopScroll from "../../components/loopScroll"
+//import loopScroll from "../../components/loopScroll"
 import playMusic from "../../components/playMusic"
 import musicList from "../../components/musicList"
 export default {
   name: "mainContent",
   components: {
-    loopScroll,
+    //loopScroll,
     playMusic,
     musicList
   },

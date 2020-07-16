@@ -17,7 +17,7 @@
       </mu-list>
       <el-button slot="reference" @click="show" class="infoItemBtn">{{content.name}}</el-button>
     </el-popover>
-    <el-button v-else class="infoItemBtn">{{content.name}}</el-button>
+    <el-button v-else class="infoItemBtn" @click="getCollection">{{content.name}}</el-button>
     <el-dialog
       title="添加歌单"
       :visible.sync="dialogVisible"
@@ -50,7 +50,7 @@
 
 <script>
 import loopScroll from "./loopScroll";
-import { addPlayList, getPlayListDetails } from "../netWork/request";
+import { addPlayList, getPlayListDetails,getAlbumlist } from "../netWork/request";
 import localSetting from "../Nedb/setting";
 import { message } from "../utils/utils";
 const { ipcRenderer: ipc } = require("electron");
@@ -66,6 +66,7 @@ export default {
   },
   mounted() {
     this.update.getMusic = this.getMusic;
+      console.log(this.$route);
   },
   data() {
     return {
@@ -83,6 +84,8 @@ export default {
   methods: {
     show() {
       this.isShow = !this.isShow;
+      this.$router.push('/musicList');
+      console.log(this.$route);
     },
     addPlayListForm() {
       this.dialogVisible = !this.dialogVisible;
@@ -108,6 +111,12 @@ export default {
         this.$store.commit("updateMicLisSta", "online");
         this.$store.commit("addMusic", res.data.playlist.tracks);
       });
+    },
+    async getCollection(){
+      this.$router.push('/collection')
+      console.log(this.$route);
+      // let collection=await getAlbumlist();
+      // console.log(collection);
     }
   },
   components: {
