@@ -92,7 +92,9 @@ export default {
           });
         
       }
-      this.$router.push('/musicList');
+      if(this.$route.path!=='/musicList'){
+        this.$router.replace('/musicList');
+      }
       localSetting.find({ micLisSta: "localMusic" }).then(
         doc => {
           if (doc.length === 0) {

@@ -31,7 +31,6 @@ export default {
   methods:{
     Show(){
       this.ishow=!this.ishow;
-      console.log("main");
     }
   }
 };

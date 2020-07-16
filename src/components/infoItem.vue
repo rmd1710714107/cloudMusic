@@ -84,8 +84,9 @@ export default {
   methods: {
     show() {
       this.isShow = !this.isShow;
-      this.$router.push('/musicList');
-      console.log(this.$route);
+      if(this.$route.path!=='/musicList'){
+        this.$router.replace('/musicList');
+      }
     },
     addPlayListForm() {
       this.dialogVisible = !this.dialogVisible;
@@ -113,8 +114,7 @@ export default {
       });
     },
     async getCollection(){
-      this.$router.push('/collection')
-      console.log(this.$route);
+      this.$router.replace('/collection')
       // let collection=await getAlbumlist();
       // console.log(collection);
     }
