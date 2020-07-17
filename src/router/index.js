@@ -7,8 +7,7 @@ const collection = () => import("../components/collection.vue");
 const mainContent = () => import("../view/main/mainContent.vue");
 const album=()=>import("../components/colleAlbums.vue");
 const singer=()=>import("../components/colleSinger.vue");
-const video=()=>import("../components/colleVideo.vue")
-const artical=()=>import("../components/colleArtical.vue")
+const videos=()=>import("../components/colleVideo.vue");
 const routes = [
   { path: "/", redirect: "/home" },
   {
@@ -27,8 +26,7 @@ const routes = [
             children: [
               {path:"/album",component:album},
               {path:"/singer",component:singer},
-              {path:"/video",component:video},
-              {path:"/artical",component:artical}
+              {path:"/video",component:videos}
             ]
           }
         ]

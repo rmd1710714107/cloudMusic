@@ -17,7 +17,11 @@ import {
   Switch,
   Tooltip,
   Checkbox,
-  CheckboxGroup} from "element-ui";
+  CheckboxGroup,
+  Breadcrumb,
+  BreadcrumbItem,
+  Col,
+  Row} from "element-ui";
 Vue.use(Container)
 Vue.use(Footer)
 Vue.use(Aside)
@@ -36,3 +40,7 @@ Vue.use(Switch)
 Vue.use(Tooltip)
 Vue.use(Checkbox)
 Vue.use(CheckboxGroup)
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
+Vue.use(Col)
+Vue.use(Row)

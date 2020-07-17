@@ -15,7 +15,7 @@ export default {
   components: {},
   data() {
     return {
-      tabs:["专辑","歌手","视频","专栏"],
+      tabs:["专辑","歌手","视频"],
       activeItem:0
     };
   },
@@ -29,11 +29,8 @@ export default {
         case 1:
           this.$router.replace("/singer");
           break;
-        case 2:
-        this.$router.replace("/video");
-        break;
         default:
-          this.$router.replace("/artical");
+           this.$router.replace("/video");
           break;
       }
     }
@@ -49,7 +46,7 @@ export default {
 }
 .menu .tab{
   list-style: none;
-  width:365px;
+  width:275px;
   height: 22px;
   display: flex;
   margin: 0 auto;

@@ -29,10 +29,7 @@ export default {
   margin: 0;
   padding: 0;
 }
-.mu-list .p{
-  /* text-align: center; */
-  /* width: 100%; */
-}
+
 .mu-list .mu-icon{
   margin: 0 auto;
 }

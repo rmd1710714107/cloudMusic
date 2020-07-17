@@ -66,7 +66,7 @@ export default {
   },
   mounted() {
     this.update.getMusic = this.getMusic;
-      console.log(this.$route);
+      //console.log(this.$route);
   },
   data() {
     return {

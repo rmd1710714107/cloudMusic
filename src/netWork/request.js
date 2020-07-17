@@ -59,8 +59,14 @@ function getmusicDetails(id) {
     }
   })
 }
-function getAlbumlist() {
+function getAlbumList() {
   return instance.get("/album/sublist")
+}
+function getArtistList(){
+  return instance.get("/artist/sublist")
+}
+function getMvList(){
+  return instance.get("/mv/sublist")
 }
 export{
   phone,//手机号登录
@@ -71,5 +77,7 @@ export{
   getPlayListDetails,//获取歌单详情
   getmusicUrl,//获取歌曲url
   getmusicDetails,//获取歌曲详情
-  getAlbumlist//获取用户收藏
+  getAlbumList,//获取收藏的专辑
+  getArtistList,//获取收藏的歌手
+  getMvList//获取收藏的视频列表
 }
