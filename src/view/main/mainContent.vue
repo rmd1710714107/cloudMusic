@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="main" ref="main">
       <router-view></router-view>
       <!-- <music-list></music-list> -->
       <play-music></play-music>

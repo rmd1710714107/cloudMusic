@@ -68,6 +68,27 @@ function getArtistList(){
 function getMvList(){
   return instance.get("/mv/sublist")
 }
+function getAlbumContent(id){
+  return instance.get("/album",{
+    params:{
+      id:id
+    }
+  })
+}
+function getArtistContent(id){
+  return instance.get("/artists",{
+    params:{
+      id:id
+    }
+  })
+}
+function getVideoContent(id){
+  return instance.get("/video/url",{
+    params:{
+      id:id
+    }
+  })
+}
 export{
   phone,//手机号登录
   searchMusic,//搜索音乐
@@ -79,5 +100,8 @@ export{
   getmusicDetails,//获取歌曲详情
   getAlbumList,//获取收藏的专辑
   getArtistList,//获取收藏的歌手
-  getMvList//获取收藏的视频列表
+  getMvList,//获取收藏的视频列表
+  getAlbumContent,//获取专辑内容
+  getArtistContent,//获取歌手专辑
+  getVideoContent//获取视频播放地址
 }

@@ -21,7 +21,8 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   Col,
-  Row} from "element-ui";
+  Row,
+  MessageBox} from "element-ui";
 Vue.use(Container)
 Vue.use(Footer)
 Vue.use(Aside)
@@ -44,3 +45,4 @@ Vue.use(Breadcrumb)
 Vue.use(BreadcrumbItem)
 Vue.use(Col)
 Vue.use(Row)
+Vue.prototype.$confirm = MessageBox.confirm;

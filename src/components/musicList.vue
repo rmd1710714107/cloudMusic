@@ -1,14 +1,13 @@
 <template>
   <div class="musicList">
-    <mu-data-table :columns="columns" :data="this.$store.state.musicList" :min-col-width="60" height="300">
+    <mu-data-table :columns="columns" :data="this.$store.state.musicList" :min-col-width="60" height="600">
       <template slot-scope="scope">
         <td>{{scope.$index+1}}</td>
         <td @click="play(scope.$index)">
           <loop-scroll :content="scope.row" :exam="false"></loop-scroll>
         </td>
-        <td>{{"未知"}}</td>
-        <td>{{"未知"}}</td>
-        <td>{{"未知"}}</td>
+        <td>{{scope.row.ar?scope.row.ar[0].name:"未知"}}</td>
+        <td class="album">{{scope.row.al?scope.row.al.name:"未知"}}</td>
       </template>
     </mu-data-table>
   </div>
@@ -17,6 +16,7 @@
 <script>
 import loopScroll from "./loopScroll";
 import { getmusicUrl, getmusicDetails } from "../netWork/request";
+import Vue from "vue"
 export default {
   name: "musicList",
   components: {
@@ -31,10 +31,9 @@ export default {
       selects: [],
       columns: [
         { title: "", name: "name", align: "center" },
-        { title: "歌曲", name: "calories", width: 200, align: "center" },
+        { title: "歌曲", name: "calories", width: 200, align: "left" },
         { title: "歌手", name: "fat", align: "center" },
-        { title: "专辑", name: "carbs", align: "center" },
-        { title: "时长", name: "protein", align: "center" }
+        { title: "专辑", name: "carbs", align: "center" }
       ]
     };
   },
@@ -49,10 +48,11 @@ export default {
           // }
           break;
         default:
-          this.$bus.$emit("switchSong",type)
+          //this.$bus.$emit("switchSong",type)
           break;
       }
     })
+    console.log(Vue.$refs);
   },
   methods: {
     async play(arg) {
@@ -72,10 +72,17 @@ export default {
         this.$store.commit("addPlayInfo", music);
       }
     }
+  },
+  computed:{
+    tableHeight(){
+    }
   }
 };
 </script>
 <style>
+.musicList{
+  overflow: hidden;
+}
 .musicList .mu-table td {
   text-align: center;
 }
@@ -90,5 +97,14 @@ export default {
   width: 24px;
   margin: 0 auto;
   display: block;
+}
+.musicList .album{
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.musicList tr{
+  max-height: 48px;
+  cursor: pointer;
 }
 </style>

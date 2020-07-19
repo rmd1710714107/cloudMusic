@@ -68,11 +68,13 @@ export default {
   methods: {
     playMusic() {
       this.flag = !this.flag;
+      console.log(this.flag);
       if (this.flag) {
         this.$store.commit("setMusicTime", {
           duration: handleMusicTinme(this.audioDom.duration)
         });
-        this.timer = setInterval(() => {
+        if(!this.timer){
+          this.timer = setInterval(() => {
           if (
             parseInt(this.audioDom.duration) ===
             parseInt(this.audioDom.currentTime)
@@ -83,6 +85,7 @@ export default {
             currentTime: handleMusicTinme(this.audioDom.currentTime)
           });
         }, 1000);
+        }
         this.audioDom.play();
       } else {
         this.pause();
@@ -92,7 +95,7 @@ export default {
       ++this.index;
     },
     pause() {
-      this.flag = !this.flag;
+      // this.flag = !this.flag;
       this.audioDom.pause();
       clearInterval(this.timer);
       this.timer = null;
@@ -107,10 +110,10 @@ export default {
   },
   computed: {
     src() {
-      if (!this.flag) {
-        return require("../assets/img/pause.svg");
-      } else {
+      if (this.flag) {
         return require("../assets/img/play.svg");
+      } else {
+        return require("../assets/img/pause.svg");
       }
     },
     playSrc() {

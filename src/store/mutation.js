@@ -2,6 +2,7 @@ import Vue from "vue";
 const mutations={
   addMusic(state,payload){
     state.musicList=payload;
+    console.log(state.musicList);
   },
   showSuggest(state,payload){
     state.suggest=payload

@@ -31,6 +31,9 @@ export default {
 };
 </script>
 <style scoped>
+.el-main,.el-aside{
+  overflow: hidden;
+}
 .home{
   width: 100%;
   height: 100%;
@@ -40,7 +43,7 @@ export default {
 }
 .el-main {
   height: 100%;
-  background-color: #fffbf0;
+  background-color: #fff;
   padding: 0px;
 }
 .el-header {
