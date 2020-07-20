@@ -6,6 +6,7 @@
         </ul>
       </div>
       <router-view></router-view>
+      
     </div>
 </template>
 
@@ -34,6 +35,9 @@ export default {
           break;
       }
     }
+  },
+  activated(){
+    this.collDetails(this.activeItem);
   }
 }
 </script>

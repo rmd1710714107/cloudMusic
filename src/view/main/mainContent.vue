@@ -1,6 +1,9 @@
 <template>
   <div class="main" ref="main">
-    <router-view></router-view>
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
+    
     <!-- <music-list></music-list> -->
     <play-music @resize="aa"></play-music>
   </div>

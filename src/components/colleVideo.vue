@@ -55,7 +55,6 @@ export default {
   created() {
     (async () => {
       this.MvList = await getMvList();
-      console.log(this.MvList);
     })();
   },
   data() {

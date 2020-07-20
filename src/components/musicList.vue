@@ -5,7 +5,9 @@
       :data="this.$store.state.musicList"
       :min-col-width="60"
       :height="listHeight"
+      ref="table"
     >
+    
       <template slot-scope="scope">
         <td>{{scope.$index+1}}</td>
         <td @click="play(scope.$index)">
@@ -63,7 +65,10 @@ export default {
     this.$bus.$on("listHeight", arg => {
       this.listHeight = arg - 70;
     });
-    Scrollbar.init(document.querySelector(".mu-table-body-wrapper"));
+    let scrollbar=Scrollbar.init(this.$refs.table.$el);
+    console.log(this.$refs.table);
+      
+    
   },
   methods: {
     async play(arg) {
@@ -117,7 +122,7 @@ export default {
 .musicList tr {
   max-height: 48px;
 }
-.musicList .mu-table-body-wrapper tr {
+.musicList .mu-table .mu-table-body-wrapper tr{
   cursor: pointer;
 }
 </style>

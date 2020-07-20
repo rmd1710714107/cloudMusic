@@ -37,7 +37,6 @@ export default {
   created () {
     (async ()=>{
       this.albumList = await getAlbumList();
-      console.log(this.albumList);
     })();
   },
   mounted() {

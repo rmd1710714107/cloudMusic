@@ -37,11 +37,10 @@ export default {
   created () {
     (async ()=>{
       this.artistList = await getArtistList();
-      console.log(this.artistList);
     })();
   },
   mounted() {
-      console.log(this.artistList);
+      // console.log(this.artistList);
   },
   data() {
     return {

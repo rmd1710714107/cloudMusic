@@ -37,6 +37,9 @@ export default {
   mounted() {
     if (JSON.stringify(this.content) == "{}") return;
     new Promise((resolve, reject) => {
+      if(!this.$refs.p0[0].offsetWidth){
+        return;
+      }
       this.timer = setInterval(() => {
         if (this.size === this.$refs.p0[0].offsetWidth && this.size !== 0) {
           clearInterval(this.timer);
