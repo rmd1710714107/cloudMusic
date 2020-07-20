@@ -1,6 +1,11 @@
 <template>
   <div class="musicList">
-    <mu-data-table :columns="columns" :data="this.$store.state.musicList" :min-col-width="60" height="600">
+    <mu-data-table
+      :columns="columns"
+      :data="this.$store.state.musicList"
+      :min-col-width="60"
+      :height="listHeight"
+    >
       <template slot-scope="scope">
         <td>{{scope.$index+1}}</td>
         <td @click="play(scope.$index)">
@@ -16,7 +21,8 @@
 <script>
 import loopScroll from "./loopScroll";
 import { getmusicUrl, getmusicDetails } from "../netWork/request";
-import Vue from "vue"
+import Vue from "vue";
+import Scrollbar from "smooth-scrollbar";
 export default {
   name: "musicList",
   components: {
@@ -34,29 +40,34 @@ export default {
         { title: "歌曲", name: "calories", width: 200, align: "left" },
         { title: "歌手", name: "fat", align: "center" },
         { title: "专辑", name: "carbs", align: "center" }
-      ]
+      ],
+      listHeight: 0
     };
   },
-  mounted(){
-    this.$bus.$on("switchSong",type=>{
+  mounted() {
+    this.$bus.$on("switchSong", type => {
       switch (type) {
         case "prevMusic":
           // if(this.$store.state.musicList[this.$store.state.musicInfo.index-1]){
           //   this.play(this.$store.state.musicInfo.index-1)
           // }else{
-            
+
           // }
           break;
         default:
           //this.$bus.$emit("switchSong",type)
           break;
       }
-    })
-    console.log(Vue.$refs);
+    });
+    this.listHeight = this.$parent.$refs.main.offsetHeight - 70;
+    this.$bus.$on("listHeight", arg => {
+      this.listHeight = arg - 70;
+    });
+    Scrollbar.init(document.querySelector(".mu-table-body-wrapper"));
   },
   methods: {
     async play(arg) {
-      let music=this.$store.state.musicList[arg];
+      let music = this.$store.state.musicList[arg];
       if (!music.path) {
         let musicInfo = {},
           musicUrl = await getmusicUrl(music.id),
@@ -64,24 +75,24 @@ export default {
         musicInfo.id = music.id;
         musicInfo.name = music.name;
         musicInfo.url = musicUrl.data.data[0].url;
-        musicInfo.picUrl=picUrl.data.songs[0].al.picUrl;
-        musicInfo.index=arg;
-        this.$store.commit("addPlayInfo",musicInfo);
-        musicInfo=null;
+        musicInfo.picUrl = picUrl.data.songs[0].al.picUrl;
+        musicInfo.index = arg;
+        this.$store.commit("addPlayInfo", musicInfo);
+        musicInfo = null;
       } else {
         this.$store.commit("addPlayInfo", music);
       }
     }
   },
-  computed:{
-    tableHeight(){
-    }
+  computed: {
+    tableHeight() {}
   }
 };
 </script>
 <style>
-.musicList{
-  overflow: hidden;
+.musicList {
+  height: 100%;
+  overflow-x: hidden;
 }
 .musicList .mu-table td {
   text-align: center;
@@ -98,13 +109,15 @@ export default {
   margin: 0 auto;
   display: block;
 }
-.musicList .album{
+.musicList .album {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 }
-.musicList tr{
+.musicList tr {
   max-height: 48px;
+}
+.musicList .mu-table-body-wrapper tr {
   cursor: pointer;
 }
 </style>

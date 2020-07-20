@@ -1,16 +1,16 @@
 <template>
   <div class="main" ref="main">
-      <router-view></router-view>
-      <!-- <music-list></music-list> -->
-      <play-music></play-music>
-      
+    <router-view></router-view>
+    <!-- <music-list></music-list> -->
+    <play-music @resize="aa"></play-music>
   </div>
 </template>
 
 <script>
 //import loopScroll from "../../components/loopScroll"
-import playMusic from "../../components/playMusic"
-import musicList from "../../components/musicList"
+import playMusic from "../../components/playMusic";
+import musicList from "../../components/musicList";
+var elementResizeDetectorMaker = require("element-resize-detector")
 export default {
   name: "mainContent",
   components: {
@@ -21,28 +21,41 @@ export default {
   data() {
     return {
       //path:this.$store.state.path,
-      content:{
-        name:"bhkbsksbshjvbibsjkbsdjkfsjkvbjlvbhksofhjkbsklbsklggbsbkbihihghuhfishg",
-        id:1
-      },
-      ishow:false
     };
   },
-  methods:{
-    Show(){
-      this.ishow=!this.ishow;
+  methods: {
+    Show() {
+      this.ishow = !this.ishow;
+    },
+    aa() {
+      console.log("ok");
     }
+  },
+  mounted() {
+    this.$bus.$emit("listHeight",this.$refs.main.offsetHeight)
+    let erd = elementResizeDetectorMaker()
+    erd.listenTo(this.$refs.main, (element)=>{
+      let height = element.offsetHeight
+      this.$nextTick(function () {
+        this.$bus.$emit("listHeight",height)
+       
+      })
+    })
   }
 };
 </script>
 <style scoped>
+.main{
+  height: 100%;
+  overflow: hidden;
+}
 .demo-list-wrap {
-    width: 100%;
-    max-width: 360px;
-    overflow: hidden;
-  }
-  .divItem{
-    width: 300px;
-    height: 30px;
-  }
+  width: 100%;
+  max-width: 360px;
+  overflow: hidden;
+}
+.divItem {
+  width: 300px;
+  height: 30px;
+}
 </style>

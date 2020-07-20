@@ -31,7 +31,7 @@ export default {
 };
 </script>
 <style scoped>
-.el-main,.el-aside{
+.el-aside{
   overflow: hidden;
 }
 .home{
