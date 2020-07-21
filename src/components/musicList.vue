@@ -7,7 +7,6 @@
       :height="listHeight"
       ref="table"
     >
-    
       <template slot-scope="scope">
         <td>{{scope.$index+1}}</td>
         <td @click="play(scope.$index)">
@@ -43,7 +42,7 @@ export default {
         { title: "歌手", name: "fat", align: "center" },
         { title: "专辑", name: "carbs", align: "center" }
       ],
-      listHeight: 0
+      listHeight: 450
     };
   },
   mounted() {
@@ -65,10 +64,10 @@ export default {
     this.$bus.$on("listHeight", arg => {
       this.listHeight = arg - 70;
     });
-    let scrollbar=Scrollbar.init(this.$refs.table.$el);
-    console.log(this.$refs.table);
-      
     
+  },
+  updated(){
+    Scrollbar.init(document.querySelector(".mu-table-body-wrapper"));
   },
   methods: {
     async play(arg) {

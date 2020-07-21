@@ -274,5 +274,6 @@ export default {
   height: 12px;
   font-size: 10px;
   text-align: center;
+  margin: 0 0 6px 0;
 }
 </style>
