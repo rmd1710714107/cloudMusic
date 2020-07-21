@@ -52,6 +52,11 @@ ipcMain.on('max',function(){
   }
 })
 ipcMain.on('close',function(){
+  win.webContents.send("close",win);
+  //win.close();
+})
+ipcMain.on("closed",(arg)=>{
+  //console.log("closed");
   win.close();
 })
 
