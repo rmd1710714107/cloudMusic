@@ -3,7 +3,7 @@
     <keep-alive>
       <router-view></router-view>
     </keep-alive>
-    
+    <!-- <router-view></router-view> -->
     <!-- <music-list></music-list> -->
     <play-music @resize="aa"></play-music>
   </div>
@@ -38,10 +38,9 @@ export default {
     this.$bus.$emit("listHeight",this.$refs.main.offsetHeight)
     let erd = elementResizeDetectorMaker()
     erd.listenTo(this.$refs.main, (element)=>{
-      let height = element.offsetHeight
       this.$nextTick(function () {
+        let height = element.offsetHeight
         this.$bus.$emit("listHeight",height)
-       
       })
     })
   }

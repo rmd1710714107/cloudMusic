@@ -112,6 +112,8 @@ export default {
     },
     getUsrInfo(usrId) {
       getUsrInfo(usrId).then(res => {
+        res.data.playlist.shift();
+        console.log(res.data.playlist);
         this.$store.commit("getPlayList", res.data.playlist);
       });
     },

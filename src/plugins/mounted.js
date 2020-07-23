@@ -20,11 +20,11 @@ const mounted = {
     //   }
     // })
     localSetting.find({ index: { $exists: true }, name: { $exists: true }, }).then(res=>{
-      console.log(res);
+      //console.log(res);
       this.$store.commit("addPlayInfo",res[0]);
     })
     localSetting.find({ currentTime: { $exists: true }, duration: { $exists: true }, }).then(res=>{
-      console.log(res);
+      //console.log(res);
       this.$store.commit("setMusicTime",res[0]);
     })
     localSetting.find({ micLisSta: /[a-zA-Z]+/ }).then(
@@ -52,10 +52,10 @@ const mounted = {
           delete this.$store.state.musicTime._id
           localSetting.update(musicInfo[0], this.$store.state.musicInfo)
           localSetting.update(time[0], this.$store.state.musicTime)
-          console.log("update");
+          //console.log("update");
         }
       })();
-      console.log("close");
+      //console.log("close");
       ipc.send("closed");
 
     })

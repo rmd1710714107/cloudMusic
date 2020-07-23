@@ -10,13 +10,14 @@
       </div>
     </div>
     <mu-divider></mu-divider>
-    <div class="content">
+    <div class="content" :style="{maxHeight:listHeight+'px'}" ref="content">
       <el-row :gutter="20">
         <el-col
           :lg="4"
           :md="6"
           :xs="12"
           :sm="8"
+          :xl="2"
           v-for="item in (MvList.data?MvList.data.data:[])"
           :key="item.vid"
         >
@@ -28,12 +29,15 @@
                   src="../assets/img/mv.svg"
                   style="width:20px;height:20px;vertical-align:middle;margin-right:3px;"
                 />
-                {{item.playTime}}
+                {{playTime(item.playTime)}}
               </p>
               <p class="duration">{{duration(item.durationms)}}</p>
             </div>
             <div style="padding: 14px;">
-              <span class="mvTitle">{{item.title}}</span>
+              <el-tooltip class="item" effect="dark" :content="item.title" placement="bottom">
+                <span class="mvTitle">{{item.title}}</span>
+              </el-tooltip>
+              <!-- <span class="mvTitle">{{item.title}}</span> -->
               <div class="bottom clearfix">
                 <p class="time">by{{ item.creator[0].userName}}</p>
               </div>
@@ -48,21 +52,33 @@
 <script>
 import { getMvList, getVideoContent } from "../netWork/request";
 import { handleMusicTinme } from "../utils/utils";
+import Scrollbar from "smooth-scrollbar";
 const { shell: shell } = require("electron");
 export default {
   name: "videos",
-  components: {},
   created() {
     (async () => {
       this.MvList = await getMvList();
     })();
+    this.$nextTick(()=>{
+      this.listHeight=document.documentElement.clientHeight-30-151;
+      Scrollbar.init(this.$refs.content);
+    })
+  },
+  mounted(){
+    // console.log(document.documentElement.clientHeight);
+    this.$bus.$on("listHeight", arg => {
+      this.listHeight = arg - 171;
+    });
+      //console.log(this.$refs.content);
   },
   data() {
     return {
       MvList: {},
       input2: "",
-      centerDialogVisible:false,
-      videoUrl:""
+      centerDialogVisible: false,
+      videoUrl: "",
+      listHeight:10000
     };
   },
   computed: {
@@ -71,19 +87,32 @@ export default {
         let time = handleMusicTinme(arg.toString().substring(0, 3));
         return time;
       };
+    },
+    playTime() {
+      return arg => {
+        if (arg >= 10000) {
+          arg = (arg / 10000).toFixed(1) + "w";
+          return arg;
+        } else if (arg >= 1000 && arg < 10000) {
+          arg = (arg / 1000).toFixed(1) + "k";
+          return arg;
+        } else {
+          return arg;
+        }
+      };
     }
   },
   methods: {
     async playVideo(id) {
       let res = await getVideoContent(id);
-      this.$confirm("是否打开浏览器观看视频",{
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'info'
-      }).then(()=>{
+      //console.log(res.data.urls[0].url);
+      this.$confirm("是否使用默认浏览器观看视频", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "info"
+      }).then(() => {
         shell.openExternal(res.data.urls[0].url);
-      })
-      
+      });
     }
   }
 };
@@ -128,6 +157,9 @@ export default {
   width: 100%;
   overflow: hidden;
 }
+.videos .mvTitle:hover{
+  color: #76b0e6;
+}
 .videos .bottom {
   margin-top: 13px;
   line-height: 12px;
@@ -165,9 +197,17 @@ export default {
 .videos .playTime {
   right: 3px;
   top: 0;
+  opacity: 0.7;
+  background-color: #4b4b4b;
 }
 .videos .duration {
   left: 3px;
   bottom: 0;
+  opacity: 0.7;
+  background-color: #4b4b4b;
+}
+.videos .el-col {
+  display: inline-block;
+  float: none;
 }
 </style>

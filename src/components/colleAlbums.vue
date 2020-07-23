@@ -40,7 +40,7 @@ export default {
     })();
   },
   mounted() {
-      console.log(this.albumList);
+      //console.log(this.albumList);
   },
   data() {
     return {

@@ -4,7 +4,7 @@
       :columns="columns"
       :data="this.$store.state.musicList"
       :min-col-width="60"
-      :height="listHeight"
+      :max-height="listHeight"
       ref="table"
     >
       <template slot-scope="scope">
@@ -64,10 +64,12 @@ export default {
     this.$bus.$on("listHeight", arg => {
       this.listHeight = arg - 70;
     });
+   
     
   },
   updated(){
-    Scrollbar.init(document.querySelector(".mu-table-body-wrapper"));
+    Scrollbar.init(document.querySelector(".mu-table-body-wrapper")||null);
+    
   },
   methods: {
     async play(arg) {

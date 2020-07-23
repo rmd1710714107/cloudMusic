@@ -37,7 +37,9 @@ export default {
     }
   },
   activated(){
+    if (this.activeItem!==0) {
     this.collDetails(this.activeItem);
+    }
   }
 }
 </script>
