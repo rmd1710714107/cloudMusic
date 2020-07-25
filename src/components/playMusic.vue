@@ -108,7 +108,7 @@ export default {
       this.$bus.$emit("switchSong",type)
       
     },
-    getLyric(){
+    async getLyric(){
       if (this.$store.state.musicInfo.id) {
         let lyric=await getLyric(this.$store.state.musicInfo.id);
         this.$store.commit("addLyricInfo",lyric.data);
