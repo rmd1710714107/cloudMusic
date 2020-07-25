@@ -61,6 +61,7 @@ export default {
             properties: ["openFile", "multiSelections"]
           })
           .then(res => {
+            if(res.canceled) return;
             this.LocalMusic = res.filePaths.map((item, index) => {
               let music = {};
               music.index = --this.$store.state.musicList.length || index;
@@ -88,7 +89,6 @@ export default {
             localSetting.update({flag:!this.flag},{flag:this.flag}).then(res=>{
               message("info",res+"条记录被影响");
             })
-            
           });
         
       }

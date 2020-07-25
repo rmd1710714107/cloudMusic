@@ -17,17 +17,22 @@ const mutations={
     for (const key in payload) {
       Vue.set(state.musicInfo,key,payload[key])
     }
-    console.log(state.musicInfo);
   },
   setMusicTime(state,payload){
-    //state.musicTime={}
+    state.musicTime={}
     for (const key in payload) {
       Vue.set(state.musicTime,key,payload[key])
     }
-    //console.log(state.musicTime);
   },
   updateMicLisSta (state,payload) {
     state.micLisSta=payload;
+  },
+  addLyricInfo(state,payload){
+    state.lyricInfo={};
+    for (const key in payload) {
+      Vue.set(state.lyricInfo,key,payload[key])
+    }
+    console.log(state.lyricInfo);
   }
 }
 export default mutations;

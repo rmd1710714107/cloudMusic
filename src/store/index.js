@@ -9,7 +9,8 @@ const state={
   playList:[],
   musicInfo:{},
   musicTime:{},
-  micLisSta:""
+  micLisSta:"",
+  lyricInfo:{}
 }
 const store=new Vuex.Store({
   state,

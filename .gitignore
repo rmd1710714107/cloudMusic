@@ -6,6 +6,7 @@ serve/
 # local env files
 .env.local
 .env.*.local
+接口文档.md
 
 # Log files
 npm-debug.log*

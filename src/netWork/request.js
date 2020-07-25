@@ -1,6 +1,7 @@
 import axios from "axios"
 const instance = axios.create({
-  baseURL: 'http://localhost:3000',
+  //baseURL: 'http://localhost:3000',
+  baseURL: 'http://60.205.249.128:3000',
   withCredentials: true,
 });
 function phone(arg){
@@ -89,6 +90,13 @@ function getVideoContent(id){
     }
   })
 }
+function getLyric(id) {
+  return instance.get("/lyric",{
+    params:{
+      id:id
+    }
+  })
+}
 export{
   phone,//手机号登录
   searchMusic,//搜索音乐
@@ -103,5 +111,6 @@ export{
   getMvList,//获取收藏的视频列表
   getAlbumContent,//获取专辑内容
   getArtistContent,//获取歌手专辑
-  getVideoContent//获取视频播放地址
+  getVideoContent,//获取视频播放地址
+  getLyric//获取歌词
 }

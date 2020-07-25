@@ -1,17 +1,22 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <el-container>
+      <el-header height="30px" style="-webkit-app-region: drag;">
+        <header-info></header-info>
+      </el-header>
+      <router-view></router-view>
+    </el-container>
+    
   </div>
 </template>
 
 <script>
-import home from "./view/home"
+import headerInfo from "./view/header/headerInfo"
 import mounted from "./plugins/mounted"
 export default {
   name: "App",
   components: {
-    
-    home
+    headerInfo
   },
   mixins: [mounted],
   data() {
@@ -44,5 +49,12 @@ export default {
 }
 #app .el-main{
   padding: 0px;
+}
+#app .el-header {
+  width: 100%;
+  padding: 0 10px;
+}
+#app .el-container {
+  height: 100%;
 }
 </style>

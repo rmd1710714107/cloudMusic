@@ -1,8 +1,9 @@
 <template>
   <div class="playMusic">
     <audio ref="audio" :src="localSrc||netSrc"></audio>
-    <div>
+    <div class="holder">
       <img :src="musicImg" class="imgHolder" />
+      <p class="laric" @click="getLyric">词</p>
     </div>
     <div class="control">
       <div class="topControl">
@@ -46,6 +47,7 @@
 import playProgress from "./playProgress";
 import loopScroll from "./loopScroll";
 import { handleMusicTinme } from "../utils/utils";
+import {getLyric} from "../netWork/request"
 export default {
   name: "playMusic",
   components: {
@@ -68,7 +70,6 @@ export default {
   methods: {
     playMusic() {
       this.flag = !this.flag;
-      console.log(this.flag);
       if (this.flag) {
         this.$store.commit("setMusicTime", {
           duration: handleMusicTinme(this.audioDom.duration)
@@ -106,6 +107,14 @@ export default {
     switchSong(type){
       this.$bus.$emit("switchSong",type)
       
+    },
+    getLyric(){
+      if (this.$store.state.musicInfo.id) {
+        let lyric=await getLyric(this.$store.state.musicInfo.id);
+        this.$store.commit("addLyricInfo",lyric.data);
+      }
+      //console.log(this.$route);
+      this.$bus.$emit("showLyric","left");
     }
   },
   computed: {
@@ -165,6 +174,11 @@ export default {
 .playMusic .imgHolder {
   width: 80px;
   height: 100%;
+  position: absolute;
+  z-index: 1;
+}
+.playMusic .holder{
+  width: 80px;
 }
 .playMusic .control {
   height: 100%;
@@ -276,4 +290,23 @@ export default {
   text-align: center;
   margin: 0 0 6px 0;
 }
-</style>
+.playMusic .holder{
+  position: relative;
+}
+.playMusic .laric{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  color: #fff;
+  font-size: 50px;
+  text-align: center;
+  background-color: rgb(150, 143, 143);
+  cursor: pointer;
+  opacity: 0.5;
+  visibility: hidden;
+}
+.playMusic .holder:hover .laric{
+  visibility: visible;
+}
+</style>                                                                                                                                                                                                                      

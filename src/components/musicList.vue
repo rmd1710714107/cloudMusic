@@ -68,7 +68,10 @@ export default {
     
   },
   updated(){
-    Scrollbar.init(document.querySelector(".mu-table-body-wrapper")||null);
+    if(document.querySelector(".mu-table-body-wrapper")){
+      Scrollbar.init(document.querySelector(".mu-table-body-wrapper"));
+    }
+    
     
   },
   methods: {
