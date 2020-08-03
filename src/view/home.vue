@@ -35,7 +35,6 @@ export default {
   },
   methods: {
     showLyric(arg) {
-      console.log(arg);
       if(arg!=="left"){
         this.direction=[0,"100%"];
       }else{
@@ -83,7 +82,6 @@ export default {
 .home .mainPanel {
   width: 100%;
   position: absolute;
-  z-index: 1;
 }
 .home .lyricPanel {
   width: 100%;

@@ -32,7 +32,6 @@ const mutations={
     for (const key in payload) {
       Vue.set(state.lyricInfo,key,payload[key])
     }
-    console.log(state.lyricInfo);
   }
 }
 export default mutations;

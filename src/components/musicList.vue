@@ -24,6 +24,7 @@ import loopScroll from "./loopScroll";
 import { getmusicUrl, getmusicDetails } from "../netWork/request";
 import Vue from "vue";
 import Scrollbar from "smooth-scrollbar";
+import { getLyric } from "../netWork/request";
 export default {
   name: "musicList",
   components: {
@@ -64,20 +65,17 @@ export default {
     this.$bus.$on("listHeight", arg => {
       this.listHeight = arg - 70;
     });
-   
-    
   },
-  updated(){
-    if(document.querySelector(".mu-table-body-wrapper")){
+  updated() {
+    if (document.querySelector(".mu-table-body-wrapper")) {
       Scrollbar.init(document.querySelector(".mu-table-body-wrapper"));
     }
-    
-    
   },
   methods: {
     async play(arg) {
       let music = this.$store.state.musicList[arg];
       if (!music.path) {
+        console.log(music.id);
         let musicInfo = {},
           musicUrl = await getmusicUrl(music.id),
           picUrl = await getmusicDetails(music.id);
@@ -87,6 +85,11 @@ export default {
         musicInfo.picUrl = picUrl.data.songs[0].al.picUrl;
         musicInfo.index = arg;
         this.$store.commit("addPlayInfo", musicInfo);
+        // if (music.id) {
+        //   console.log(music.id);
+        //   let lyric = await getLyric(music.id);
+        //   this.$store.commit("addLyricInfo", lyric.data);
+        // }
         musicInfo = null;
       } else {
         this.$store.commit("addPlayInfo", music);
@@ -126,7 +129,7 @@ export default {
 .musicList tr {
   max-height: 48px;
 }
-.musicList .mu-table .mu-table-body-wrapper tr{
+.musicList .mu-table .mu-table-body-wrapper tr {
   cursor: pointer;
 }
 </style>

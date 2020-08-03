@@ -20,7 +20,6 @@ const mounted = {
     //   }
     // })
     localSetting.find({ index: { $exists: true }, name: { $exists: true }, }).then(res=>{
-      //console.log(res);
       this.$store.commit("addPlayInfo",res[0]);
     })
     localSetting.find({ currentTime: { $exists: true }, duration: { $exists: true }, }).then(res=>{

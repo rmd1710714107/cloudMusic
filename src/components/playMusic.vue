@@ -1,6 +1,6 @@
 <template>
   <div class="playMusic">
-    <audio ref="audio" :src="localSrc||netSrc"></audio>
+    <audio ref="audio" :src="localSrc||netSrc" @timeupdate="playIng"></audio>
     <div class="holder">
       <img :src="musicImg" class="imgHolder" />
       <p class="laric" @click="getLyric">词</p>
@@ -47,7 +47,7 @@
 import playProgress from "./playProgress";
 import loopScroll from "./loopScroll";
 import { handleMusicTinme } from "../utils/utils";
-import {getLyric} from "../netWork/request"
+import { getLyric } from "../netWork/request";
 export default {
   name: "playMusic",
   components: {
@@ -68,35 +68,41 @@ export default {
     this.audioDom = this.$refs.audio;
   },
   methods: {
-    playMusic() {
+    aaa() {
+      console.log("ok");
+    },
+    async playMusic() {
       this.flag = !this.flag;
       if (this.flag) {
         this.$store.commit("setMusicTime", {
           duration: handleMusicTinme(this.audioDom.duration)
         });
-        if(!this.timer){
-          this.timer = setInterval(() => {
-          if (
-            parseInt(this.audioDom.duration) ===
-            parseInt(this.audioDom.currentTime)
-          ) {
-            this.pause();
-          }
-          this.$store.commit("setMusicTime", {
-            currentTime: handleMusicTinme(this.audioDom.currentTime)
-          });
-        }, 1000);
-        }
+
         this.audioDom.play();
       } else {
         this.pause();
+      }
+    },
+    playIng() {
+      if (
+        parseInt(this.audioDom.duration) < parseInt(this.audioDom.currentTime)
+      ) {
+        this.pause();
+      }
+      this.$store.commit("setMusicTime", {
+        currentTime: handleMusicTinme(this.audioDom.currentTime)
+      });
+      if (this.flag) {
+        this.$bus.$emit("playing", this.audioDom.currentTime);
       }
     },
     playSort() {
       ++this.index;
     },
     pause() {
-      // this.flag = !this.flag;
+      if (this.flag) {
+        this.flag = !this.flag;
+      }
       this.audioDom.pause();
       clearInterval(this.timer);
       this.timer = null;
@@ -104,17 +110,11 @@ export default {
         currentTime: handleMusicTinme(this.audioDom.currentTime)
       });
     },
-    switchSong(type){
-      this.$bus.$emit("switchSong",type)
-      
+    switchSong(type) {
+      this.$bus.$emit("switchSong", type);
     },
-    async getLyric(){
-      if (this.$store.state.musicInfo.id) {
-        let lyric=await getLyric(this.$store.state.musicInfo.id);
-        this.$store.commit("addLyricInfo",lyric.data);
-      }
-      //console.log(this.$route);
-      this.$bus.$emit("showLyric","left");
+    getLyric() {
+      this.$bus.$emit("showLyric", "left");
     }
   },
   computed: {
@@ -157,6 +157,18 @@ export default {
       } else {
         return require("../assets/img/CD.svg");
       }
+    },
+    musicInfo() {
+      return this.$store.state.musicInfo;
+    }
+  },
+  watch: {
+    async musicInfo() {
+      console.log(this.$store.state.musicInfo);
+      if (this.$store.state.musicInfo.id) {
+        let lyric = await getLyric(this.$store.state.musicInfo.id);
+        this.$store.commit("addLyricInfo", lyric.data);
+      }
     }
   }
 };
@@ -177,7 +189,7 @@ export default {
   position: absolute;
   z-index: 1;
 }
-.playMusic .holder{
+.playMusic .holder {
   width: 80px;
 }
 .playMusic .control {
@@ -290,10 +302,10 @@ export default {
   text-align: center;
   margin: 0 0 6px 0;
 }
-.playMusic .holder{
+.playMusic .holder {
   position: relative;
 }
-.playMusic .laric{
+.playMusic .laric {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -306,7 +318,7 @@ export default {
   opacity: 0.5;
   visibility: hidden;
 }
-.playMusic .holder:hover .laric{
+.playMusic .holder:hover .laric {
   visibility: visible;
 }
 </style>                                                                                                                                                                                                                      
