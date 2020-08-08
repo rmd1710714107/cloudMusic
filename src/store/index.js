@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import mutations from "./mutation"
 Vue.use(Vuex);
 const state={
+  userInfo:{},
   musicList:[],
   suggest:{},
   searVal:"",
@@ -10,7 +11,8 @@ const state={
   musicInfo:{},
   musicTime:{},
   micLisSta:"",
-  lyricInfo:{}
+  lyricInfo:{},
+  musicComments:{}
 }
 const store=new Vuex.Store({
   state,

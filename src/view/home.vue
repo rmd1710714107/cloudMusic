@@ -10,30 +10,51 @@
       </el-main>
     </el-container>
     <el-container class="lyricPanel">
-      <lyric></lyric>
+      <el-button circle icon="el-icon-right" @click.native="musicPanel" type="info" class="back" size="small"></el-button>
+      <el-main class="lyricMain" ref="lyricMain">
+        <div class="lyricPic">
+          <el-row>
+            <el-col :span="12"></el-col>
+            <el-col :span="12">
+              <lyric></lyric>
+            </el-col>
+          </el-row>
+        </div>
+        <div class="comment">
+          <comment></comment>
+        </div>
+      </el-main>
     </el-container>
   </div>
 </template>
 
 <script>
+import Scrollbar from 'smooth-scrollbar';
 import mainContent from "./main/mainContent";
 import asideContent from "./aside/asideContent";
 import headerInfo from "./header/headerInfo";
 import lyric from "../components/lyric";
 import anime from "animejs/lib/anime.es.js";
+import comment from "../components/comment"
 export default {
   name: "home",
   components: {
     mainContent,
     asideContent,
-    lyric
+    lyric,
+    comment
   },
   mounted() {
     this.$bus.$on("showLyric", (arg) => {
       this.showLyric(arg);
     });
+    console.log(this.$refs.lyricMain.$el);
+    Scrollbar.init(this.$refs.lyricMain.$el);
   },
   methods: {
+    musicPanel() {
+      this.$bus.$emit("showLyric", "right");
+    },
     showLyric(arg) {
       if(arg!=="left"){
         this.direction=[0,"100%"];
@@ -48,7 +69,6 @@ export default {
         easing: 'linear'
       });
       this.animation.play();
-      
     }
   },
   data () {
@@ -69,7 +89,7 @@ export default {
   position: relative;
   overflow: hidden;
 }
-.el-main {
+.mainPanel .el-main {
   height: 100%;
   background-color: #fff;
   padding: 0px;
@@ -87,7 +107,18 @@ export default {
   width: 100%;
   height: 100%;
   position: absolute;
-  z-index: 999;
   left:100%;
+  background:linear-gradient(-45deg, #333545, #070708, #333540);
 }
+.lyricPanel .back{
+position: absolute;
+top: 3px;
+left: 3px;
+z-index: 999;
+}
+.lyricPanel .lyricMain{
+  height: 100%;
+  overflow: auto;
+}
+
 </style>

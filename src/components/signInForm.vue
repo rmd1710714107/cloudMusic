@@ -98,7 +98,7 @@ export default {
               message("error", res.data.msg);
               //this.$refs.SignInForm.resetFields();
             } else {
-              this.$emit("sendData", res.data.profile);
+              this.$store.commit("addUserInfo",res.data.profile)
               this.getUsrInfo(res.data.account.id);
               this.close();
             }
@@ -113,7 +113,6 @@ export default {
     getUsrInfo(usrId) {
       getUsrInfo(usrId).then(res => {
         res.data.playlist.shift();
-        console.log(res.data.playlist);
         this.$store.commit("getPlayList", res.data.playlist);
       });
     },

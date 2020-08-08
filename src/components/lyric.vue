@@ -1,11 +1,9 @@
 <template>
   <div class="lyric">
-    <button @click="musicPanel">back</button>
-    <!-- <button @click="parseLyc">parseLyc</button> -->
-    <hr />
+    <!-- <button @click="musicPanel">back</button> -->
+    <!-- <el-button circle icon="el-icon-right" @click.native="musicPanel" type="info" class="back" size="small"></el-button> -->
     <ul id="lyricUl" ref="lyricUl">
-      <!-- <li v-for="(item,index) in lyricArray" :key="index">{{item}}</li> -->
-      <li v-for="(item,index) in lyricArray" :key="index">{{item.content}}</li>
+      <li v-for="(item,index) in lyricArray" :key="index" :class="{activeLi:activeIndex===index}">{{item.content}}</li>
     </ul>
   </div>
 </template>
@@ -19,7 +17,9 @@ export default {
     return {
       lyricArray: [],
       lyricIndex: -1,
-      lyric: ""
+      lyric: "",
+      scroll:null,
+      activeIndex:0
     };
   },
   mounted() {
@@ -40,12 +40,9 @@ export default {
     });
   },
   updated() {
-    //this.lyricArray=[];
+     this.scroll=Scrollbar.init(this.$refs.lyricUl);
   },
   methods: {
-    musicPanel() {
-      this.$bus.$emit("showLyric", "right");
-    },
     parseLyc() {
       if (this.lyricInfo.uncollected) return;
       let lycReg = /\[{1}(.{1,})\]{1}(.{0,})/,
@@ -70,9 +67,6 @@ export default {
           }
         }
       });
-      console.log(this.$refs.lyricUl);
-      Scrollbar.init(document.querySelector('#lyricUl'));
-      // 
     },
     switchLyc(time = 0) {
       if (this.lyricArray.length !== 0) {
@@ -82,10 +76,10 @@ export default {
         ) {
           this.lyricIndex++;
         }
-        // console.log(this.lyricArray[this.lyricIndex].content);
-        // this.lyric =
-        //   this.lyricArray[this.lyricIndex].content ||
-        //   this.lyricArray[this.lyricIndex - 1].content;
+        this.activeIndex=this.lyricIndex;
+        if(this.scroll){
+          this.scroll.scrollTo(0, this.lyricIndex*20)
+        }
       }
     }
   },
@@ -98,7 +92,6 @@ export default {
 </script>
 <style scoped>
 .lyric {
-  background-color: #fff;
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -108,4 +101,12 @@ export default {
   height: 500px;
   overflow: auto;
 }
+.lyric #lyricUl li{
+  height: 20px;
+  color: #fff;
+}
+.lyric #lyricUl .activeLi{
+  color: red;
+}
+
 </style>

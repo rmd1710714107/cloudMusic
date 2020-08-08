@@ -3,8 +3,6 @@
     <keep-alive>
       <router-view></router-view>
     </keep-alive>
-    <!-- <router-view></router-view> -->
-    <!-- <music-list></music-list> -->
     <play-music @resize="aa"></play-music>
   </div>
 </template>

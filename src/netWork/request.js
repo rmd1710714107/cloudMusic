@@ -97,6 +97,41 @@ function getLyric(id) {
     }
   })
 }
+function getComments(id,limit=20) {
+  return instance.get("/comment/music",{
+    params:{
+      id:id,
+      limit:limit
+    }
+  })
+}
+class operateComments{
+  constructor(arg){
+    this.url="/comment",
+    this.params=arg;
+  }
+  addComment(){
+    let{t,type,id,content}=this.params;
+    return instance.get(this.url,{
+      params:{
+        t,type,id,content
+      }
+    })
+  }
+  delComment(){
+    let {t,type}=this.params;
+    try {
+      return instance.get(this.url,{
+        params:{
+          t,type
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+    
+  }
+}
 export{
   phone,//手机号登录
   searchMusic,//搜索音乐
@@ -112,5 +147,7 @@ export{
   getAlbumContent,//获取专辑内容
   getArtistContent,//获取歌手专辑
   getVideoContent,//获取视频播放地址
-  getLyric//获取歌词
+  getLyric,//获取歌词
+  getComments,//获取歌词评论
+  operateComments//操作评论类
 }

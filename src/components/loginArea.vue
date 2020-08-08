@@ -1,13 +1,13 @@
 <template>
   <div class="loginArea">
     <div class="icon">
-      <img :src="src" alt="头像" class="avatar"/>
+      <img :src="proflie.avatarUrl||src" alt="头像" class="avatar"/>
     </div>
     <div class="operate" v-if="operate">
       <el-button round size="small" @click="signIn">登录</el-button>
     </div>
-    <div class="nickname" v-else>{{nickname}}</div>
-    <sign-in-form :dialogVisible="dialogVisible" @close="close" @sendData="getData"></sign-in-form>
+    <div class="nickname" v-else>{{proflie.nickname}}</div>
+    <sign-in-form :dialogVisible="dialogVisible" @close="close" ></sign-in-form>
   </div>
 </template>
 
@@ -21,10 +21,9 @@ export default {
   },
   data() {
     return {
-      src: src,
+      src: require("../assets/img/icon.svg"),
       dialogVisible:false,
       operate:true,
-      nickname:""
     };
   },
   methods:{
@@ -32,12 +31,13 @@ export default {
       this.dialogVisible = true;
     },
     close(){
-      this.dialogVisible=false;
-    },
-    getData(param){
       this.operate=false;
-      this.src=param.avatarUrl;
-      this.nickname=param.nickname;
+      this.dialogVisible=false;
+    }
+  },
+  computed: {
+    proflie(){
+      return this.$store.state.userInfo;
     }
   }
 };

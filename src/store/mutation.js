@@ -1,5 +1,8 @@
 import Vue from "vue";
 const mutations={
+  addUserInfo(state,payload){
+    state.userInfo=payload;
+  },
   addMusic(state,payload){
     state.musicList=payload;
   },
@@ -32,6 +35,10 @@ const mutations={
     for (const key in payload) {
       Vue.set(state.lyricInfo,key,payload[key])
     }
+  },
+  addMusicComments(state,payload){
+    console.log(payload);
+    state.musicComments=payload;
   }
 }
 export default mutations;

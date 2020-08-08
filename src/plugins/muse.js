@@ -10,7 +10,8 @@ import {
   Menu,
   Button ,
   Slider,
-  DataTable  } from 'muse-ui';
+  DataTable,
+  Avatar  } from 'muse-ui';
  
 Vue.use(Paper);
 Vue.use(List);
@@ -21,3 +22,4 @@ Vue.use(Menu);
 Vue.use(Button);
 Vue.use(Slider);
 Vue.use(DataTable);
+Vue.use(Avatar);

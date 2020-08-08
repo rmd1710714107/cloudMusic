@@ -3,7 +3,7 @@
     <audio ref="audio" :src="localSrc||netSrc" @timeupdate="playIng"></audio>
     <div class="holder">
       <img :src="musicImg" class="imgHolder" />
-      <p class="laric" @click="getLyric">词</p>
+      <p class="laric" @click="showLyric">词</p>
     </div>
     <div class="control">
       <div class="topControl">
@@ -19,7 +19,7 @@
           </div>
         </div>
         <div class="musicName">
-          <loop-scroll :content="this.$store.state.musicInfo" :exam="false"></loop-scroll>
+          <loop-scroll :content="musicInfo" :exam="false"></loop-scroll>
         </div>
         <div class="playSet">
           <div class="volumeControl">
@@ -47,7 +47,7 @@
 import playProgress from "./playProgress";
 import loopScroll from "./loopScroll";
 import { handleMusicTinme } from "../utils/utils";
-import { getLyric } from "../netWork/request";
+import { getLyric, getComments } from "../netWork/request";
 export default {
   name: "playMusic",
   components: {
@@ -71,13 +71,12 @@ export default {
     aaa() {
       console.log("ok");
     },
-    async playMusic() {
+    playMusic() {
       this.flag = !this.flag;
       if (this.flag) {
         this.$store.commit("setMusicTime", {
           duration: handleMusicTinme(this.audioDom.duration)
         });
-
         this.audioDom.play();
       } else {
         this.pause();
@@ -113,7 +112,11 @@ export default {
     switchSong(type) {
       this.$bus.$emit("switchSong", type);
     },
-    getLyric() {
+    async showLyric() {
+      if (JSON.stringify(this.$store.state.musicComments) === "{}") {
+        let comments = await getComments(this.musicInfo.id);
+        this.$store.commit("addMusicComments", comments.data);
+      }
       this.$bus.$emit("showLyric", "left");
     }
   },
@@ -163,13 +166,13 @@ export default {
     }
   },
   watch: {
-    async musicInfo() {
-      console.log(this.$store.state.musicInfo);
-      if (this.$store.state.musicInfo.id) {
+  async musicInfo(){
+    if (this.$store.state.musicInfo.id) {
         let lyric = await getLyric(this.$store.state.musicInfo.id);
+        this.$store.commit("addMusicComments", {});
         this.$store.commit("addLyricInfo", lyric.data);
       }
-    }
+  }
   }
 };
 </script>
