@@ -9,9 +9,16 @@
         <router-view></router-view>
       </el-main>
     </el-container>
-    <el-container class="lyricPanel">
-      <el-button circle icon="el-icon-right" @click.native="musicPanel" type="info" class="back" size="small"></el-button>
-      <el-main class="lyricMain" ref="lyricMain">
+    <el-container class="lyricPanel" ref="lyricPanel">
+      <el-button
+        circle
+        icon="el-icon-right"
+        @click.native="musicPanel"
+        type="info"
+        class="back"
+        size="small"
+      ></el-button>
+      <el-main class="lyricMain">
         <div class="lyricPic">
           <el-row>
             <el-col :span="12"></el-col>
@@ -29,53 +36,61 @@
 </template>
 
 <script>
-import Scrollbar from 'smooth-scrollbar';
+import Scrollbar from "smooth-scrollbar";
 import mainContent from "./main/mainContent";
 import asideContent from "./aside/asideContent";
 import headerInfo from "./header/headerInfo";
 import lyric from "../components/lyric";
 import anime from "animejs/lib/anime.es.js";
-import comment from "../components/comment"
+import comment from "../components/comment";
 export default {
   name: "home",
   components: {
     mainContent,
     asideContent,
     lyric,
-    comment
+    comment,
+    scroll: null
   },
   mounted() {
-    this.$bus.$on("showLyric", (arg) => {
+    this.$bus.$on("showLyric", arg => {
       this.showLyric(arg);
     });
-    console.log(this.$refs.lyricMain.$el);
-    Scrollbar.init(this.$refs.lyricMain.$el);
+    this.scroll = Scrollbar.init(this.$refs.lyricPanel.$el);
   },
   methods: {
     musicPanel() {
       this.$bus.$emit("showLyric", "right");
     },
     showLyric(arg) {
-      if(arg!=="left"){
-        this.direction=[0,"100%"];
-      }else{
-        this.direction=["100%",0];
+      if (arg !== "left") {
+        this.direction = [0, "100%"];
+      } else {
+        this.direction = ["100%", 0];
       }
-      this.animation=null;
-      this.animation=anime({
+      this.animation = null;
+      this.animation = anime({
         targets: ".lyricPanel",
         left: this.direction,
         autoplay: false,
-        easing: 'linear'
+        easing: "linear"
       });
       this.animation.play();
+    },
+    getComments() {
+      console.log("ok");
+      if (JSON.stringify(this.$store.state.musicComments) === "{}") {
+        getComments(this.musicInfo.id).then(res => {
+          this.$store.commit("addMusicComments", res.data);
+        });
+      }
     }
   },
-  data () {
+  data() {
     return {
-      animation:null,
-      direction:["100%",0]
-    }
+      animation: null,
+      direction: ["100%", 0]
+    };
   }
 };
 </script>
@@ -107,18 +122,18 @@ export default {
   width: 100%;
   height: 100%;
   position: absolute;
-  left:100%;
-  background:linear-gradient(-45deg, #333545, #070708, #333540);
-}
-.lyricPanel .back{
-position: absolute;
-top: 3px;
-left: 3px;
-z-index: 999;
-}
-.lyricPanel .lyricMain{
-  height: 100%;
   overflow: auto;
+  left: 100%;
+  background: linear-gradient(-45deg, #333545, #070708, #333540);
 }
-
+.lyricPanel .back {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  z-index: 999;
+}
+.lyricPanel .lyricMain {
+  max-width: 840px;
+  margin: 0 auto;
+}
 </style>

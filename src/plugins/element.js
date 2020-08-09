@@ -22,7 +22,8 @@ import {
   BreadcrumbItem,
   Col,
   Row,
-  MessageBox} from "element-ui";
+  MessageBox,
+  Pagination} from "element-ui";
 Vue.use(Container)
 Vue.use(Footer)
 Vue.use(Aside)
@@ -45,4 +46,5 @@ Vue.use(Breadcrumb)
 Vue.use(BreadcrumbItem)
 Vue.use(Col)
 Vue.use(Row)
+Vue.use(Pagination)
 Vue.prototype.$confirm = MessageBox.confirm;

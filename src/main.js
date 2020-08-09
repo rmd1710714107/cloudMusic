@@ -8,6 +8,8 @@ import "./plugins/muse"
 import "normalize.css"
 import "./assets/basic.css"
 import './assets/material-icons.css'
+import infiniteScroll from "vue-infinite-scroll";
+ Vue.use(infiniteScroll);
 Vue.config.productionTip = false
 Vue.prototype.$bus=new Vue();
 Vue.prototype.update={}

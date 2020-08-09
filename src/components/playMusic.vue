@@ -68,9 +68,6 @@ export default {
     this.audioDom = this.$refs.audio;
   },
   methods: {
-    aaa() {
-      console.log("ok");
-    },
     playMusic() {
       this.flag = !this.flag;
       if (this.flag) {
