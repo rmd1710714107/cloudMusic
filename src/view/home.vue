@@ -21,7 +21,9 @@
       <el-main class="lyricMain">
         <div class="lyricPic">
           <el-row>
-            <el-col :span="12"></el-col>
+            <el-col :span="12">
+              <cd-pic></cd-pic>
+            </el-col>
             <el-col :span="12">
               <lyric></lyric>
             </el-col>
@@ -43,20 +45,27 @@ import headerInfo from "./header/headerInfo";
 import lyric from "../components/lyric";
 import anime from "animejs/lib/anime.es.js";
 import comment from "../components/comment";
+import cdPic from "../components/cdPic"
 export default {
   name: "home",
+  data() {
+    return {
+      animation: null,
+      direction: ["100%", 0]
+    };
+  },
   components: {
     mainContent,
     asideContent,
     lyric,
     comment,
-    scroll: null
+    cdPic
   },
   mounted() {
     this.$bus.$on("showLyric", arg => {
       this.showLyric(arg);
     });
-    this.scroll = Scrollbar.init(this.$refs.lyricPanel.$el);
+    Scrollbar.init(this.$refs.lyricPanel.$el);
   },
   methods: {
     musicPanel() {
@@ -85,12 +94,6 @@ export default {
         });
       }
     }
-  },
-  data() {
-    return {
-      animation: null,
-      direction: ["100%", 0]
-    };
   }
 };
 </script>

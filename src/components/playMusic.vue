@@ -111,6 +111,7 @@ export default {
     },
     async showLyric() {
       if (JSON.stringify(this.$store.state.musicComments) === "{}") {
+        if(this.musicInfo.path) return;
         let comments = await getComments(this.musicInfo.id);
         this.$store.commit("addMusicComments", comments.data);
       }
