@@ -6,6 +6,7 @@
       width="50%"
       :center="true"
       :show-close="false"
+      :close-on-click-modal="false"
     >
       <el-form
         ref="SignInForm"
@@ -15,17 +16,16 @@
         :status-icon="true"
       >
         <el-form-item label="手机号" prop="phone">
-          <el-input v-model="form.phone" clearable></el-input>
+          <el-input  @keyup.native.enter="signIn" v-model="form.phone" clearable></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="pwd">
-          <el-input v-model="form.pwd" type="password" :show-password="true" clearable></el-input>
+          <el-input  @keyup.enter.native="signIn" v-model="form.pwd" type="password" :show-password="true" clearable></el-input>
         </el-form-item>
         <el-form-item>
           <el-checkbox-group v-model="checked">
             <el-checkbox @change="hanlde">自动登录</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="close">取消</el-button>
@@ -95,6 +95,7 @@ export default {
           }
           phone(this.form).then(res => {
             if (res.data.code !== 200) {
+              console.log(res.data);
               message("error", res.data.msg);
               //this.$refs.SignInForm.resetFields();
             } else {

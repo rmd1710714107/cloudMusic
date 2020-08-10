@@ -48,6 +48,7 @@ import playProgress from "./playProgress";
 import loopScroll from "./loopScroll";
 import { handleMusicTinme } from "../utils/utils";
 import { getLyric, getComments } from "../netWork/request";
+import {message} from "../utils/utils"
 export default {
   name: "playMusic",
   components: {
@@ -74,8 +75,13 @@ export default {
         this.$store.commit("setMusicTime", {
           duration: handleMusicTinme(this.audioDom.duration)
         });
-        this.audioDom.play();
-        this.$bus.$emit("play");
+        try {
+          this.audioDom.play();
+          this.$bus.$emit("play");
+        } catch (err) {
+          this.flag = false;
+          message("error","歌曲播放出错");
+        }
       } else {
         this.pause();
       }
