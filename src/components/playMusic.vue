@@ -75,6 +75,7 @@ export default {
           duration: handleMusicTinme(this.audioDom.duration)
         });
         this.audioDom.play();
+        this.$bus.$emit("play");
       } else {
         this.pause();
       }
@@ -100,11 +101,10 @@ export default {
         this.flag = !this.flag;
       }
       this.audioDom.pause();
-      clearInterval(this.timer);
-      this.timer = null;
       this.$store.commit("setMusicTime", {
         currentTime: handleMusicTinme(this.audioDom.currentTime)
       });
+      this.$bus.$emit("pause");
     },
     switchSong(type) {
       this.$bus.$emit("switchSong", type);

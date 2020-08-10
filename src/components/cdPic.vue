@@ -13,7 +13,7 @@
     </div>
   </div>
 </template>
-
+npm 
 <script>
 import anime from "animejs/lib/anime.es.js";
 export default {
@@ -26,8 +26,13 @@ export default {
     };
   },
   mounted () {
-    this.$bus.$on("playing",()=>{
+    this.$bus.$on("play",()=>{
       this.picRoate();
+      this.barRoate("0deg",0,"linear")
+    }),
+    this.$bus.$on("pause",()=>{
+      this.picAnime.pause();
+      this.barRoate("-25deg",0,"linear");
     })
   },
   computed: {
@@ -40,7 +45,17 @@ export default {
     }
   },
   methods: {
-    barRoate() {},
+    barRoate(de,duratio,easin) {
+      this.barAnime&&this.barAnime.pause();
+      this.barAnime=null;
+      this.barAnime=anime({
+        targets: ".bar",
+        easing: easin,
+        duration: duratio,
+        rotate:de
+      })
+      this.barAnime.play();
+    },
     picRoate() {
       if(!this.picAnime){
         this.picAnime=anime({
@@ -73,18 +88,18 @@ export default {
   margin: 0 auto;
 }
 .cdPic .play-bar {
-  transform-origin: 0 0;
-  transform: rotate(-25deg);
-  transition: all 0.3s;
   position: relative;
 }
 .cdPic .bar {
+  transform-origin: 0 0;
+  transition: all 0.3s;
   width: 80px;
   height: 127px;
   position: absolute;
-  left: calc(50% - 6px);
-  top: 55px;
+  left: 49%;
+  top: -38px;
   z-index: 1;
+  transform: rotate(-25deg);
 }
 .play-bar-support img {
   width: 100%;
