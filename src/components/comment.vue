@@ -113,6 +113,9 @@ export default {
 };
 </script>
 <style>
+.comment{
+  margin-top: 30px;
+}
 .comment .mu-divider {
   background-color: #fff;
 }

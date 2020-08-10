@@ -1,15 +1,22 @@
 <template>
   <div class="lyric">
-    <!-- <button @click="musicPanel">back</button> -->
-    <!-- <el-button circle icon="el-icon-right" @click.native="musicPanel" type="info" class="back" size="small"></el-button> -->
-    <ul id="lyricUl" ref="lyricUl">
-      <li v-for="(item,index) in lyricArray" :key="index" :class="{activeLi:activeIndex===index}">{{item.content}}</li>
-    </ul>
+    <h1 class="musicName">{{this.$store.state.musicInfo.name}}</h1>
+    <div class="lyricWrap">
+      <ul id="lyricUl" ref="lyricUl">
+        <li
+          v-for="(item,index) in lyricArray"
+          :key="index"
+          :class="{activeLi:activeIndex===index}"
+        >{{item.content}}</li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
-import Scrollbar from 'smooth-scrollbar';
+import Scrollbar from "smooth-scrollbar";
+import anime from "animejs/lib/anime.es.js";
+import { duration } from "moment";
 export default {
   name: "lyric",
   components: {},
@@ -18,18 +25,18 @@ export default {
       lyricArray: [],
       lyricIndex: -1,
       lyric: "",
-      scroll:null,
-      activeIndex:0
+      scroll: null,
+      activeIndex: 0,
+      animation: null
     };
   },
   mounted() {
     this.$bus.$on("playing", arg => {
       if (JSON.stringify(this.$store.state.lyricInfo) !== "{}") {
-        if(this.$store.state.lyricInfo.uncollected){
+        if (this.$store.state.lyricInfo.uncollected) {
           this.$bus.$off("playing");
-          this.lyric="无歌词";
-          console.log(this.$store.state.lyricInfo.uncollected);
-          return ;
+          this.lyric = "无歌词";
+          return;
         }
         this.lyricArray = [];
         this.lyricIndex = -1;
@@ -38,9 +45,6 @@ export default {
       }
       this.switchLyc(arg);
     });
-  },
-  updated() {
-     this.scroll=Scrollbar.init(this.$refs.lyricUl);
   },
   methods: {
     parseLyc() {
@@ -75,12 +79,24 @@ export default {
           time < this.lyricArray[this.lyricIndex + 2].time
         ) {
           this.lyricIndex++;
+          if (this.lyricIndex >= 4) {
+            //this.$refs.lyricUl.style.top = -(this.lyricIndex - 4) * 30 + "px";
+            let dis=-(this.lyricIndex - 4) * 30;
+            this.switchAnime(dis);
+          }
+          this.activeIndex = this.lyricIndex;
+          
         }
-        this.activeIndex=this.lyricIndex;
-        if(this.scroll){
-          this.scroll.scrollTo(0, this.lyricIndex*20)
-        }
+        
       }
+    },
+    switchAnime(dis) {
+      this.animation = anime({
+        targets: "#lyricUl",
+        translateY: dis,
+        easing: "easeInOutCubic",
+        duration: 1000
+      });
     }
   },
   computed: {
@@ -94,19 +110,31 @@ export default {
 .lyric {
   width: 100%;
   height: 100%;
-  overflow: hidden;
 }
-.lyric #lyricUl{
+.lyric .lyricWrap {
   width: 100%;
-  height: 500px;
-  overflow: auto;
+  height: 270px;
+  overflow: hidden;
+  position: relative;
 }
-.lyric #lyricUl li{
-  height: 20px;
+.lyric #lyricUl {
+  list-style: none;
+  position: absolute;
+  width: 100%;
+}
+.lyric #lyricUl li {
+  height: 30px;
   color: #fff;
+  text-align: center;
+  opacity: 0.3;
+  padding: 5px 0;
 }
-.lyric #lyricUl .activeLi{
+.lyric #lyricUl .activeLi {
   color: red;
+  opacity: 1;
 }
-
+.lyric .musicName {
+  color: #fff;
+  text-align: center;
+}
 </style>

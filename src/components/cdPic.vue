@@ -65,8 +65,8 @@ export default {
           loop:true,
           easing: 'linear'
         });
-        this.picAnime.play();
       }
+      this.picAnime.play();
     }
   }
 };
