@@ -75,7 +75,6 @@ export default {
     async play(arg) {
       let music = this.$store.state.musicList[arg];
       if (!music.path) {
-        console.log(music.id);
         let musicInfo = {},
           musicUrl = await getmusicUrl(music.id),
           picUrl = await getmusicDetails(music.id);
@@ -85,15 +84,11 @@ export default {
         musicInfo.picUrl = picUrl.data.songs[0].al.picUrl;
         musicInfo.index = arg;
         this.$store.commit("addPlayInfo", musicInfo);
-        // if (music.id) {
-        //   console.log(music.id);
-        //   let lyric = await getLyric(music.id);
-        //   this.$store.commit("addLyricInfo", lyric.data);
-        // }
         musicInfo = null;
       } else {
         this.$store.commit("addPlayInfo", music);
       }
+      this.$store.commit("setMusicTime",{})
     }
   },
   computed: {

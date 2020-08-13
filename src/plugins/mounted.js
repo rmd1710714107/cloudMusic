@@ -19,7 +19,7 @@ const mounted = {
     //     form=null;
     //   }
     // })
-    localSetting.find({ index: { $exists: true }, name: { $exists: true }, }).then(res=>{
+    localSetting.find({ name: { $exists: true }, }).then(res=>{
       this.$store.commit("addPlayInfo",res[0]);
     })
     localSetting.find({ currentTime: { $exists: true }, duration: { $exists: true }, }).then(res=>{
@@ -41,7 +41,7 @@ const mounted = {
         message("error", err);
       });
     ipc.on("close", async (arg) => {
-      let musicInfo=await localSetting.find({ index: { $exists: true }, name: { $exists: true }, });
+      let musicInfo=await localSetting.find({name: { $exists: true }, });
       (async ()=>{
         if (musicInfo.length === 0) {
           localSetting.insert([this.$store.state.musicInfo, this.$store.state.musicTime]);

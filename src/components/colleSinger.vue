@@ -39,9 +39,6 @@ export default {
       this.artistList = await getArtistList();
     })();
   },
-  mounted() {
-      // console.log(this.artistList);
-  },
   data() {
     return {
       artistList: {},

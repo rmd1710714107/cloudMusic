@@ -66,11 +66,9 @@ export default {
     })
   },
   mounted(){
-    // console.log(document.documentElement.clientHeight);
     this.$bus.$on("listHeight", arg => {
       this.listHeight = arg - 171;
     });
-      //console.log(this.$refs.content);
   },
   data() {
     return {
@@ -112,6 +110,8 @@ export default {
         type: "info"
       }).then(() => {
         shell.openExternal(res.data.urls[0].url);
+      }).catch(()=>{
+        console.log("已取消");
       });
     }
   }

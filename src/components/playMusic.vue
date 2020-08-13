@@ -48,7 +48,7 @@ import playProgress from "./playProgress";
 import loopScroll from "./loopScroll";
 import { handleMusicTinme } from "../utils/utils";
 import { getLyric, getComments } from "../netWork/request";
-import {message} from "../utils/utils"
+import { message } from "../utils/utils";
 export default {
   name: "playMusic",
   components: {
@@ -73,6 +73,9 @@ export default {
       this.flag = !this.flag;
       if (this.flag) {
         this.$store.commit("setMusicTime", {
+          currentTime: handleMusicTinme(0)
+        });
+        this.$store.commit("setMusicTime", {
           duration: handleMusicTinme(this.audioDom.duration)
         });
         try {
@@ -80,23 +83,23 @@ export default {
           this.$bus.$emit("play");
         } catch (err) {
           this.flag = false;
-          message("error","歌曲播放出错");
+          message("error", "歌曲播放出错");
         }
       } else {
         this.pause();
       }
     },
     playIng() {
-      if (
-        parseInt(this.audioDom.duration) < parseInt(this.audioDom.currentTime)
-      ) {
-        this.pause();
-      }
       this.$store.commit("setMusicTime", {
         currentTime: handleMusicTinme(this.audioDom.currentTime)
       });
       if (this.flag) {
         this.$bus.$emit("playing", this.audioDom.currentTime);
+      }
+      if (
+        this.audioDom.duration <= this.audioDom.currentTime
+      ) {
+        this.pause();
       }
     },
     playSort() {
@@ -107,9 +110,6 @@ export default {
         this.flag = !this.flag;
       }
       this.audioDom.pause();
-      this.$store.commit("setMusicTime", {
-        currentTime: handleMusicTinme(this.audioDom.currentTime)
-      });
       this.$bus.$emit("pause");
     },
     switchSong(type) {
@@ -117,7 +117,7 @@ export default {
     },
     async showLyric() {
       if (JSON.stringify(this.$store.state.musicComments) === "{}") {
-        if(this.musicInfo.path) return;
+        if (this.musicInfo.path) return;
         let comments = await getComments(this.musicInfo.id);
         this.$store.commit("addMusicComments", comments.data);
       }
@@ -170,13 +170,13 @@ export default {
     }
   },
   watch: {
-  async musicInfo(){
-    if (this.$store.state.musicInfo.id) {
+    async musicInfo() {
+      if (this.$store.state.musicInfo.id) {
         let lyric = await getLyric(this.$store.state.musicInfo.id);
         this.$store.commit("addMusicComments", {});
         this.$store.commit("addLyricInfo", lyric.data);
       }
-  }
+    }
   }
 };
 </script>

@@ -71,19 +71,21 @@ export default {
           }
         }
       });
+      this.lyricArray.push({time:this.lyricArray[this.lyricArray.length-1].time+1,content:""})
     },
     switchLyc(time = 0) {
       if (this.lyricArray.length !== 0) {
+          console.log(time+"-",this.lyricArray[this.lyricIndex + 1].time+"-",this.lyricArray[this.lyricIndex + 2].time);
         if (
           time >= this.lyricArray[this.lyricIndex + 1].time &&
           time < this.lyricArray[this.lyricIndex + 2].time
         ) {
           this.lyricIndex++;
           if (this.lyricIndex >= 4) {
-            //this.$refs.lyricUl.style.top = -(this.lyricIndex - 4) * 30 + "px";
             let dis=-(this.lyricIndex - 4) * 30;
             this.switchAnime(dis);
           }
+          console.log(time,this.lyricArray[this.lyricIndex + 1].time,this.lyricArray[this.lyricIndex + 2].time);
           this.activeIndex = this.lyricIndex;
           
         }

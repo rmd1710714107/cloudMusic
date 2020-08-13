@@ -3,14 +3,14 @@
     <el-input v-model="music" :clearable="true" @input="searchTips">
       <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
     </el-input>
-    <search-sug :suggestItem="suggestItem" v-if="showSugg"></search-sug>
+    <search-sug :suggestItem="suggestItem" v-if="showSugg" @closeSugg="showSugg = false"></search-sug>
   </div>
 </template>
 
 <script>
 import { searchMusic, searchSuggest } from "../netWork/request";
 import searchSug from "./searchSug";
-import {debounce} from "../utils/utils";
+import { debounce } from "../utils/utils";
 export default {
   name: "search",
   data() {
@@ -26,6 +26,7 @@ export default {
         return [{ name: "请输入正确的信息" }];
       } else {
         return [
+          { title: "歌曲", icon: "songs.svg", category: "songs" },
           { title: "专辑", icon: "album.svg", category: "albums" },
           { title: "艺术家", icon: "artist.svg", category: "artists" },
           { title: "MV", icon: "video.svg", category: "mvs" }
@@ -41,23 +42,20 @@ export default {
       searchMusic(this.music).then(res => {});
     },
     searchTips() {
-      debounce(() => {
-        if (!this.music) {
-          this.showSugg = false;
-        } else {
-          this.$store.commit("getSearVal", this.music);
+      if (this.music) {
+        debounce(() => {
           searchSuggest(this.music).then(res => {
             if (!res.data) return;
+            this.$store.commit("getSearVal", this.music);
             this.suggest = res.data.result;
             this.$store.commit("showSuggest", this.suggest);
-
             this.showSugg = true;
           });
-        }
-        console.log("run");
-      }, 2000)();
+        }, 2000)();
+      }
+      this.showSugg = false;
     }
-  }
+  },
 };
 </script>
 <style>
