@@ -18,7 +18,11 @@ export const mixin={
         this.clean();
       } else {
         if(isDown){
-          this.domNode.style.width=(dis-this.disX-this.offset+6)+"px";
+          let rate=(dis-this.disX-this.offset+6)/this.$refs.bottom.offsetWidth;
+          if(rate<0) rate=0;
+          this.$store.commit("updateProcessDate",rate);
+          console.log(this.$refs);
+          // this.domNode.style.width=(dis-this.disX-this.offset+6)+"px";
         }else{
           this.domNode.style.width=dis+"px";
         }

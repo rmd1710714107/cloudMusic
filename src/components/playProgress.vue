@@ -1,7 +1,7 @@
 <template>
   <div class="playProgress">
     <div class="bottom" @mousedown="down" ref="bottom">
-      <div class="top" ref="top">
+      <div class="top" ref="top" :style="{width:topWidth+'px'}">
         <div class="circleImg" ref="circleImg" @mousemove.prevent="move"></div>
       </div>
     </div>
@@ -27,15 +27,27 @@ export default {
     return {
       isDown: false,
       disX: 0,
-      domNode: null
+      domNode: null,
+      topWidth:0
     };
   },
-  mixins: [mixin]
+  mixins: [mixin],
+  computed:{
+    processRate(){
+      return this.$store.state.processRate;
+    }
+  },
+  watch:{
+    processRate(){
+      this.topWidth=this.$refs.bottom.offsetWidth*this.$store.state.processRate;
+    }
+  }
 };
 </script>
 <style scoped>
 .playProgress{
-  width: calc(100% - 70px);
+  /* width: calc(100% - 70px); */
+  width: 100%;
 }
 .top {
   width: 80%;
@@ -47,14 +59,10 @@ export default {
   width: 100%;
   position: relative;
   height: 4px;
-  background-color: blue;
+  background-color: #45454662;
   cursor: pointer;
 }
 .circleImg {
-  /* width: 4px;
-  height: 4px;
-  position: absolute;
-  right: 0px; */
   display: none;
 }
 .bottom:hover .circleImg {

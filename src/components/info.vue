@@ -64,7 +64,7 @@ export default {
             if(res.canceled) return;
             this.LocalMusic = res.filePaths.map((item, index) => {
               let music = {};
-              music.index = --this.$store.state.musicList.length || index;
+              music.index = this.$store.state.musicList.length || index;
               music.path = item.replace(/\\/g, "/");
               music.name = path.basename(item).replace(/\.mp3/g, "");
               return music;
@@ -73,7 +73,6 @@ export default {
               this.LocalMusic.forEach(item => {
                 console.log(item.name);
                 localMusic.find({ name: item.name }).then(res => {
-                  console.log(res);
                   if (res.length!==0) {
                     message("info","此歌曲已导入")
                     return;
@@ -87,6 +86,7 @@ export default {
             }
             this.flag = !this.flag;
             localSetting.update({flag:!this.flag},{flag:this.flag}).then(res=>{
+              console.log(res);
               message("info",res+"条记录被影响");
             })
           });

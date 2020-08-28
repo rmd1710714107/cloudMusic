@@ -41,8 +41,6 @@
     </div>
   </div>
 </template>
-
-
 <script>
 import playProgress from "./playProgress";
 import loopScroll from "./loopScroll";
@@ -96,9 +94,9 @@ export default {
       if (this.flag) {
         this.$bus.$emit("playing", this.audioDom.currentTime);
       }
-      if (
-        this.audioDom.duration <= this.audioDom.currentTime
-      ) {
+      let rate = this.audioDom.currentTime / this.audioDom.duration;
+      this.$store.commit("updateProcessDate", rate);
+      if (this.audioDom.duration <= this.audioDom.currentTime) {
         this.pause();
       }
     },
@@ -254,14 +252,14 @@ export default {
   width: 80px;
   height: 4px;
   border-radius: 1.5px;
-  background-color: blue;
+  /* background-color: blue; */
   margin: auto 0;
 }
 .volumeStatus {
   position: absolute;
   width: 80px;
   height: 4px;
-  background-color: red;
+  /* background-color: red; */
   border-radius: 1.5px;
 }
 .playControl,
@@ -274,13 +272,13 @@ export default {
   width: 80%;
   position: absolute;
   height: 4px;
-  background: red;
+  /* background: red; */
 }
 .bottom {
   width: 100%;
   position: relative;
   height: 4px;
-  background-color: blue;
+  /* background-color: blue; */
   cursor: pointer;
 }
 .bottom:hover .circleImg,
@@ -291,7 +289,7 @@ export default {
   top: -4px;
   right: -6px;
   border-radius: 50%;
-  background-color: red;
+  /* background-color: red; */
 }
 .circleImg {
   width: 4px;
