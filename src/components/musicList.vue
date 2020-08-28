@@ -38,8 +38,8 @@ export default {
       },
       selects: [],
       columns: [
-        { title: "", name: "name", align: "center" },
-        { title: "歌曲", name: "calories", width: 200, align: "left" },
+        { title: "", name: "name", align: "center",width:80 },
+        { title: "歌曲", name: "calories", width: 300, align: "left" },
         { title: "歌手", name: "fat", align: "center" },
         { title: "专辑", name: "carbs", align: "center" }
       ],
@@ -47,19 +47,20 @@ export default {
     };
   },
   mounted() {
-    this.$bus.$on("switchSong", type => {
-      switch (type) {
-        case "prevMusic":
-          // if(this.$store.state.musicList[this.$store.state.musicInfo.index-1]){
-          //   this.play(this.$store.state.musicInfo.index-1)
-          // }else{
+    this.$bus.$on("switchSong",musicIndex => {
+      this.play(musicIndex);
+      // switch (type) {
+      //   case "prevMusic":
+      //     // if(this.$store.state.musicList[this.$store.state.musicInfo.index-1]){
+      //     //   this.play(this.$store.state.musicInfo.index-1)
+      //     // }else{
 
-          // }
-          break;
-        default:
-          //this.$bus.$emit("switchSong",type)
-          break;
-      }
+      //     // }
+      //     break;
+      //   default:
+      //     //this.$bus.$emit("switchSong",type)
+      //     break;
+      // }
     });
     this.listHeight = this.$parent.$refs.main.offsetHeight - 70;
     this.$bus.$on("listHeight", arg => {
@@ -86,7 +87,8 @@ export default {
         this.$store.commit("addPlayInfo", musicInfo);
         musicInfo = null;
       } else {
-        this.$store.commit("addPlayInfo", music);
+        music.index=arg;
+        this.$store.commit("addPlayInfo",music);
       }
       this.$store.commit("setMusicTime",{})
     }

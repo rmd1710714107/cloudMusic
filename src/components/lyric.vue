@@ -24,7 +24,6 @@ export default {
     return {
       lyricArray: [],
       lyricIndex: -1,
-      lyric: "",
       scroll: null,
       activeIndex: 0,
       animation: null
@@ -33,9 +32,9 @@ export default {
   mounted() {
     this.$bus.$on("playing", arg => {
       if (JSON.stringify(this.$store.state.lyricInfo) !== "{}") {
-        if (this.$store.state.lyricInfo.uncollected) {
+        if (this.$store.state.lyricInfo.nolyric) {
           this.$bus.$off("playing");
-          this.lyric = "无歌词";
+          this.lyricArray = [{content:"无歌词"}];
           return;
         }
         this.lyricArray = [];
@@ -75,7 +74,6 @@ export default {
     },
     switchLyc(time = 0) {
       if (this.lyricArray.length !== 0) {
-          console.log(time+"-",this.lyricArray[this.lyricIndex + 1].time+"-",this.lyricArray[this.lyricIndex + 2].time);
         if (
           time >= this.lyricArray[this.lyricIndex + 1].time &&
           time < this.lyricArray[this.lyricIndex + 2].time
@@ -85,7 +83,6 @@ export default {
             let dis=-(this.lyricIndex - 4) * 30;
             this.switchAnime(dis);
           }
-          console.log(time,this.lyricArray[this.lyricIndex + 1].time,this.lyricArray[this.lyricIndex + 2].time);
           this.activeIndex = this.lyricIndex;
           
         }

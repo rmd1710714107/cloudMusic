@@ -47,6 +47,7 @@ import loopScroll from "./loopScroll";
 import { handleMusicTinme } from "../utils/utils";
 import { getLyric, getComments } from "../netWork/request";
 import { message } from "../utils/utils";
+import playType from "../utils/playType";
 export default {
   name: "playMusic",
   components: {
@@ -56,7 +57,7 @@ export default {
   data() {
     return {
       flag: false,
-      index: 0,
+      typeIndex: 0,
       value: 0,
       audioDom: null,
       timer: null,
@@ -97,11 +98,11 @@ export default {
       let rate = this.audioDom.currentTime / this.audioDom.duration;
       this.$store.commit("updateProcessDate", rate);
       if (this.audioDom.duration <= this.audioDom.currentTime) {
-        this.pause();
+        this.switchSong("nextMusic");
       }
     },
     playSort() {
-      ++this.index;
+      ++this.typeIndex;
     },
     pause() {
       if (this.flag) {
@@ -110,8 +111,25 @@ export default {
       this.audioDom.pause();
       this.$bus.$emit("pause");
     },
-    switchSong(type) {
-      this.$bus.$emit("switchSong", type);
+    switchSong(action) {
+      this.flag=false;
+      if(this.typeIndex===1){
+        this.playMusic();
+        return;
+      }
+      let musicIndex=this.musicInfo.index;
+      switch (this.typeIndex) {
+        case 0:
+          musicIndex=playType.ShunXu(this.musicInfo,action);
+          break;
+        case 2:
+          return require("../assets/img/radom.svg");
+          break;
+        default:
+          return require("../assets/img/loop.svg");
+          break;
+      }
+      this.$bus.$emit("switchSong", musicIndex);
     },
     async showLyric() {
       if (JSON.stringify(this.$store.state.musicComments) === "{}") {
@@ -131,10 +149,10 @@ export default {
       }
     },
     playSrc() {
-      if (this.index > 3) {
-        this.index = 0;
+      if (this.typeIndex > 3) {
+        this.typeIndex = 0;
       }
-      switch (this.index) {
+      switch (this.typeIndex) {
         case 0:
           return require("../assets/img/sort.svg");
           break;
@@ -174,6 +192,8 @@ export default {
         this.$store.commit("addMusicComments", {});
         this.$store.commit("addLyricInfo", lyric.data);
       }
+      this.flag=false;
+      this.playMusic();
     }
   }
 };
@@ -199,7 +219,7 @@ export default {
 }
 .playMusic .control {
   height: 100%;
-  width: calc(100% - 80px);
+  width: calc(100% - 80px); 
   display: flex;
   flex-direction: column;
 }

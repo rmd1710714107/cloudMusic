@@ -1,16 +1,14 @@
 class PlayType{
-  ShunXu(index,type){
-    if(type==="prevMusic"){
-      return index-=1;
+  ShunXu(musicInfo,action){
+    if(action==="prevMusic"){
+      return musicInfo.index-=1;
     }else{
-      return index+=1;
+      return musicInfo.index+=1;
     }
-  }
-  DanQu(index){
-    return index;
   }
   SuiJi(index,max){
     
   }
-
 }
+let playType=new PlayType()
+export default playType;
