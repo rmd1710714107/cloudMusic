@@ -72,14 +72,15 @@ export default {
   },
   computed: {
     res() {
-      if (this.content.name && this.exam) {
+      let musicName=this.content.name||"";
+      if (musicName && this.exam) {
         let reg = new RegExp(this.$store.state.searVal, "g");
-        this.content.name = this.content.name.replace(
+        musicName = musicName.replace(
           reg,
           `<span style="color:red;">${this.$store.state.searVal}</span>`
         );
       }
-      return this.content.name;
+      return musicName;
     }
   }
 };

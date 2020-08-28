@@ -25,6 +25,10 @@ function timeFormat(min,sec){
   })
   return time.join(":")
 }
+function processsRate(total,process){
+  rate=process/total;
+  return rate;
+}
 
 import {Message} from "element-ui";
 function message(type,msg,showClose=false){
@@ -37,5 +41,6 @@ function message(type,msg,showClose=false){
 export {
   debounce,
   handleMusicTinme,
-  message
+  message,
+  processsRate
 } ;

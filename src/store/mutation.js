@@ -22,7 +22,6 @@ const mutations={
     }
   },
   setMusicTime(state,payload){
-    state.musicTime={}
     for (const key in payload) {
       Vue.set(state.musicTime,key,payload[key])
     }
@@ -37,8 +36,11 @@ const mutations={
     }
   },
   addMusicComments(state,payload){
-    console.log(payload);
     state.musicComments=payload;
+  },
+  updateProcessDate(state,payload){
+   // console.log(payload);
+    state.processRate=payload;
   }
 }
 export default mutations;

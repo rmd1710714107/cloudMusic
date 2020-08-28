@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { getAlbumList,getAlbumContent,getmusicUrl } from "../netWork/request";
+import { getAlbumList,getAlbumContent } from "../netWork/request";
 export default {
   name: "albums",
   components: {},
@@ -52,7 +52,6 @@ export default {
     async getAlbumContent(id){
       let res=await getAlbumContent(id);
       this.$store.commit("addMusic", res.data.songs);
-      // let song=await getmusicUrl(res.data.songs[0].id)
       // console.log(song);
       this.$router.replace('/musicList');
     }

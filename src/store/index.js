@@ -12,7 +12,8 @@ const state={
   musicTime:{},
   micLisSta:"",
   lyricInfo:{},
-  musicComments:{}
+  musicComments:{},
+  processRate:0
 }
 const store=new Vuex.Store({
   state,
