@@ -8,15 +8,6 @@ import "./plugins/muse"
 import "normalize.css"
 import "./assets/basic.css"
 import './assets/material-icons.css'
-import infiniteScroll from "vue-infinite-scroll";
-import VuePlyr from 'vue-plyr'
-Vue.use(VuePlyr, {
-  plyr: {
-    fullscreen: { enabled: false }
-  },
-  emit: ['ended']
-})
- Vue.use(infiniteScroll);
 Vue.config.productionTip = false
 Vue.prototype.$bus=new Vue();
 Vue.prototype.update={}

@@ -6,6 +6,9 @@ class PlayType{
       return musicInfo.index+=1;
     }
   }
+  DanQu(musicInfo){
+    return musicInfo.index;
+  }
   SuiJi(index,max){
     
   }

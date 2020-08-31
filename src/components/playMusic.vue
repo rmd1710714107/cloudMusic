@@ -1,6 +1,6 @@
 <template>
   <div class="playMusic">
-    <audio ref="audio" :src="localSrc||netSrc" @timeupdate="playIng"></audio>
+    <audio ref="audio" :src="localSrc||netSrc" @timeupdate="playIng" @play="befoerPlay"></audio>
     <div class="holder">
       <img :src="musicImg" class="imgHolder" />
       <p class="laric" @click="showLyric">词</p>
@@ -48,6 +48,7 @@ import { handleMusicTinme } from "../utils/utils";
 import { getLyric, getComments } from "../netWork/request";
 import { message } from "../utils/utils";
 import playType from "../utils/playType";
+import { Howl, Howler } from "howler";
 export default {
   name: "playMusic",
   components: {
@@ -66,18 +67,26 @@ export default {
   },
   mounted() {
     this.audioDom = this.$refs.audio;
+    // console.log(this.localSrc);
+    
   },
   methods: {
+    befoerPlay(){
+      this.$store.commit("setMusicTime", {
+          currentTime: handleMusicTinme(0)
+        });
+      this.$store.commit("setMusicTime", {
+        duration: handleMusicTinme(this.audioDom.duration)
+      });
+      this.flag=true;
+    },
     playMusic() {
       this.flag = !this.flag;
       if (this.flag) {
-        this.$store.commit("setMusicTime", {
-          currentTime: handleMusicTinme(0)
-        });
-        this.$store.commit("setMusicTime", {
-          duration: handleMusicTinme(this.audioDom.duration)
-        });
         try {
+          if(this.audioDom.autoplay!=="autoplay"){
+            this.audioDom.autoplay="autoplay"
+          };
           this.audioDom.play();
           this.$bus.$emit("play");
         } catch (err) {
@@ -112,15 +121,15 @@ export default {
       this.$bus.$emit("pause");
     },
     switchSong(action) {
-      this.flag=false;
-      if(this.typeIndex===1){
+      this.flag = false;
+      if (this.typeIndex === 1) {
         this.playMusic();
         return;
       }
-      let musicIndex=this.musicInfo.index;
+      let musicIndex = this.musicInfo.index;
       switch (this.typeIndex) {
         case 0:
-          musicIndex=playType.ShunXu(this.musicInfo,action);
+          musicIndex = playType.ShunXu(this.musicInfo, action);
           break;
         case 2:
           return require("../assets/img/radom.svg");
@@ -128,6 +137,12 @@ export default {
         default:
           return require("../assets/img/loop.svg");
           break;
+      }
+      if(musicIndex>=this.$store.state.musicList.length-1){
+        musicIndex=0;
+      }
+      if(musicIndex<0){
+        musicIndex=this.$store.state.musicList.length-1;
       }
       this.$bus.$emit("switchSong", musicIndex);
     },
@@ -167,11 +182,16 @@ export default {
           break;
       }
     },
-    localSrc() {
-      if (this.$store.state.musicInfo.path) {
-        return "local-resource://" + this.$store.state.musicInfo.path;
-      } else {
-        return this.$store.state.musicInfo.url;
+    localSrc: {
+      get() {
+        if (this.$store.state.musicInfo.path) {
+          return "local-resource://" + this.$store.state.musicInfo.path;
+        } else {
+          return this.$store.state.musicInfo.url;
+        }
+      },
+      set() {
+        console.log(localSrc+" has been reset");
       }
     },
     musicImg() {
@@ -192,8 +212,6 @@ export default {
         this.$store.commit("addMusicComments", {});
         this.$store.commit("addLyricInfo", lyric.data);
       }
-      this.flag=false;
-      this.playMusic();
     }
   }
 };
@@ -219,7 +237,7 @@ export default {
 }
 .playMusic .control {
   height: 100%;
-  width: calc(100% - 80px); 
+  width: calc(100% - 80px);
   display: flex;
   flex-direction: column;
 }
