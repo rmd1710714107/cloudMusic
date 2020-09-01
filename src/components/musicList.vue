@@ -2,7 +2,7 @@
   <div class="musicList">
     <mu-data-table
       :columns="columns"
-      :data="this.$store.state.musicList"
+      :data="musicList"
       :min-col-width="60"
       :max-height="listHeight"
       ref="table"
@@ -94,7 +94,10 @@ export default {
     }
   },
   computed: {
-    tableHeight() {}
+    tableHeight() {},
+    musicList(){
+      return this.$store.state.musicList;
+    }
   }
 };
 </script>

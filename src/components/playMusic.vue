@@ -46,9 +46,8 @@ import playProgress from "./playProgress";
 import loopScroll from "./loopScroll";
 import { handleMusicTinme } from "../utils/utils";
 import { getLyric, getComments } from "../netWork/request";
-import { message } from "../utils/utils";
+import { message, shuffle } from "../utils/utils";
 import playType from "../utils/playType";
-import { Howl, Howler } from "howler";
 export default {
   name: "playMusic",
   components: {
@@ -68,25 +67,24 @@ export default {
   mounted() {
     this.audioDom = this.$refs.audio;
     // console.log(this.localSrc);
-    
   },
   methods: {
-    befoerPlay(){
+    befoerPlay() {
       this.$store.commit("setMusicTime", {
-          currentTime: handleMusicTinme(0)
-        });
+        currentTime: handleMusicTinme(0)
+      });
       this.$store.commit("setMusicTime", {
         duration: handleMusicTinme(this.audioDom.duration)
       });
-      this.flag=true;
+      this.flag = true;
     },
     playMusic() {
       this.flag = !this.flag;
       if (this.flag) {
         try {
-          if(this.audioDom.autoplay!=="autoplay"){
-            this.audioDom.autoplay="autoplay"
-          };
+          if (this.audioDom.autoplay !== "autoplay") {
+            this.audioDom.autoplay = "autoplay";
+          }
           this.audioDom.play();
           this.$bus.$emit("play");
         } catch (err) {
@@ -132,17 +130,22 @@ export default {
           musicIndex = playType.ShunXu(this.musicInfo, action);
           break;
         case 2:
-          return require("../assets/img/radom.svg");
+          musicIndex = playType.SuiJi(
+            this.musicInfo,
+            this.musicList.length,
+            action,
+            this.randomArr
+          );
           break;
         default:
           return require("../assets/img/loop.svg");
           break;
       }
-      if(musicIndex>=this.$store.state.musicList.length-1){
-        musicIndex=0;
+      if (musicIndex >= this.musicList.length - 1) {
+        musicIndex = 0;
       }
-      if(musicIndex<0){
-        musicIndex=this.$store.state.musicList.length-1;
+      if (musicIndex < 0) {
+        musicIndex = this.musicList.length - 1;
       }
       this.$bus.$emit("switchSong", musicIndex);
     },
@@ -164,12 +167,12 @@ export default {
       }
     },
     playSrc() {
-      if (this.typeIndex > 3) {
+      if (this.typeIndex > 2) {
         this.typeIndex = 0;
       }
       switch (this.typeIndex) {
         case 0:
-          return require("../assets/img/sort.svg");
+          return require("../assets/img/loop.svg");
           break;
         case 1:
           return require("../assets/img/singleLoop.svg");
@@ -178,20 +181,14 @@ export default {
           return require("../assets/img/radom.svg");
           break;
         default:
-          return require("../assets/img/loop.svg");
           break;
       }
     },
-    localSrc: {
-      get() {
-        if (this.$store.state.musicInfo.path) {
-          return "local-resource://" + this.$store.state.musicInfo.path;
-        } else {
-          return this.$store.state.musicInfo.url;
-        }
-      },
-      set() {
-        console.log(localSrc+" has been reset");
+    localSrc() {
+      if (this.$store.state.musicInfo.path) {
+        return "local-resource://" + this.$store.state.musicInfo.path;
+      } else {
+        return this.$store.state.musicInfo.url;
       }
     },
     musicImg() {
@@ -203,6 +200,19 @@ export default {
     },
     musicInfo() {
       return this.$store.state.musicInfo;
+    },
+    randomArr: {
+      get: function (){
+        if (this.typeIndex === 2) {
+          return shuffle(this.$store.state.musicList);
+        }
+      }
+    },
+    musicList() {
+      if (this.typeIndex === 2) {
+        this.randomArr;
+      }
+      return this.$store.state.musicList;
     }
   },
   watch: {
