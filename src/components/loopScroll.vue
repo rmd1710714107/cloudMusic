@@ -82,10 +82,6 @@ export default {
           resArr=[];
       if (musicName && this.exam&&this.searVal ) {
         let reg = new RegExp(this.searVal, "g");
-        if(this.content.name.match(reg)){
-          resArr.push(this.content)
-        }
-        this.$emit("resItem",resArr);
         musicName = musicName.replace(
           reg,
           `<span style="color:red;">${this.searVal}</span>`

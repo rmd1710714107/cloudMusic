@@ -11,20 +11,21 @@
           size="mini"
           prefix-icon="el-icon-search"
           @keyup.enter.native="search"
+          @input="search"
         ></el-input>
       </el-col>
     </el-row>
-    <scroll :height="listHeight+'px'" :isInit="isInit">
+    <scroll :height="listHeight+'px'">
         <mu-data-table
         :columns="columns"
-        :data="musicList"
+        :data="searRes.length===0?musicList:searRes"
         :min-col-width="60"
         ref="table"
       >
         <template slot-scope="scope">
           <td>{{scope.$index+1}}</td>
           <td @click="play(scope.$index)">
-            <loop-scroll :content="scope.row" :searVal="musicKey" @resItem="resItem"></loop-scroll>
+            <loop-scroll :content="scope.row" :searVal="musicKey"></loop-scroll>
           </td>
           <td>{{scope.row.ar?scope.row.ar[0].name:"未知"}}</td>
           <td class="album">{{scope.row.al?scope.row.al.name:"未知"}}</td>
@@ -41,6 +42,7 @@ import { getmusicUrl, getmusicDetails } from "../netWork/request";
 import Vue from "vue";
 import { getLyric } from "../netWork/request";
 import scroll from "./scroll";
+import localMusic from "../Nedb/localMusic"
 export default {
   name: "musicList",
   components: {
@@ -49,11 +51,6 @@ export default {
   },
   data() {
     return {
-      sort: {
-        name: "",
-        order: "asc",
-      },
-      selects: [],
       columns: [
         { title: "", name: "name", align: "center", width: 80 },
         { title: "歌曲", name: "calories", width: 300, align: "left" },
@@ -63,7 +60,7 @@ export default {
       listHeight: 450,
       musicKey: "",
       sugArr: 0,
-      isInit:false
+      searRes:[]
     };
   },
   mounted() {
@@ -74,9 +71,6 @@ export default {
     this.$bus.$on("listHeight", (arg) => {
       this.listHeight = arg - 70 - 35;
     });
-  },
-  updated() {
-    this.isInit=true;
   },
   methods: {
     async play(arg) {
@@ -101,9 +95,12 @@ export default {
     importLocalMusic() {
       this.$bus.$emit("importLocalMusic",false);
     },
-    resItem(arg) {
-      console.log(arg);
-    },
+    search(){
+      if(this.musicKey==="") this.searRes=[];
+      localMusic.find({name:new RegExp(this.musicKey, "g")}).then(res=>{
+        this.searRes=res;
+      })
+    }
   },
   computed: {
     musicList() {
