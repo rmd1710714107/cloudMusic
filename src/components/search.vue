@@ -3,7 +3,7 @@
     <el-input v-model="music" :clearable="true" @input="searchTips">
       <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
     </el-input>
-    <search-sug :suggestItem="suggestItem" v-if="showSugg" @closeSugg="showSugg = false"></search-sug>
+    <search-sug :suggestItem="suggestItem" v-if="showSugg" @closeSugg="showSugg = false" :searVal="music"></search-sug>
   </div>
 </template>
 
@@ -46,7 +46,6 @@ export default {
         debounce(() => {
           searchSuggest(this.music).then(res => {
             if (!res.data) return;
-            this.$store.commit("getSearVal", this.music);
             this.suggest = res.data.result;
             this.$store.commit("showSuggest", this.suggest);
             this.showSugg = true;

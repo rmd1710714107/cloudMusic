@@ -1,48 +1,48 @@
 export const mixin={
   methods: {
     move(e) {
-      if (this.isDown) {
-        document.onmousemove = e => {
-          this.changePosition(e.clientX);
-        };
+      if (this.allowMove) {
+        this.changePosition(e.pageX);
       }
     },
-    changePosition(dis,isDown=true) {
+    changePosition(dis) {
       if (
-        this.domNode.offsetWidth < 0
+        this.top.offsetWidth < 0
       ) {
-        this.domNode.style.width = 0 + "px";
+        this.$emit("changePercent",0);
         this.clean();
-      } else if (this.domNode.offsetWidth > this.$refs.bottom.offsetWidth) {
-        this.domNode.style.width = this.$refs.bottom.offsetWidth + "px";
+      } else if (this.top.offsetWidth > this.bottom.offsetWidth) {
+        this.$emit("changePercent",1);
         this.clean();
       } else {
-        if(isDown){
-          let rate=(dis-this.disX-this.offset+6)/this.$refs.bottom.offsetWidth;
+          let rate=(dis-this.mouse.start+this.mouse.diff)/this.bottom.offsetWidth;
+          console.log("理想宽度:"+(dis-this.mouse.start+this.mouse.diff));
           if(rate<0) rate=0;
-          this.$store.commit("updateProcessDate",rate);
-          console.log(this.$refs);
-          // this.domNode.style.width=(dis-this.disX-this.offset+6)+"px";
-        }else{
-          this.domNode.style.width=dis+"px";
-        }
+          this.$emit("changePercent",rate);
       }
     },
     clean() {
-      document.onmousemove = null;
-      this.isDown = false;
+      this.allowMove = false;
+      console.log("clear");
     },
     down(e) {
-      if(e.target.className!=="circleImg"){
-        this.changePosition(e.clientX);
-      }else{
-        this.disX = e.clientX - this.$refs.circleImg.offsetLeft - this.offset;
-        this.isDown=true;
-        document.onmouseup = () => {
-          this.clean();
-        };
-      }
+      this.mouse.start=e.pageX;
+      this.mouse.diff=this.top.offsetWidth;
+      this.allowMove=true
+      // if(e.target.className==="circleImg"){
+      //   this.allowMove=true
+      // }
+      document.onmouseup = (e) => {
+        this.clean();
+      };
       
     },
+    up(){
+      // if(!this.allowMove){
+      //   let targetRight=this.top.getBoundingClientRect().right;
+      //   this.changePosition(targetRight);
+      // }
+          
+    }
   }
 }

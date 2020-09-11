@@ -113,10 +113,8 @@ export default {
         this.$store.commit("addMusic", res.data.playlist.tracks);
       });
     },
-    async getCollection(){
-      this.$router.replace('/collection')
-      // let collection=await getAlbumlist();
-      // console.log(collection);
+    getCollection(){
+      this.$router.replace('/collection');
     }
   },
   components: {

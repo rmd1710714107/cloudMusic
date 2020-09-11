@@ -37,10 +37,6 @@ const mutations={
   },
   addMusicComments(state,payload){
     state.musicComments=payload;
-  },
-  updateProcessDate(state,payload){
-   // console.log(payload);
-    state.processRate=payload;
   }
 }
 export default mutations;

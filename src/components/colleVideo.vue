@@ -10,7 +10,7 @@
       </div>
     </div>
     <mu-divider></mu-divider>
-    <div class="content" :style="{maxHeight:listHeight+'px'}" ref="content">
+    <scroll :height="listHeight+'px'">
       <el-row :gutter="20">
         <el-col
           :lg="4"
@@ -37,7 +37,6 @@
               <el-tooltip class="item" effect="dark" :content="item.title" placement="bottom">
                 <span class="mvTitle">{{item.title}}</span>
               </el-tooltip>
-              <!-- <span class="mvTitle">{{item.title}}</span> -->
               <div class="bottom clearfix">
                 <p class="time">by{{ item.creator[0].userName}}</p>
               </div>
@@ -45,7 +44,7 @@
           </el-card>
         </el-col>
       </el-row>
-    </div>
+    </scroll>
   </div>
 </template>
 
@@ -54,6 +53,7 @@ import { getMvList, getVideoContent } from "../netWork/request";
 import { handleMusicTinme } from "../utils/utils";
 import Scrollbar from "smooth-scrollbar";
 const { shell: shell } = require("electron");
+import scroll from "./scroll"
 export default {
   name: "videos",
   created() {
@@ -62,8 +62,10 @@ export default {
     })();
     this.$nextTick(()=>{
       this.listHeight=document.documentElement.clientHeight-30-151;
-      Scrollbar.init(this.$refs.content);
     })
+  },
+  components:{
+    scroll
   },
   mounted(){
     this.$bus.$on("listHeight", arg => {
@@ -103,15 +105,12 @@ export default {
   methods: {
     async playVideo(id) {
       let res = await getVideoContent(id);
-      //console.log(res.data.urls[0].url);
       this.$confirm("是否使用默认浏览器观看视频", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "info"
       }).then(() => {
         shell.openExternal(res.data.urls[0].url);
-      }).catch(()=>{
-        console.log("已取消");
       });
     }
   }

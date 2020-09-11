@@ -31,7 +31,9 @@ export default {
       this.dialogVisible = true;
     },
     close(){
-      this.operate=false;
+      if(JSON.stringify(this.proflie)!=="{}"){
+        this.operate=false;
+      }
       this.dialogVisible=false;
     }
   },

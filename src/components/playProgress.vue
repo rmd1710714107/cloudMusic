@@ -1,8 +1,8 @@
 <template>
   <div class="playProgress">
-    <div class="bottom" @mousedown="down" ref="bottom">
+    <div class="bottom" @mousedown="down" ref="bottom" @mousemove.prevent="move" @mouseup="up">
       <div class="top" ref="top" :style="{width:topWidth+'px'}">
-        <div class="circleImg" ref="circleImg" @mousemove.prevent="move"></div>
+        <!-- <div class="circleImg" ref="circleImg"></div> -->
       </div>
     </div>
   </div>
@@ -13,44 +13,44 @@ import { mixin } from "../plugins/mixin";
 export default {
   name: "playProgress",
   props: {
-    offset: {
+    percent: {
       type: Number,
       default() {
         return 0;
-      }
-    }
+      },
+    },
   },
   mounted() {
-    this.domNode = this.$refs.top;
+    this.top = this.$refs.top;
+    this.bottom = this.$refs.bottom;
+    this.totalWidth = this.bottom.offsetWidth;
+    window.addEventListener("resize", () => {
+      this.totalWidth = this.bottom.offsetWidth;
+    });
   },
   data() {
     return {
-      isDown: false,
+      isMove: false,
       disX: 0,
       domNode: null,
-      topWidth:0
+      totalWidth: 0,
+      mouse:{}
     };
   },
   mixins: [mixin],
-  computed:{
-    processRate(){
-      return this.$store.state.processRate;
-    }
+  computed: {
+    topWidth() {
+      console.log(parseInt((this.totalWidth * this.percent).toFixed(2)));
+      return parseInt((this.totalWidth * this.percent).toFixed(2));
+    },
   },
-  watch:{
-    processRate(){
-      this.topWidth=this.$refs.bottom.offsetWidth*this.$store.state.processRate;
-    }
-  }
 };
 </script>
 <style scoped>
-.playProgress{
-  /* width: calc(100% - 70px); */
+.playProgress {
   width: 100%;
 }
 .top {
-  width: 80%;
   position: absolute;
   height: 4px;
   background: red;
@@ -66,7 +66,7 @@ export default {
   display: none;
 }
 .bottom:hover .circleImg {
-  display: block;                                                          
+  display: block;
   width: 12px;
   height: 12px;
   position: absolute;

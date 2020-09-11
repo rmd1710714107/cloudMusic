@@ -16,17 +16,17 @@ const { ipcRenderer: ipc } = require("electron");
 export default {
   name: "",
   components: {
-    infoItem
+    infoItem,
   },
   data() {
     return {
       flag: false,
       content: [
         { name: "我的歌单", list: true },
-        { name: "我的收藏", list: false }
+        { name: "我的收藏", list: false },
       ],
       LocalMusic: [],
-      localList: null
+      localList: null,
     };
   },
   computed: {
@@ -36,89 +36,83 @@ export default {
       } else {
         return "导入本地歌曲";
       }
-    }
+    },
   },
-  mounted(){
-    localSetting.find({flag:{$exists:true}}).then(res=>{
-      if(res.length===0){
-        localSetting.insert({flag:this.flag});
-      }else{
-        this.flag=res[0].flag;
+  mounted() {
+    localSetting.find({ flag: { $exists: true } }).then((res) => {
+      if (res.length === 0) {
+        localSetting.insert({ flag: this.flag });
+      } else {
+        this.flag = res[0].flag;
       }
-    })
-    // ipc.on("close",()=>{
-
-    // })
+    });
+    this.$bus.$on("importLocalMusic",this.importMusic)
   },
   methods: {
-    importMusic() {
-      if (this.flag) {
-        this.update.localMusic();
-      } else {
+    importMusic(flag=this.flag) {
+      if(!flag){
         dialog
-          .showOpenDialog({
-            filters: [{ name: "music", extensions: ["mp3", "m4a", "flac"] }],
-            properties: ["openFile", "multiSelections"]
-          })
-          .then(res => {
-            if(res.canceled) return;
-            this.LocalMusic = res.filePaths.map((item, index) => {
-              let music = {};
-              music.index = this.$store.state.musicList.length || index;
-              music.path = item.replace(/\\/g, "/");
-              music.name = path.basename(item).replace(/\.mp3/g, "");
-              return music;
-            });
-            if (this.$store.state.musicList.length !== 0) {
-              this.LocalMusic.forEach(item => {
-                console.log(item.name);
-                localMusic.find({ name: item.name }).then(res => {
-                  if (res.length!==0) {
-                    message("info","此歌曲已导入")
-                    return;
-                  }else{
-                    this.insertMusic(this.LocalMusic)
-                  }
-                });
-              });
-            }else{
-              this.insertMusic(this.LocalMusic)
-            }
-            this.flag = !this.flag;
-            localSetting.update({flag:!this.flag},{flag:this.flag}).then(res=>{
-              console.log(res);
-              message("info",res+"条记录被影响");
-            })
+        .showOpenDialog({
+          filters: [{ name: "music", extensions: ["mp3", "m4a", "flac"] }],
+          properties: ["openFile", "multiSelections"],
+        })
+        .then((res) => {
+          if (res.canceled) return;
+          this.LocalMusic = res.filePaths.map((item, index) => {
+            let music = {};
+            music.index = this.$store.state.musicList.length || index;
+            music.path = item.replace(/\\/g, "/");
+            music.name = path.basename(item).replace(/\.mp3/g, "");
+            return music;
           });
-        
+          if (this.$store.state.musicList.length !== 0) {
+            this.LocalMusic.forEach((item) => {
+              localMusic.find({ name: item.name }).then((res) => {
+                if (res.length !== 0) {
+                  message("info", "此歌曲已导入");
+                  return;
+                } else {
+                  this.insertMusic(this.LocalMusic);
+                }
+              });
+            });
+          } else {
+            this.insertMusic(this.LocalMusic);
+            localSetting
+            .update({ flag: !this.flag }, { flag: this.flag })
+            .then((res) => {
+              message("info", res + "条记录被影响");
+            });
+          }
+          this.flag = !this.flag;
+        });
       }
-      if(this.$route.path!=='/musicList'){
-        this.$router.replace('/musicList');
+      
+      if (this.$route.path !== "/musicList") {
+        this.$router.replace("/musicList");
       }
       localSetting.find({ micLisSta: "localMusic" }).then(
-        doc => {
+        (doc) => {
           if (doc.length === 0) {
             this.$store.commit("updateMicLisSta", "localMusic");
           }
         },
-        err => {
+        (err) => {
           message("error", err);
         }
       );
     },
     insertMusic(data) {
       localMusic.insert(data).then(
-        res => {
+        (res) => {
           message("success", "歌曲导入成功");
-          this.update.localMusic();
-          console.log(res);
         },
-        err => {
+        (err) => {
           message("error", "歌曲导入失败");
         }
       );
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

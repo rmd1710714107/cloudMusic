@@ -17,7 +17,7 @@
           :key="childItem.id"
           @click.native="selectedMusic(item.category,childItem)"
         >
-          <loop-scroll :content="childItem"></loop-scroll>
+          <loop-scroll :content="childItem" :searVal="searVal"></loop-scroll>
         </mu-list-item>
       </mu-list>
     </div>
@@ -43,6 +43,12 @@ export default {
       type: Array,
       default() {
         return [];
+      }
+    },
+    searVal:{
+      type:String,
+      default(){
+        return ""
       }
     }
   },

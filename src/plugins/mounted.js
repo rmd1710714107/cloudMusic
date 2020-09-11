@@ -23,7 +23,6 @@ const mounted = {
       this.$store.commit("addPlayInfo",res[0]);
     })
     localSetting.find({ currentTime: { $exists: true }, duration: { $exists: true }, }).then(res=>{
-      //console.log(res);
       this.$store.commit("setMusicTime",res[0]);
     })
     localSetting.find({ micLisSta: /[a-zA-Z]+/ }).then(
@@ -42,23 +41,22 @@ const mounted = {
       });
     ipc.on("close", async (arg) => {
       let musicInfo=await localSetting.find({name: { $exists: true }, });
-      (async ()=>{
+      (async (resolve,reject)=>{
         if (musicInfo.length === 0) {
           localSetting.insert([this.$store.state.musicInfo, this.$store.state.musicTime]);
         } else {
           let time = await localSetting.find({ currentTime: { $exists: true }, duration: { $exists: true }, })
           delete this.$store.state.musicInfo._id
           delete this.$store.state.musicTime._id
-          localSetting.update(musicInfo[0], this.$store.state.musicInfo)
-          localSetting.update(time[0], this.$store.state.musicTime)
-          //console.log("update");
+          localSetting.update(musicInfo[0], this.$store.state.musicInfo).then(()=>{
+            localSetting.update(time[0], this.$store.state.musicTime)
+          }).then(()=>{
+            ipc.send("closed");
+          })
         }
-      })();
-      //console.log("close");
-      ipc.send("closed");
-
+      })()
+      
     })
-
   },
   methods: {
     getLocalMusic() {

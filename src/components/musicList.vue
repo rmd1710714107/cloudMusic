@@ -1,21 +1,37 @@
 <template>
   <div class="musicList">
-    <mu-data-table
-      :columns="columns"
-      :data="musicList"
-      :min-col-width="60"
-      :max-height="listHeight"
-      ref="table"
-    >
-      <template slot-scope="scope">
-        <td>{{scope.$index+1}}</td>
-        <td @click="play(scope.$index)">
-          <loop-scroll :content="scope.row" :exam="false"></loop-scroll>
-        </td>
-        <td>{{scope.row.ar?scope.row.ar[0].name:"未知"}}</td>
-        <td class="album">{{scope.row.al?scope.row.al.name:"未知"}}</td>
-      </template>
-    </mu-data-table>
+    <el-row v-if="musicList">
+      <el-col :span="6">
+        <el-button size="mini" @click="importLocalMusic">导入本地歌曲</el-button>
+      </el-col>
+      <el-col :span="6" :offset="12">
+        <el-input
+          v-model="musicKey"
+          placeholder="搜索本地歌曲"
+          size="mini"
+          prefix-icon="el-icon-search"
+          @keyup.enter.native="search"
+        ></el-input>
+      </el-col>
+    </el-row>
+    <scroll :height="listHeight+'px'" :isInit="isInit">
+        <mu-data-table
+        :columns="columns"
+        :data="musicList"
+        :min-col-width="60"
+        ref="table"
+      >
+        <template slot-scope="scope">
+          <td>{{scope.$index+1}}</td>
+          <td @click="play(scope.$index)">
+            <loop-scroll :content="scope.row" :searVal="musicKey" @resItem="resItem"></loop-scroll>
+          </td>
+          <td>{{scope.row.ar?scope.row.ar[0].name:"未知"}}</td>
+          <td class="album">{{scope.row.al?scope.row.al.name:"未知"}}</td>
+        </template>
+      </mu-data-table>
+      
+    </scroll>
   </div>
 </template>
 
@@ -23,54 +39,44 @@
 import loopScroll from "./loopScroll";
 import { getmusicUrl, getmusicDetails } from "../netWork/request";
 import Vue from "vue";
-import Scrollbar from "smooth-scrollbar";
 import { getLyric } from "../netWork/request";
+import scroll from "./scroll";
 export default {
   name: "musicList",
   components: {
-    loopScroll
+    loopScroll,
+    scroll
   },
   data() {
     return {
       sort: {
         name: "",
-        order: "asc"
+        order: "asc",
       },
       selects: [],
       columns: [
-        { title: "", name: "name", align: "center",width:80 },
+        { title: "", name: "name", align: "center", width: 80 },
         { title: "歌曲", name: "calories", width: 300, align: "left" },
         { title: "歌手", name: "fat", align: "center" },
-        { title: "专辑", name: "carbs", align: "center" }
+        { title: "专辑", name: "carbs", align: "center" },
       ],
-      listHeight: 450
+      listHeight: 450,
+      musicKey: "",
+      sugArr: 0,
+      isInit:false
     };
   },
   mounted() {
-    this.$bus.$on("switchSong",musicIndex => {
+    this.$bus.$on("switchSong", (musicIndex) => {
       this.play(musicIndex);
-      // switch (type) {
-      //   case "prevMusic":
-      //     // if(this.$store.state.musicList[this.$store.state.musicInfo.index-1]){
-      //     //   this.play(this.$store.state.musicInfo.index-1)
-      //     // }else{
-
-      //     // }
-      //     break;
-      //   default:
-      //     //this.$bus.$emit("switchSong",type)
-      //     break;
-      // }
     });
-    this.listHeight = this.$parent.$refs.main.offsetHeight - 70;
-    this.$bus.$on("listHeight", arg => {
-      this.listHeight = arg - 70;
+    this.listHeight = this.$parent.$refs.main.offsetHeight - 70 - 35;
+    this.$bus.$on("listHeight", (arg) => {
+      this.listHeight = arg - 70 - 35;
     });
   },
   updated() {
-    if (document.querySelector(".mu-table-body-wrapper")) {
-      Scrollbar.init(document.querySelector(".mu-table-body-wrapper"));
-    }
+    this.isInit=true;
   },
   methods: {
     async play(arg) {
@@ -87,23 +93,28 @@ export default {
         this.$store.commit("addPlayInfo", musicInfo);
         musicInfo = null;
       } else {
-        music.index=arg;
-        this.$store.commit("addPlayInfo",music);
+        music.index = arg;
+        this.$store.commit("addPlayInfo", music);
       }
-      this.$store.commit("setMusicTime",{})
-    }
+      this.$store.commit("setMusicTime", {});
+    },
+    importLocalMusic() {
+      this.$bus.$emit("importLocalMusic",false);
+    },
+    resItem(arg) {
+      console.log(arg);
+    },
   },
   computed: {
-    tableHeight() {},
-    musicList(){
+    musicList() {
       return this.$store.state.musicList;
-    }
+    },
   }
 };
 </script>
 <style>
 .musicList {
-  height: 100%;
+  height: auto;
   overflow-x: hidden;
 }
 .musicList .mu-table td {
@@ -131,5 +142,9 @@ export default {
 }
 .musicList .mu-table .mu-table-body-wrapper tr {
   cursor: pointer;
+}
+
+.musicList .el-row {
+  padding: 5px;
 }
 </style>

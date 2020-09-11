@@ -42,7 +42,6 @@ function shuffle(musicList) {
   let maxNumber = musicList.length,
       musicArr = [],
       resArr = [];
-  console.log(maxNumber);
   for (let k = 0; k < maxNumber; k++) {
     musicArr.push(k);
   }

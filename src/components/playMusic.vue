@@ -23,9 +23,9 @@
         </div>
         <div class="playSet">
           <div class="volumeControl">
-            <img class="valumeImg" src="../assets/img/volume.svg" />
+            <img class="valumeImg" src="../assets/img/volume.svg" @click="changeValume(0)" />
             <div class="valume">
-              <play-progress :offset="652.03"></play-progress>
+              <play-progress @changePercent="changeValume" :percent="volumPercent"></play-progress>
             </div>
           </div>
           <div class="playControl" @click="playSort">
@@ -34,9 +34,8 @@
         </div>
       </div>
       <div class="progress">
-        <p class="time">{{this.$store.state.musicTime.currentTime}}</p>
-        <play-progress :offset="240"></play-progress>
-        <p class="time">{{this.$store.state.musicTime.duration}}</p>
+        <play-progress :percent="percent" @changePercent="changeTime"></play-progress>
+        <p class="time">{{time.currentTime+"/"+time.duration}}</p>
       </div>
     </div>
   </div>
@@ -61,20 +60,20 @@ export default {
       value: 0,
       audioDom: null,
       timer: null,
-      netSrc: ""
+      netSrc: "",
+      volumPercent:1
     };
   },
   mounted() {
     this.audioDom = this.$refs.audio;
-    // console.log(this.localSrc);
   },
   methods: {
     befoerPlay() {
       this.$store.commit("setMusicTime", {
-        currentTime: handleMusicTinme(0)
+        currentTime: 0
       });
       this.$store.commit("setMusicTime", {
-        duration: handleMusicTinme(this.audioDom.duration)
+        duration: this.audioDom.duration
       });
       this.flag = true;
     },
@@ -97,13 +96,11 @@ export default {
     },
     playIng() {
       this.$store.commit("setMusicTime", {
-        currentTime: handleMusicTinme(this.audioDom.currentTime)
+        currentTime: this.audioDom.currentTime
       });
       if (this.flag) {
         this.$bus.$emit("playing", this.audioDom.currentTime);
       }
-      let rate = this.audioDom.currentTime / this.audioDom.duration;
-      this.$store.commit("updateProcessDate", rate);
       if (this.audioDom.duration <= this.audioDom.currentTime) {
         this.switchSong("nextMusic");
       }
@@ -156,6 +153,16 @@ export default {
         this.$store.commit("addMusicComments", comments.data);
       }
       this.$bus.$emit("showLyric", "left");
+    },
+    changeTime(rate){
+      this.audioDom.currentTime=this.audioDom.duration*rate;
+    },
+    changeValume(rate){
+      this.volumPercent=rate;
+      if(rate>1){
+        rate=1
+      }
+      this.audioDom.volume=rate;
     }
   },
   computed: {
@@ -213,6 +220,15 @@ export default {
         this.randomArr;
       }
       return this.$store.state.musicList;
+    },
+    time(){
+      return {
+        currentTime:handleMusicTinme(this.$store.state.musicTime.currentTime),
+        duration:handleMusicTinme(this.$store.state.musicTime.duration)
+      }
+    },
+    percent(){
+      return this.$store.state.musicTime.currentTime/this.$store.state.musicTime.duration;
     }
   },
   watch: {
@@ -293,6 +309,7 @@ export default {
   display: flex;
   width: 120px;
   justify-content: space-between;
+  cursor: pointer;
 }
 .valume {
   position: relative;
@@ -300,14 +317,12 @@ export default {
   width: 80px;
   height: 4px;
   border-radius: 1.5px;
-  /* background-color: blue; */
   margin: auto 0;
 }
 .volumeStatus {
   position: absolute;
   width: 80px;
   height: 4px;
-  /* background-color: red; */
   border-radius: 1.5px;
 }
 .playControl,
@@ -320,13 +335,11 @@ export default {
   width: 80%;
   position: absolute;
   height: 4px;
-  /* background: red; */
 }
 .bottom {
   width: 100%;
   position: relative;
   height: 4px;
-  /* background-color: blue; */
   cursor: pointer;
 }
 .bottom:hover .circleImg,
@@ -337,7 +350,6 @@ export default {
   top: -4px;
   right: -6px;
   border-radius: 50%;
-  /* background-color: red; */
 }
 .circleImg {
   width: 4px;
@@ -349,11 +361,11 @@ export default {
   width: 200px;
 }
 .time {
-  width: 30px;
+  width: 60px;
   height: 12px;
   font-size: 10px;
   text-align: center;
-  margin: 0 0 6px 0;
+  margin: 0 0 0 10px;
 }
 .playMusic .holder {
   position: relative;

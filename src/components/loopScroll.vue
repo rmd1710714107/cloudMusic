@@ -22,6 +22,12 @@ export default {
       default() {
         return true;
       }
+    },
+    searVal:{
+      type:String,
+      default(){
+        return ""
+      }
     }
   },
   data() {
@@ -72,12 +78,17 @@ export default {
   },
   computed: {
     res() {
-      let musicName=this.content.name||"";
-      if (musicName && this.exam) {
-        let reg = new RegExp(this.$store.state.searVal, "g");
+      let musicName=this.content.name||"",
+          resArr=[];
+      if (musicName && this.exam&&this.searVal ) {
+        let reg = new RegExp(this.searVal, "g");
+        if(this.content.name.match(reg)){
+          resArr.push(this.content)
+        }
+        this.$emit("resItem",resArr);
         musicName = musicName.replace(
           reg,
-          `<span style="color:red;">${this.$store.state.searVal}</span>`
+          `<span style="color:red;">${this.searVal}</span>`
         );
       }
       return musicName;

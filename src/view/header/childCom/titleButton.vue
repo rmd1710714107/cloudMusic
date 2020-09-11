@@ -1,7 +1,4 @@
 <template>
-    <!-- <button class="titleButton" :style="style" @click="click">
-
-    </button> -->
     <el-button size="mini" :style="style" @click="click" circle></el-button>
 </template>
 

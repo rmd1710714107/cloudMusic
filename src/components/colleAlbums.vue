@@ -10,57 +10,71 @@
       </div>
     </div>
     <mu-divider></mu-divider>
-    <mu-list>
-      <mu-list-item button :ripple="false" v-for="item in (albumList.data?albumList.data.data:[])" :key="item.id" @click="getAlbumContent(item.id)">
-        <mu-list-item-action>
-          <div class="albImg">
-            <img class="img" :src="item.picUrl" />
-          </div>
-        </mu-list-item-action>
-        <mu-list-item-content>{{item.name}}</mu-list-item-content>
-        <mu-list-item-content>
-          <p class="p">{{item.artists[0].name}}</p>
-        </mu-list-item-content>
-        <mu-list-item-content>
-          <p class="p">{{item.size+"首"}}</p>
-        </mu-list-item-content>
-      </mu-list-item>
-    </mu-list>
+    <scroll :height="listHeight+'px'">
+      <mu-list>
+        <mu-list-item
+          button
+          :ripple="false"
+          v-for="item in (albumList.data?albumList.data.data:[])"
+          :key="item.id"
+          @click="getAlbumContent(item.id)"
+        >
+          <mu-list-item-action>
+            <div class="albImg">
+              <img class="img" :src="item.picUrl" />
+            </div>
+          </mu-list-item-action>
+          <mu-list-item-content>{{item.name}}</mu-list-item-content>
+          <mu-list-item-content>
+            <p class="p">{{item.artists[0].name}}</p>
+          </mu-list-item-content>
+          <mu-list-item-content>
+            <p class="p">{{item.size+"首"}}</p>
+          </mu-list-item-content>
+        </mu-list-item>
+      </mu-list>
+    </scroll>
   </div>
 </template>
 
 <script>
-import { getAlbumList,getAlbumContent } from "../netWork/request";
+import { getAlbumList, getAlbumContent } from "../netWork/request";
+import scroll from "./scroll";
 export default {
   name: "albums",
   components: {},
-  created () {
-    (async ()=>{
+  created() {
+    (async () => {
       this.albumList = await getAlbumList();
     })();
+    this.$nextTick(() => {
+      this.listHeight = document.documentElement.clientHeight - 30 - 151;
+    });
   },
   mounted() {
-      //console.log(this.albumList);
+    this.$bus.$on("listHeight", (arg) => {
+      this.listHeight = arg - 171;
+    });
   },
   data() {
     return {
       albumList: {},
-      input2: ""
+      input2: "",
+      listHeight: 1000,
     };
   },
-  methods:{
-    async getAlbumContent(id){
-      let res=await getAlbumContent(id);
+  methods: {
+    async getAlbumContent(id) {
+      let res = await getAlbumContent(id);
       this.$store.commit("addMusic", res.data.songs);
-      // console.log(song);
-      this.$router.replace('/musicList');
-    }
+      this.$router.replace("/musicList");
+    },
   },
-  computed:{
-    albumData(){
-      return this.albumList||"未知";
-    }
-  }
+  computed: {
+    albumData() {
+      return this.albumList || "未知";
+    },
+  },
 };
 </script>
 <style>
@@ -82,15 +96,16 @@ export default {
   height: 25px;
   line-height: 25px;
 }
-.albums .albImg, .albums .img{
+.albums .albImg,
+.albums .img {
   width: 48px;
   height: 40px;
 }
-.albums .mu-list .p{
+.albums .mu-list .p {
   text-align: center;
   width: 100%;
 }
-.albums .mu-list .mu-item-content{
-  flex:1 1 auto;
+.albums .mu-list .mu-item-content {
+  flex: 1 1 auto;
 }
 </style>
