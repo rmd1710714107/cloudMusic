@@ -98,6 +98,7 @@ function getLyric(id) {
   })
 }
 function getComments(id,limit=20,offset=0,before="") {
+  console.log(offset);
   return instance.get("/comment/music",{
     params:{
       id:id,
@@ -121,11 +122,11 @@ class operateComments{
     })
   }
   delComment(){
-    let {t,type}=this.params;
+    let {t,type,id,commentId}=this.params;
     try {
       return instance.get(this.url,{
         params:{
-          t,type
+          t,type,id,commentId
         }
       })
     } catch (error) {

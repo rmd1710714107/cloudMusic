@@ -16,6 +16,7 @@
     </div>
     <div class="showComments">
       <mu-list textline="two-line" v-if="comments.total!==0">
+        <mu-sub-header>最新评论</mu-sub-header>
         <mu-list-item avatar v-for="item in comments.comments" :key="item.commentId">
           <mu-list-item-action>
             <mu-avatar>
@@ -27,9 +28,24 @@
               <span class="nickName">{{item.user.nickname+":"}}</span>
               <span class="content">{{item.content}}</span>
             </p>
+            <mu-list textline="two-line" v-if="item.beReplied.length!==0">
+              <mu-list-item
+                avatar
+                v-for="replyItem in item.beReplied"
+                :key="replyItem.beRepliedCommentId"
+                nested
+              >
+                <mu-list-item-content>
+                  <p>
+                    <span class="nickName">{{"@"+replyItem.user.nickname+":"}}</span>
+                    <span class="content">{{replyItem.content}}</span>
+                  </p>
+                </mu-list-item-content>
+              </mu-list-item>
+            </mu-list>
             <div class="date">
               <p>{{commentTime(item.time)}}</p>
-              <p @click="delComment" v-if="item.user.userId===profile.userId" class="delComment">删除</p>
+              <p @click="delComment(item)" v-if="item.user.userId===profile.userId" class="delComment">删除</p>
             </div>
           </mu-list-item-content>
         </mu-list-item>
@@ -40,19 +56,25 @@
         </mu-list-item>
       </mu-list>
     </div>
-    <el-pagination layout="total,prev, pager, next" :total="comments.total" :page-size="20"  @current-change="getComments"></el-pagination>
+    <el-pagination
+      layout="total,prev, pager, next"
+      :total="comments.total"
+      :page-size="20"
+      @current-change="getComments"
+    ></el-pagination>
   </div>
 </template>
 
 <script>
-import { operateComments,getComments } from "../netWork/request";
+import { operateComments, getComments } from "../netWork/request";
 import moment from "moment";
+import { message } from '../utils/utils';
 export default {
   name: "comment",
   components: {},
   data() {
     return {
-      comment: ""
+      comment: "",
     };
   },
   computed: {
@@ -60,7 +82,7 @@ export default {
       return this.$store.state.musicComments;
     },
     commentTime() {
-      return arg => {
+      return (arg) => {
         let dateStr = moment(arg).format(),
           reg = /(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/,
           date = reg.exec(dateStr);
@@ -73,7 +95,7 @@ export default {
           "日  " +
           date[4] +
           ":" +
-          date[4]
+          date[5]
         );
       };
     },
@@ -82,7 +104,7 @@ export default {
     },
     musicInfo() {
       return this.$store.state.musicInfo;
-    }
+    },
   },
   methods: {
     async sentComment() {
@@ -93,27 +115,49 @@ export default {
       params.content = this.comment;
       let opComment = new operateComments(params);
       let res = await opComment.addComment();
+      console.log(res);
+      switch (res.status) {
+        case 250:
+          message("warning",res.data.dialog.subtitle);
+          break;
+        case 200:
+          message("success","评论成功");
+          this.getComments();
+        default:
+          break;
+      }
+      this.comment="";
     },
-    async delComment() {
+    async delComment(item) {
       let params = {};
       params.t = 0;
       params.type = 0;
+      params.id=this.musicInfo.id;
+      params.commentId=item.commentId;
+      console.log(item);
       let opComment = new operateComments(params);
       let res = await opComment.delComment();
-      console.log(res);
+      if(res.status===200){
+        message("success","删除成功");
+        this.getComments();
+      }
     },
-    async getComments(currentPage){
-      let res=await getComments(this.musicInfo.id,20,(currentPage-1)*20,this.comments.comments[this.comments.comments.length-1].time);
-      console.log(res);
+    async getComments(currentPage=1) {
+      console.log((currentPage - 1) * 20);
+      let res = await getComments(
+        this.musicInfo.id,
+        20,
+        (currentPage - 1) * 20,
+        this.comments.comments[this.comments.comments.length - 1].time
+      );
       this.$store.commit("addMusicComments", {});
       this.$store.commit("addMusicComments", res.data);
-
-    }
-  }
+    },
+  },
 };
 </script>
 <style>
-.comment{
+.comment {
   margin-top: 30px;
 }
 .comment .mu-divider {
@@ -127,7 +171,8 @@ export default {
   display: inline-block;
   margin-right: 10px;
 }
-.comment .content {
+.comment .content,
+.comment .mu-sub-header {
   color: #fff;
 }
 .comment .date {
@@ -141,6 +186,10 @@ export default {
   border-bottom: 1px solid #ffffff;
   padding: 10px 0;
 }
+.comment .mu-list li li {
+  border-bottom: none;
+  background-color: rgb(122, 121, 120);
+}
 .comment .mu-item,
 .comment .mu-item.has-avatar,
 .comment .mu-list-two-line .mu-item {
@@ -149,8 +198,13 @@ export default {
 .comment .delComment {
   cursor: pointer;
 }
-.comment .el-pagination *,.comment .el-pagination button:disabled,.comment .el-icon-more:before{
+.comment .el-pagination *,
+.comment .el-pagination button:disabled,
+.comment .el-icon-more:before {
   background-color: initial;
   color: #fff;
+}
+.comment .mu-item {
+  align-items: stretch;
 }
 </style>

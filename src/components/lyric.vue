@@ -14,7 +14,6 @@
 </template>
 
 <script>
-import Scrollbar from "smooth-scrollbar";
 import anime from "animejs/lib/anime.es.js";
 import { duration } from "moment";
 export default {

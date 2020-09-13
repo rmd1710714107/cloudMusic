@@ -1,8 +1,8 @@
 <template>
   <div class="playProgress">
-    <div class="bottom" @mousedown="down" ref="bottom" @mousemove.prevent="move" @mouseup="up">
+    <div class="bottom" @mousedown="down" ref="bottom" @mouseup="up">
       <div class="top" ref="top" :style="{width:topWidth+'px'}">
-        <!-- <div class="circleImg" ref="circleImg"></div> -->
+        <div class="circleImg" ref="circleImg"></div>
       </div>
     </div>
   </div>
@@ -33,17 +33,17 @@ export default {
       isMove: false,
       disX: 0,
       domNode: null,
-      totalWidth: 0,
-      mouse:{}
+      mouse:{},
+      topWidth:0
     };
   },
   mixins: [mixin],
-  computed: {
-    topWidth() {
-      console.log(parseInt((this.totalWidth * this.percent).toFixed(2)));
-      return parseInt((this.totalWidth * this.percent).toFixed(2));
-    },
-  },
+  watch:{
+    percent(newPercent){
+      // if(this.isMove) return;
+      this.changTopWidth(newPercent);
+    }
+  }
 };
 </script>
 <style scoped>

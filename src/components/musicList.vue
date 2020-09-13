@@ -10,7 +10,6 @@
           placeholder="搜索本地歌曲"
           size="mini"
           prefix-icon="el-icon-search"
-          @keyup.enter.native="search"
           @input="search"
         ></el-input>
       </el-col>

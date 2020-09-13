@@ -5,7 +5,6 @@
         <aside-content></aside-content>
       </el-aside>
       <el-main>
-        <!-- <main-content></main-content> -->
         <router-view></router-view>
       </el-main>
     </el-container>

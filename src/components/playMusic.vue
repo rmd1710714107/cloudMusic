@@ -11,14 +11,14 @@
           <div class="tabControl" @click="switchSong('prevMusic')">
             <img class="prev" src="../assets/img/prev.svg" />
           </div>
-          <div class="tabControl" @click="playMusic">
+          <div class="tabControl" @click="playMusic" @keydown.space="playMusic">
             <img class="play" :src="src" />
           </div>
           <div class="tabControl" @click="switchSong('nextMusic') ">
             <img class="next" src="../assets/img/next.svg" />
           </div>
         </div>
-        <div class="musicName">
+        <div class="musicName">    
           <loop-scroll :content="musicInfo" :exam="false"></loop-scroll>
         </div>
         <div class="playSet">
@@ -76,6 +76,7 @@ export default {
         duration: this.audioDom.duration
       });
       this.flag = true;
+      this.$bus.$emit("play");
     },
     playMusic() {
       this.flag = !this.flag;
@@ -85,7 +86,6 @@ export default {
             this.audioDom.autoplay = "autoplay";
           }
           this.audioDom.play();
-          this.$bus.$emit("play");
         } catch (err) {
           this.flag = false;
           message("error", "歌曲播放出错");
@@ -155,10 +155,11 @@ export default {
       this.$bus.$emit("showLyric", "left");
     },
     changeTime(rate){
-      this.audioDom.currentTime=this.audioDom.duration*rate;
+      console.log(typeof this.audioDom.duration,typeof rate);
+      this.audioDom.currentTime=(this.audioDom.duration) * rate;
     },
     changeValume(rate){
-      this.volumPercent=rate;
+      this.volumPercent=Number(rate);
       if(rate>1){
         rate=1
       }
@@ -228,7 +229,9 @@ export default {
       }
     },
     percent(){
-      return this.$store.state.musicTime.currentTime/this.$store.state.musicTime.duration;
+      let rate=this.$store.state.musicTime.currentTime/this.$store.state.musicTime.duration;
+      rate=parseFloat(rate).toFixed(4);
+      return +rate;
     }
   },
   watch: {

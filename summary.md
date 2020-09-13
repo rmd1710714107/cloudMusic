@@ -29,3 +29,9 @@ function registerLocalResourceProtocol() {
 
 官方链接: [Loading Local Images/Resources](https://github.com/nklayman/vue-cli-plugin-electron-builder/blob/master/docs/guide/security.md)
 
+### 错误处理
+#### 音频错误
+```
+Error in v-on handler: "TypeError: Failed to set the 'currentTime' property on 'HTMLMediaElement': The provided double value is non-finite."
+```
+原因:赋给currentTime的值是NaN类型

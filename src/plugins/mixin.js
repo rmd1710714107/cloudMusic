@@ -1,11 +1,13 @@
 export const mixin={
   methods: {
-    move(e) {
-      if (this.allowMove) {
-        this.changePosition(e.pageX);
-      }
-    },
+    // move(e) {
+    //   if (this.allowMove) {
+    //     console.log("move");
+    //     this.changePosition(e.pageX);
+    //   }
+    // },
     changePosition(dis) {
+      console.log("change");
       if (
         this.top.offsetWidth < 0
       ) {
@@ -15,34 +17,49 @@ export const mixin={
         this.$emit("changePercent",1);
         this.clean();
       } else {
-          let rate=(dis-this.mouse.start+this.mouse.diff)/this.bottom.offsetWidth;
-          console.log("理想宽度:"+(dis-this.mouse.start+this.mouse.diff));
-          if(rate<0) rate=0;
-          this.$emit("changePercent",rate);
+        let rate;
+        if(this.allowMove){
+          rate=(dis-this.mouse.start+this.mouse.diff)/this.bottom.offsetWidth;
+        }else{
+          rate=(this.mouse.start-dis+this.mouse.diff)/this.bottom.offsetWidth;
+        }
+        rate=parseFloat(rate).toFixed(4);
+        if(rate<0) rate=0;
+        this.changTopWidth(rate);
+        this.$emit("changePercent",Number(rate));
       }
     },
     clean() {
       this.allowMove = false;
-      console.log("clear");
     },
     down(e) {
+      e.preventDefault();
       this.mouse.start=e.pageX;
       this.mouse.diff=this.top.offsetWidth;
-      this.allowMove=true
-      // if(e.target.className==="circleImg"){
-      //   this.allowMove=true
-      // }
+      console.log(e.target);
+      if(e.target.className==="circleImg"){
+        this.allowMove=true
+      }
+      document.onmousemove=e=>{
+        e.preventDefault();
+        if (this.allowMove) {
+          this.changePosition(e.pageX);
+        }
+      }
       document.onmouseup = (e) => {
         this.clean();
       };
       
     },
     up(){
-      // if(!this.allowMove){
-      //   let targetRight=this.top.getBoundingClientRect().right;
-      //   this.changePosition(targetRight);
-      // }
+      if(!this.allowMove){
+        let targetRight=this.top.getBoundingClientRect().right;
+        this.changePosition(targetRight);
+      }
           
+    },
+    changTopWidth(rate){
+      this.topWidth=this.bottom.offsetWidth*rate;
     }
   }
 }
