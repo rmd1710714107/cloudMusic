@@ -30,17 +30,17 @@ export default {
   },
   data() {
     return {
-      isMove: false,
       disX: 0,
       domNode: null,
       mouse:{},
-      topWidth:0
+      topWidth:0,
+      allowMove:false
     };
   },
   mixins: [mixin],
   watch:{
     percent(newPercent){
-      // if(this.isMove) return;
+      if(this.allowMove) return;
       this.changTopWidth(newPercent);
     }
   }

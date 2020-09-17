@@ -1,6 +1,6 @@
 <template>
   <div class="search">
-    <el-input v-model="music" :clearable="true" @input="searchTips">
+    <el-input v-model="music" :clearable="true" >
       <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
     </el-input>
     <search-sug :suggestItem="suggestItem" v-if="showSugg" @closeSugg="showSugg = false" :searVal="music"></search-sug>
@@ -38,12 +38,16 @@ export default {
     searchSug
   },
   methods: {
-    search() {
-      searchMusic(this.music).then(res => {});
+    async search() {
+      let res=await searchMusic(this.music);
+      console.log(res);
+      this.music="";
+      this.showSugg = false;
+      this.$store.commit("addMusic",res.data.result.songs)
     },
     searchTips() {
-      if (this.music) {
         debounce(() => {
+          if (this.music==="") return;
           searchSuggest(this.music).then(res => {
             if (!res.data) return;
             this.suggest = res.data.result;
@@ -51,7 +55,6 @@ export default {
             this.showSugg = true;
           });
         }, 2000)();
-      }
       this.showSugg = false;
     }
   },

@@ -29,6 +29,8 @@ export default {
 <style>
 #app {
   height: 100%;
+  min-width: 800px;
+  min-height: 600px;
 }
 *{
   margin: 0;

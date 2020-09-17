@@ -3,7 +3,19 @@ const instance = axios.create({
   //baseURL: 'http://localhost:3000',
   baseURL: 'http://60.205.249.128:3000',
   withCredentials: true,
+  timeout:5000,
+  timeoutErrorMessage:"请求时间太长"
 });
+instance.interceptors.request.use((config)=>{
+  return config;
+},(err)=>{
+  return Promise.reject(err);
+})
+instance.interceptors.response.use((response)=>{
+  return response;
+},(err)=>{
+  return Promise.reject(err);
+})
 function phone(arg){
   return instance.post("/login/cellphone",{
     phone:arg.phone,
@@ -49,7 +61,14 @@ function getPlayListDetails(id){
 function getmusicUrl(id){
   return instance.get("/song/url",{
     params:{
-      id:id
+      id
+    }
+  })
+}
+function checkMusic(id){
+  return instance.get("/check/music",{
+    params:{
+      id
     }
   })
 }
@@ -98,7 +117,6 @@ function getLyric(id) {
   })
 }
 function getComments(id,limit=20,offset=0,before="") {
-  console.log(offset);
   return instance.get("/comment/music",{
     params:{
       id:id,
@@ -152,5 +170,6 @@ export{
   getVideoContent,//获取视频播放地址
   getLyric,//获取歌词
   getComments,//获取歌词评论
-  operateComments//操作评论类
+  operateComments,//操作评论类
+  checkMusic//检查歌曲是否可用
 }

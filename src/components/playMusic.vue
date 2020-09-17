@@ -1,6 +1,6 @@
 <template>
   <div class="playMusic">
-    <audio ref="audio" :src="localSrc||netSrc" @timeupdate="playIng" @play="befoerPlay"></audio>
+    <audio ref="audio" :src="localSrc||netSrc" @timeupdate="playIng" @play="befoerPlay" @error="error"></audio>
     <div class="holder">
       <img :src="musicImg" class="imgHolder" />
       <p class="laric" @click="showLyric">词</p>
@@ -11,7 +11,7 @@
           <div class="tabControl" @click="switchSong('prevMusic')">
             <img class="prev" src="../assets/img/prev.svg" />
           </div>
-          <div class="tabControl" @click="playMusic" @keydown.space="playMusic">
+          <div class="tabControl" @click="playMusic" @keydown.space="playMusic" :contenteditable="true">
             <img class="play" :src="src" />
           </div>
           <div class="tabControl" @click="switchSong('nextMusic') ">
@@ -68,7 +68,10 @@ export default {
     this.audioDom = this.$refs.audio;
   },
   methods: {
-    befoerPlay() {
+    error(err){
+      console.log(err);
+    },
+    async befoerPlay() {
       this.$store.commit("setMusicTime", {
         currentTime: 0
       });
@@ -76,6 +79,12 @@ export default {
         duration: this.audioDom.duration
       });
       this.flag = true;
+      if (JSON.stringify(this.$store.state.musicComments) === "{}") {
+        if (this.musicInfo.path) return;
+        this.$store.commit("addMusicComments", {});
+        let comments = await getComments(this.musicInfo.id);
+        this.$store.commit("addMusicComments", comments.data);
+      }
       this.$bus.$emit("play");
     },
     playMusic() {
@@ -146,16 +155,10 @@ export default {
       }
       this.$bus.$emit("switchSong", musicIndex);
     },
-    async showLyric() {
-      if (JSON.stringify(this.$store.state.musicComments) === "{}") {
-        if (this.musicInfo.path) return;
-        let comments = await getComments(this.musicInfo.id);
-        this.$store.commit("addMusicComments", comments.data);
-      }
+    showLyric() {
       this.$bus.$emit("showLyric", "left");
     },
     changeTime(rate){
-      console.log(typeof this.audioDom.duration,typeof rate);
       this.audioDom.currentTime=(this.audioDom.duration) * rate;
     },
     changeValume(rate){
@@ -238,8 +241,9 @@ export default {
     async musicInfo() {
       if (this.$store.state.musicInfo.id) {
         let lyric = await getLyric(this.$store.state.musicInfo.id);
-        this.$store.commit("addMusicComments", {});
         this.$store.commit("addLyricInfo", lyric.data);
+      }else{
+        this.$store.commit("addLyricInfo", {});
       }
     }
   }

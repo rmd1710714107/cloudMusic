@@ -30,17 +30,7 @@ export default {
   },
   mounted() {
     this.$bus.$on("playing", arg => {
-      if (JSON.stringify(this.$store.state.lyricInfo) !== "{}") {
-        if (this.$store.state.lyricInfo.nolyric) {
-          this.$bus.$off("playing");
-          this.lyricArray = [{content:"无歌词"}];
-          return;
-        }
-        this.lyricArray = [];
-        this.lyricIndex = -1;
-        this.parseLyc();
-        this.$store.commit("addLyricInfo", {});
-      }
+      if(this.lyricArray.length===0) return;
       this.switchLyc(arg);
     });
   },
@@ -69,10 +59,12 @@ export default {
           }
         }
       });
-      this.lyricArray.push({time:this.lyricArray[this.lyricArray.length-1].time+1,content:""})
+      this.lyricArray.push({time:this.lyricArray[this.lyricArray.length-1].time+1,content:""});
+      console.log(this.lyricArray);
     },
     switchLyc(time = 0) {
       if (this.lyricArray.length !== 0) {
+        if(time>this.lyricArray[this.lyricArray.length-1].time) return;
         if (
           time >= this.lyricArray[this.lyricIndex + 1].time &&
           time < this.lyricArray[this.lyricIndex + 2].time
@@ -83,7 +75,6 @@ export default {
             this.switchAnime(dis);
           }
           this.activeIndex = this.lyricIndex;
-          
         }
         
       }
@@ -100,6 +91,25 @@ export default {
   computed: {
     lyricInfo() {
       return this.$store.state.lyricInfo;
+    }
+  },
+  watch:{
+    lyricInfo(){
+      if (JSON.stringify(this.$store.state.lyricInfo) !== "{}") {
+        if (this.$store.state.lyricInfo.nolyric==true) {
+          this.$bus.$off("playing");
+          this.lyricArray = [{content:"无歌词"}];
+          return;
+        }
+        if (this.$store.state.lyricInfo.uncollected==true) {
+          this.$bus.$off("playing");
+          this.lyricArray = [{content:"歌词未收录"}];
+          return;
+        }
+        this.lyricArray = [];
+        this.lyricIndex = -1;
+        this.parseLyc();
+      }
     }
   }
 };

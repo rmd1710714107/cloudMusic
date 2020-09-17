@@ -1,13 +1,7 @@
 export const mixin={
   methods: {
-    // move(e) {
-    //   if (this.allowMove) {
-    //     console.log("move");
-    //     this.changePosition(e.pageX);
-    //   }
-    // },
+    
     changePosition(dis) {
-      console.log("change");
       if (
         this.top.offsetWidth < 0
       ) {
@@ -36,7 +30,6 @@ export const mixin={
       e.preventDefault();
       this.mouse.start=e.pageX;
       this.mouse.diff=this.top.offsetWidth;
-      console.log(e.target);
       if(e.target.className==="circleImg"){
         this.allowMove=true
       }
@@ -51,8 +44,8 @@ export const mixin={
       };
       
     },
-    up(){
-      if(!this.allowMove){
+    up(e){
+      if(e.target.className!=="circleImg"){
         let targetRight=this.top.getBoundingClientRect().right;
         this.changePosition(targetRight);
       }

@@ -26,8 +26,8 @@
           <td @click="play(scope.$index)">
             <loop-scroll :content="scope.row" :searVal="musicKey"></loop-scroll>
           </td>
-          <td>{{scope.row.ar?scope.row.ar[0].name:"未知"}}</td>
-          <td class="album">{{scope.row.al?scope.row.al.name:"未知"}}</td>
+          <td>{{scope.row.artists?scope.row.artists[0].name:"未知"}}</td>
+          <td class="album">{{scope.row.album?scope.row.album.name:"未知"}}</td>
         </template>
       </mu-data-table>
       
@@ -37,11 +37,12 @@
 
 <script>
 import loopScroll from "./loopScroll";
-import { getmusicUrl, getmusicDetails } from "../netWork/request";
+import { getmusicUrl, getmusicDetails,checkMusic } from "../netWork/request";
 import Vue from "vue";
 import { getLyric } from "../netWork/request";
 import scroll from "./scroll";
 import localMusic from "../Nedb/localMusic"
+import {message} from "../utils/utils"
 export default {
   name: "musicList",
   components: {
@@ -76,11 +77,28 @@ export default {
       let music = this.$store.state.musicList[arg];
       if (!music.path) {
         let musicInfo = {},
-          musicUrl = await getmusicUrl(music.id),
-          picUrl = await getmusicDetails(music.id);
+          checkRes=await checkMusic(music.id);
+        if(!checkRes.data.success){
+          message("error",checkRes.data.message);
+          return ;
+        }
+        let musicUrl = await getmusicUrl(music.id),
+            picUrl = await getmusicDetails(music.id);
+        switch(musicUrl.data.data[0].fee){
+          case 1:
+            message("info","VIP可听");
+            return ;
+            break;
+          case 4:
+            message("info","所在专辑需单独付费");
+            return ;
+            break;
+          default:
+            musicInfo.url = musicUrl.data.data[0].url;
+          break;
+        }
         musicInfo.id = music.id;
         musicInfo.name = music.name;
-        musicInfo.url = musicUrl.data.data[0].url;
         musicInfo.picUrl = picUrl.data.songs[0].al.picUrl;
         musicInfo.index = arg;
         this.$store.commit("addPlayInfo", musicInfo);
