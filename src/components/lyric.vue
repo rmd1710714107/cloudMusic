@@ -24,19 +24,20 @@ export default {
       lyricArray: [],
       lyricIndex: -1,
       scroll: null,
-      activeIndex: 0,
-      animation: null
+      activeIndex: -1,
+      animation: null,
     };
   },
   mounted() {
-    this.$bus.$on("playing", arg => {
-      if(this.lyricArray.length===0) return;
+    this.$bus.$on("playing", (arg) => {
+      if (this.lyricArray.length === 0) return;
       this.switchLyc(arg);
     });
   },
   methods: {
     parseLyc() {
-      if (this.lyricInfo.uncollected) return;
+      // if (this.lyricInfo.uncollected) return;
+      // console.log(this.lyricInfo.lrc.lyric);
       let lycReg = /\[{1}(.{1,})\]{1}(.{0,})/,
         timeReg = /\d{2}:\d{2}\.\d{2,3}/,
         res = this.lyricInfo.lrc.lyric.split("\n");
@@ -59,24 +60,32 @@ export default {
           }
         }
       });
-      this.lyricArray.push({time:this.lyricArray[this.lyricArray.length-1].time+1,content:""});
-      console.log(this.lyricArray);
+      // console.log(this.lyricArray);
     },
     switchLyc(time = 0) {
       if (this.lyricArray.length !== 0) {
-        if(time>this.lyricArray[this.lyricArray.length-1].time) return;
-        if (
-          time >= this.lyricArray[this.lyricIndex + 1].time &&
-          time < this.lyricArray[this.lyricIndex + 2].time
-        ) {
-          this.lyricIndex++;
-          if (this.lyricIndex >= 4) {
-            let dis=-(this.lyricIndex - 4) * 30;
-            this.switchAnime(dis);
-          }
-          this.activeIndex = this.lyricIndex;
+        let currentLine = this.getCurrentLine(time);
+        this.activeIndex = currentLine;
+        // if(this.activeIndex ===currentLine) return;
+        // console.log(currentLine);
+        if (currentLine >= 4) {
+          let dis = -(currentLine - 4) * 30;
+          this.switchAnime(dis);
         }
         
+      }
+    },
+    getCurrentLine(time) {
+      try {
+        // console.log("传入的时间是"+time);
+        for (let i = 1; i < this.lyricArray.length; i++) {
+          if (time < this.lyricArray[i].time) {
+            return i-1;
+          }
+        }
+        return this.lyricArray.length - 1;
+      } catch (err) {
+        console.log(err);
       }
     },
     switchAnime(dis) {
@@ -84,34 +93,34 @@ export default {
         targets: "#lyricUl",
         translateY: dis,
         easing: "easeInOutCubic",
-        duration: 1000
+        duration: 100,
       });
-    }
+    },
   },
   computed: {
     lyricInfo() {
       return this.$store.state.lyricInfo;
-    }
+    },
   },
-  watch:{
-    lyricInfo(){
+  watch: {
+    lyricInfo() {
       if (JSON.stringify(this.$store.state.lyricInfo) !== "{}") {
-        if (this.$store.state.lyricInfo.nolyric==true) {
+        if (this.$store.state.lyricInfo.nolyric == true) {
           this.$bus.$off("playing");
-          this.lyricArray = [{content:"无歌词"}];
+          this.lyricArray = [{ content: "无歌词" }];
           return;
         }
-        if (this.$store.state.lyricInfo.uncollected==true) {
+        if (this.$store.state.lyricInfo.uncollected == true) {
           this.$bus.$off("playing");
-          this.lyricArray = [{content:"歌词未收录"}];
+          this.lyricArray = [{ content: "歌词未收录" }];
           return;
         }
         this.lyricArray = [];
         this.lyricIndex = -1;
         this.parseLyc();
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

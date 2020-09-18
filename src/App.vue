@@ -13,12 +13,13 @@
 <script>
 import headerInfo from "./view/header/headerInfo"
 import mounted from "./plugins/mounted"
+import beforeCreate from "./plugins/beforeCreate"
 export default {
   name: "App",
   components: {
     headerInfo
   },
-  mixins: [mounted],
+  mixins: [mounted,beforeCreate],
   data() {
     return {
     };

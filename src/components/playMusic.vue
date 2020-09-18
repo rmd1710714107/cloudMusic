@@ -11,7 +11,7 @@
           <div class="tabControl" @click="switchSong('prevMusic')">
             <img class="prev" src="../assets/img/prev.svg" />
           </div>
-          <div class="tabControl" @click="playMusic" @keydown.space="playMusic" :contenteditable="true">
+          <div class="tabControl" @click="playMusic" @keydown.space="playMusic">
             <img class="play" :src="src" />
           </div>
           <div class="tabControl" @click="switchSong('nextMusic') ">
@@ -108,7 +108,7 @@ export default {
         currentTime: this.audioDom.currentTime
       });
       if (this.flag) {
-        this.$bus.$emit("playing", this.audioDom.currentTime);
+        // this.$bus.$emit("playing", this.audioDom.currentTime);
       }
       if (this.audioDom.duration <= this.audioDom.currentTime) {
         this.switchSong("nextMusic");
@@ -245,6 +245,9 @@ export default {
       }else{
         this.$store.commit("addLyricInfo", {});
       }
+    },
+    time(){
+      this.$bus.$emit("playing", this.audioDom.currentTime);
     }
   }
 };
