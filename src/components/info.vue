@@ -63,6 +63,7 @@ export default {
             music.index = this.$store.state.musicList.length || index;
             music.path = item.replace(/\\/g, "/");
             music.name = path.basename(item).replace(/\.mp3/g, "");
+            music.type="local";
             return music;
           });
           if (this.$store.state.musicList.length !== 0) {
@@ -98,7 +99,7 @@ export default {
           }
         },
         (err) => {
-          message("error", err);
+          message("error", "歌曲更新失败");
         }
       );
     },

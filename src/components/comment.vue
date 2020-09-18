@@ -75,6 +75,7 @@ export default {
   data() {
     return {
       comment: "",
+      currentPage:0
     };
   },
   computed: {
@@ -142,15 +143,17 @@ export default {
         this.getComments();
       }
     },
-    async getComments(currentPage=1) {
-      console.log((currentPage - 1) * 20);
+    async getComments(nextPage=1) {
+      let before=this.currentPage<nextPage?this.comments.comments[this.comments.comments.length - 1].time:"";
+      this.currentPage=nextPage;
       let res = await getComments(
         this.musicInfo.id,
         20,
-        (currentPage - 1) * 20,
-        this.comments.comments[this.comments.comments.length - 1].time
+        (nextPage - 1) * 20,
+        before
       );
       this.$store.commit("addMusicComments", {});
+      console.log(res.data);
       this.$store.commit("addMusicComments", res.data);
     },
   },

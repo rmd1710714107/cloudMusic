@@ -119,10 +119,10 @@ function getLyric(id) {
 function getComments(id,limit=20,offset=0,before="") {
   return instance.get("/comment/music",{
     params:{
-      id:id,
-      limit:limit,
-      offset:offset,
-      before:before
+      id,
+      limit,
+      offset,
+      before
     }
   })
 }

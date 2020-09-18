@@ -1,6 +1,12 @@
 <template>
   <div class="playMusic">
-    <audio ref="audio" :src="localSrc||netSrc" @timeupdate="playIng" @play="befoerPlay" @error="error"></audio>
+    <audio
+      ref="audio"
+      :src="localSrc||netSrc"
+      @timeupdate="playIng"
+      @play="befoerPlay"
+      @error="error"
+    ></audio>
     <div class="holder">
       <img :src="musicImg" class="imgHolder" />
       <p class="laric" @click="showLyric">词</p>
@@ -18,7 +24,7 @@
             <img class="next" src="../assets/img/next.svg" />
           </div>
         </div>
-        <div class="musicName">    
+        <div class="musicName">
           <loop-scroll :content="musicInfo" :exam="false"></loop-scroll>
         </div>
         <div class="playSet">
@@ -51,7 +57,7 @@ export default {
   name: "playMusic",
   components: {
     playProgress,
-    loopScroll
+    loopScroll,
   },
   data() {
     return {
@@ -61,30 +67,25 @@ export default {
       audioDom: null,
       timer: null,
       netSrc: "",
-      volumPercent:1
+      volumPercent: 1,
     };
   },
   mounted() {
     this.audioDom = this.$refs.audio;
   },
   methods: {
-    error(err){
+    error(err) {
       console.log(err);
     },
     async befoerPlay() {
+      // this.$store.commit("setMusicTime", {
+      //   currentTime: 0
+      // });
       this.$store.commit("setMusicTime", {
-        currentTime: 0
-      });
-      this.$store.commit("setMusicTime", {
-        duration: this.audioDom.duration
+        duration: this.audioDom.duration,
       });
       this.flag = true;
-      if (JSON.stringify(this.$store.state.musicComments) === "{}") {
-        if (this.musicInfo.path) return;
-        this.$store.commit("addMusicComments", {});
-        let comments = await getComments(this.musicInfo.id);
-        this.$store.commit("addMusicComments", comments.data);
-      }
+
       this.$bus.$emit("play");
     },
     playMusic() {
@@ -94,6 +95,8 @@ export default {
           if (this.audioDom.autoplay !== "autoplay") {
             this.audioDom.autoplay = "autoplay";
           }
+          this.audioDom.currentTime =
+            this.$store.state.musicTime.currentTime || 0;
           this.audioDom.play();
         } catch (err) {
           this.flag = false;
@@ -105,11 +108,8 @@ export default {
     },
     playIng() {
       this.$store.commit("setMusicTime", {
-        currentTime: this.audioDom.currentTime
+        currentTime: this.audioDom.currentTime,
       });
-      if (this.flag) {
-        // this.$bus.$emit("playing", this.audioDom.currentTime);
-      }
       if (this.audioDom.duration <= this.audioDom.currentTime) {
         this.switchSong("nextMusic");
       }
@@ -154,20 +154,25 @@ export default {
         musicIndex = this.musicList.length - 1;
       }
       this.$bus.$emit("switchSong", musicIndex);
+      this.$store.commit("setMusicTime", {
+        currentTime: 0,
+      });
     },
     showLyric() {
       this.$bus.$emit("showLyric", "left");
     },
-    changeTime(rate){
-      this.audioDom.currentTime=(this.audioDom.duration) * rate;
+    changeTime(rate) {
+      this.$store.commit("setMusicTime", {
+        currentTime: this.audioDom.duration * rate,
+      });
     },
-    changeValume(rate){
-      this.volumPercent=Number(rate);
-      if(rate>1){
-        rate=1
+    changeValume(rate) {
+      this.volumPercent = Number(rate);
+      if (rate > 1) {
+        rate = 1;
       }
-      this.audioDom.volume=rate;
-    }
+      this.audioDom.volume = rate;
+    },
   },
   computed: {
     src() {
@@ -213,11 +218,11 @@ export default {
       return this.$store.state.musicInfo;
     },
     randomArr: {
-      get: function (){
+      get: function () {
         if (this.typeIndex === 2) {
           return shuffle(this.$store.state.musicList);
         }
-      }
+      },
     },
     musicList() {
       if (this.typeIndex === 2) {
@@ -225,31 +230,40 @@ export default {
       }
       return this.$store.state.musicList;
     },
-    time(){
+    time() {
       return {
-        currentTime:handleMusicTinme(this.$store.state.musicTime.currentTime),
-        duration:handleMusicTinme(this.$store.state.musicTime.duration)
-      }
+        currentTime: handleMusicTinme(this.$store.state.musicTime.currentTime),
+        duration: handleMusicTinme(this.$store.state.musicTime.duration),
+      };
     },
-    percent(){
-      let rate=this.$store.state.musicTime.currentTime/this.$store.state.musicTime.duration;
-      rate=parseFloat(rate).toFixed(4);
+    percent() {
+      let rate =
+        this.$store.state.musicTime.currentTime /
+        this.$store.state.musicTime.duration;
+      rate = parseFloat(rate).toFixed(4);
       return +rate;
-    }
+    },
   },
   watch: {
     async musicInfo() {
       if (this.$store.state.musicInfo.id) {
         let lyric = await getLyric(this.$store.state.musicInfo.id);
         this.$store.commit("addLyricInfo", lyric.data);
-      }else{
+        if (JSON.stringify(this.$store.state.musicComments) === "{}") {
+          if (this.musicInfo.path) return;
+          this.$store.commit("addMusicComments", {});
+          let comments = await getComments(this.musicInfo.id);
+          this.$store.commit("addMusicComments", comments.data);
+        }
+      } else {
+        console.log("local");
         this.$store.commit("addLyricInfo", {});
       }
     },
-    time(){
-      this.$bus.$emit("playing", this.audioDom.currentTime);
-    }
-  }
+    time() {
+      this.$bus.$emit("playing", this.$store.state.musicTime.currentTime);
+    },
+  },
 };
 </script>
 <style scoped>

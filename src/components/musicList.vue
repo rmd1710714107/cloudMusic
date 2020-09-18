@@ -98,6 +98,7 @@ export default {
           break;
         }
         musicInfo.id = music.id;
+        musicInfo.type="online";
         musicInfo.name = music.name;
         musicInfo.picUrl = picUrl.data.songs[0].al.picUrl;
         musicInfo.index = arg;

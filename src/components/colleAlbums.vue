@@ -42,7 +42,9 @@ import { getAlbumList, getAlbumContent } from "../netWork/request";
 import scroll from "./scroll";
 export default {
   name: "albums",
-  components: {},
+  components: {
+    scroll
+  },
   created() {
     (async () => {
       this.albumList = await getAlbumList();

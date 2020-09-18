@@ -36,8 +36,6 @@ export default {
   },
   methods: {
     parseLyc() {
-      // if (this.lyricInfo.uncollected) return;
-      // console.log(this.lyricInfo.lrc.lyric);
       let lycReg = /\[{1}(.{1,})\]{1}(.{0,})/,
         timeReg = /\d{2}:\d{2}\.\d{2,3}/,
         res = this.lyricInfo.lrc.lyric.split("\n");
@@ -60,14 +58,11 @@ export default {
           }
         }
       });
-      // console.log(this.lyricArray);
     },
     switchLyc(time = 0) {
       if (this.lyricArray.length !== 0) {
         let currentLine = this.getCurrentLine(time);
         this.activeIndex = currentLine;
-        // if(this.activeIndex ===currentLine) return;
-        // console.log(currentLine);
         if (currentLine >= 4) {
           let dis = -(currentLine - 4) * 30;
           this.switchAnime(dis);
@@ -104,6 +99,7 @@ export default {
   },
   watch: {
     lyricInfo() {
+      console.log(this.$store.state.lyricInfo);
       if (JSON.stringify(this.$store.state.lyricInfo) !== "{}") {
         if (this.$store.state.lyricInfo.nolyric == true) {
           this.$bus.$off("playing");
@@ -118,6 +114,8 @@ export default {
         this.lyricArray = [];
         this.lyricIndex = -1;
         this.parseLyc();
+      }else{
+        this.lyricArray = [];
       }
     },
   },
