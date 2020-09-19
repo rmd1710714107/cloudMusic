@@ -1,4 +1,5 @@
 <template>
+<!-- 收藏的歌手 -->
   <div class="singer">
     <div class="head">
       <p class="title" style="font-size:20px;">

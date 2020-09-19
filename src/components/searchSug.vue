@@ -1,4 +1,5 @@
 <template>
+<!-- 显示搜索建议组件 -->
   <div class="suggest">
     <div v-for="(item,index) in suggestItem" :key="index">
       <mu-list v-if="$store.state.suggest[item.category]">

@@ -6,19 +6,6 @@ import { message } from "../utils/utils"
 const { ipcRenderer: ipc } = require("electron");
 const mounted = {
   mounted() {
-    //localSetting.remove({phone:{$exists:true},pwd:{$exists:true}});
-    // localSetting.find({phone:{$exists:true},pwd:{$exists:true}}).then(res=>{
-    //   if(res.length===0){
-    //     return
-    //   }else{
-    //     console.log(decode(res[0].pwd));
-    //     let form={};
-    //     form.phone=res[0].phone;
-    //     form.pwd=decode(res[0].pwd)
-    //     this.$bus.$emit("autoSign",form);
-    //     form=null;
-    //   }
-    // })
     localSetting.find({ name: { $exists: true }, }).then(res=>{
       this.$store.commit("addPlayInfo",res[0]);
     })

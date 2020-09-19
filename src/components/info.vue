@@ -1,4 +1,5 @@
 <template>
+<!-- 侧边栏按钮 -->
   <div class="info">
     <el-button class="childInfo" @click="importMusic">{{msg}}</el-button>
     <info-item v-for="(item,index) in content" :key="index" :content="item"></info-item>

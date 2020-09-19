@@ -1,4 +1,5 @@
 <template>
+<!-- 歌词组件 -->
   <div class="lyric">
     <h1 class="musicName">{{this.$store.state.musicInfo.name}}</h1>
     <div class="lyricWrap">

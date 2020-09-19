@@ -1,4 +1,5 @@
 <template>
+<!-- 评论组件 -->
   <div class="comment">
     <div class="tab">
       <h3 style="color:#fff;">评论</h3>

@@ -1,4 +1,5 @@
 <template>
+<!-- 歌单列表组件 -->
   <div class="musicList">
     <el-row v-if="musicList">
       <el-col :span="6">

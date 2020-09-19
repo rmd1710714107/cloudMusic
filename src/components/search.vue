@@ -1,4 +1,5 @@
 <template>
+<!-- 搜索组件 -->
   <div class="search">
     <el-input v-model="music" :clearable="true" >
       <el-button slot="append" icon="el-icon-search" @click="search"></el-button>

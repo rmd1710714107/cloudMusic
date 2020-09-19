@@ -1,4 +1,5 @@
 <template>
+<!-- 登录组件 -->
   <div class="SignInForm">
     <el-dialog
       title="登录"

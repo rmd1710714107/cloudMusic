@@ -1,4 +1,5 @@
 <template>
+<!-- 水平循环滚动组件 -->
   <div class="loopScroll" ref="loopScroll">
     <div class="div1" ref="div1">
       <p class="p" v-for="(item,index) in number" :key="index" :ref="'p'+index" v-html="res"></p>

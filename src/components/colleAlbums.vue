@@ -1,4 +1,5 @@
 <template>
+<!-- 收藏的专辑 -->
   <div class="albums">
     <div class="head">
       <p class="title" style="font-size:20px;">

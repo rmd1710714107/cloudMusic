@@ -1,4 +1,5 @@
 <template>
+<!-- 滚动组件 -->
     <div class="scroll">
       <div class="container" :style="{height:height,width:width}">
         <slot></slot>
@@ -25,8 +26,22 @@ export default {
       }
     }
   },
-  updated(){
-    Scrollbar.init(document.querySelector(".container"));
+  data () {
+    return {
+      scroll:null
+    }
+  },
+  mounted(){
+    this.scroll=Scrollbar.init(document.querySelector(".container"));
+  },
+  watch:{
+    scroll(){
+      if (this.scroll!==null) {
+        this.scroll.addListener(()=>{
+          this.$emit("scrolling",this.scroll.offset.y)
+        })
+      }
+    }
   }
 }
 </script>

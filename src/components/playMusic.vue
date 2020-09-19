@@ -78,9 +78,6 @@ export default {
       console.log(err);
     },
     async befoerPlay() {
-      // this.$store.commit("setMusicTime", {
-      //   currentTime: 0
-      // });
       this.$store.commit("setMusicTime", {
         duration: this.audioDom.duration,
       });

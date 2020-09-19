@@ -1,4 +1,5 @@
 <template>
+<!-- 旋转的专辑图片 -->
   <div class="cdPic">
     <div class="play-bar-support">
       <img src="../assets/img/play-bar-support.png" alt />

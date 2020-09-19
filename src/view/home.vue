@@ -84,14 +84,6 @@ export default {
         easing: "linear"
       });
       this.animation.play();
-    },
-    getComments() {
-      console.log("ok");
-      if (JSON.stringify(this.$store.state.musicComments) === "{}") {
-        getComments(this.musicInfo.id).then(res => {
-          this.$store.commit("addMusicComments", res.data);
-        });
-      }
     }
   }
 };

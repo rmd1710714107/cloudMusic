@@ -1,4 +1,5 @@
 <template>
+<!-- 收藏组件 -->
     <div class="collection">
       <div class="menu">
         <ul class="tab">

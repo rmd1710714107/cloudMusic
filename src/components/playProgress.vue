@@ -1,4 +1,5 @@
 <template>
+<!-- 播放控制条界面 -->
   <div class="playProgress">
     <div class="bottom" @mousedown="down" ref="bottom" @mouseup="up">
       <div class="top" ref="top" :style="{width:topWidth+'px'}">

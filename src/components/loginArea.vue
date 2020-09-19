@@ -1,4 +1,5 @@
 <template>
+<!-- 登录区域 -->
   <div class="loginArea">
     <div class="icon">
       <img :src="proflie.avatarUrl||src" alt="头像" class="avatar"/>
