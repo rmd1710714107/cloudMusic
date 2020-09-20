@@ -17,6 +17,7 @@
 <script>
 import anime from "animejs/lib/anime.es.js";
 import { duration } from "moment";
+import {message} from "../utils/utils"
 export default {
   name: "lyric",
   components: {},
@@ -32,7 +33,6 @@ export default {
   mounted() {
     this.$bus.$on("playing", (arg) => {
       if (this.lyricArray.length === 0) return;
-      this.switchLyc(arg);
     });
   },
   methods: {
@@ -73,7 +73,6 @@ export default {
     },
     getCurrentLine(time) {
       try {
-        // console.log("传入的时间是"+time);
         for (let i = 1; i < this.lyricArray.length; i++) {
           if (time < this.lyricArray[i].time) {
             return i-1;
@@ -81,7 +80,7 @@ export default {
         }
         return this.lyricArray.length - 1;
       } catch (err) {
-        console.log(err);
+        message("error","程序出错，请联系开发者");
       }
     },
     switchAnime(dis) {
@@ -100,7 +99,6 @@ export default {
   },
   watch: {
     lyricInfo() {
-      console.log(this.$store.state.lyricInfo);
       if (JSON.stringify(this.$store.state.lyricInfo) !== "{}") {
         if (this.$store.state.lyricInfo.nolyric == true) {
           this.$bus.$off("playing");

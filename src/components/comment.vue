@@ -108,6 +108,9 @@ export default {
       return this.$store.state.musicInfo;
     },
   },
+  mounted(){
+    this.$bus.$on("scrolling",this.refreshComments);
+  },
   methods: {
     async sentComment() {
       let params = {};
@@ -144,16 +147,12 @@ export default {
         this.getComments();
       }
     },
-    async getComments(nextPage=1) {
-      let before=this.currentPage<nextPage?this.comments.comments[this.comments.comments.length - 1].time:"";
-      this.currentPage=nextPage;
-      let res = await getComments(
-        this.musicInfo.id,
-        20,
-        (nextPage - 1) * 20,
-        before
-      );
-      this.$store.commit("addMusicComments", {});
+    refreshComments(offsetY){
+      this.getComments();
+    },
+    async getComments() {
+      let res = await getComments(this.musicInfo.id);
+      // this.$store.commit("addMusicComments", {});
       console.log(res.data);
       this.$store.commit("addMusicComments", res.data);
     },

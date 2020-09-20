@@ -38,7 +38,7 @@ export default {
     scroll(){
       if (this.scroll!==null) {
         this.scroll.addListener(()=>{
-          this.$emit("scrolling",this.scroll.offset.y)
+          this.$bus.$emit("scrolling",this.scroll.offset.y)
         })
       }
     }

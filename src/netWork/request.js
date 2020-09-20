@@ -116,13 +116,11 @@ function getLyric(id) {
     }
   })
 }
-function getComments(id,limit=20,offset=0,before="") {
+function getComments(id,limit=20) {
   return instance.get("/comment/music",{
     params:{
       id,
-      limit,
-      offset,
-      before
+      limit
     }
   })
 }

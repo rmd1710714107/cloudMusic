@@ -5,7 +5,6 @@
       :src="localSrc||netSrc"
       @timeupdate="playIng"
       @play="befoerPlay"
-      @error="error"
     ></audio>
     <div class="holder">
       <img :src="musicImg" class="imgHolder" />
@@ -29,7 +28,7 @@
         </div>
         <div class="playSet">
           <div class="volumeControl">
-            <img class="valumeImg" src="../assets/img/volume.svg" @click="changeValume(0)" />
+            <img class="valumeImg" :src="volumeSrc" @click="changeValumeState" />
             <div class="valume">
               <play-progress @changePercent="changeValume" :percent="volumPercent"></play-progress>
             </div>
@@ -67,16 +66,15 @@ export default {
       audioDom: null,
       timer: null,
       netSrc: "",
-      volumPercent: 1,
+      volumPercent: 0,
+      isMute:false
     };
   },
   mounted() {
     this.audioDom = this.$refs.audio;
+    this.volumPercent=1;
   },
   methods: {
-    error(err) {
-      console.log(err);
-    },
     async befoerPlay() {
       this.$store.commit("setMusicTime", {
         duration: this.audioDom.duration,
@@ -89,6 +87,10 @@ export default {
       this.flag = !this.flag;
       if (this.flag) {
         try {
+          let netWorkState=this.audioDom.networkState;
+          if(netWorkState===3){
+            message("error","歌曲加载出错，请重新选择");
+          }
           if (this.audioDom.autoplay !== "autoplay") {
             this.audioDom.autoplay = "autoplay";
           }
@@ -165,11 +167,16 @@ export default {
     },
     changeValume(rate) {
       this.volumPercent = Number(rate);
-      if (rate > 1) {
-        rate = 1;
-      }
       this.audioDom.volume = rate;
     },
+    changeValumeState(){
+      this.isMute=!this.isMute;
+      if (this.isMute) {
+        this.changeValume(0);
+      }else{
+        this.changeValume(1);
+      }
+    }
   },
   computed: {
     src() {
@@ -240,6 +247,13 @@ export default {
       rate = parseFloat(rate).toFixed(4);
       return +rate;
     },
+    volumeSrc(){
+      if(!this.isMute){
+        return require("../assets/img/volume.svg")
+      }else{
+        return require("../assets/img/mute.svg")
+      }
+    }
   },
   watch: {
     async musicInfo() {
