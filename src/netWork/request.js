@@ -17,9 +17,11 @@ instance.interceptors.response.use((response)=>{
   return Promise.reject(err);
 })
 function phone(arg){
+  let time=+new Date();
   return instance.post("/login/cellphone",{
     phone:arg.phone,
-    password:arg.pwd
+    password:arg.pwd,
+    timestamp:time
   })
 }
 function searchMusic(arg){
@@ -116,11 +118,15 @@ function getLyric(id) {
     }
   })
 }
-function getComments(id,limit=20) {
+function getComments(id,offset,limit=20,berore="") {
+  let time=+new Date();
   return instance.get("/comment/music",{
     params:{
       id,
-      limit
+      limit,
+      offset,
+      berore,
+      timestamp:time
     }
   })
 }

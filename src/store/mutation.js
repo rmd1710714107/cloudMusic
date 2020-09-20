@@ -36,7 +36,9 @@ const mutations={
     }
   },
   addMusicComments(state,payload){
-    state.musicComments=payload;
+    for (const key in payload) {
+      Vue.set(state.musicComments,key,payload[key])
+    }
   }
 }
 export default mutations;

@@ -1,5 +1,5 @@
 <template>
-<!-- 评论组件 -->
+  <!-- 评论组件 -->
   <div class="comment">
     <div class="tab">
       <h3 style="color:#fff;">评论</h3>
@@ -17,7 +17,6 @@
     </div>
     <div class="showComments">
       <mu-list textline="two-line" v-if="comments.total!==0">
-        <mu-sub-header>最新评论</mu-sub-header>
         <mu-list-item avatar v-for="item in comments.comments" :key="item.commentId">
           <mu-list-item-action>
             <mu-avatar>
@@ -46,7 +45,11 @@
             </mu-list>
             <div class="date">
               <p>{{commentTime(item.time)}}</p>
-              <p @click="delComment(item)" v-if="item.user.userId===profile.userId" class="delComment">删除</p>
+              <p
+                @click="delComment(item)"
+                v-if="item.user.userId===profile.userId"
+                class="delComment"
+              >删除</p>
             </div>
           </mu-list-item-content>
         </mu-list-item>
@@ -69,14 +72,14 @@
 <script>
 import { operateComments, getComments } from "../netWork/request";
 import moment from "moment";
-import { message } from '../utils/utils';
+import { message } from "../utils/utils";
 export default {
   name: "comment",
   components: {},
   data() {
     return {
       comment: "",
-      currentPage:0
+      currentPage: 0,
     };
   },
   computed: {
@@ -108,9 +111,6 @@ export default {
       return this.$store.state.musicInfo;
     },
   },
-  mounted(){
-    this.$bus.$on("scrolling",this.refreshComments);
-  },
   methods: {
     async sentComment() {
       let params = {};
@@ -123,37 +123,36 @@ export default {
       console.log(res);
       switch (res.status) {
         case 250:
-          message("warning",res.data.dialog.subtitle);
+          message("warning", res.data.dialog.subtitle);
           break;
         case 200:
-          message("success","评论成功");
-          this.getComments();
+          message("success", "评论成功");
+          this.getComments(1);
         default:
           break;
       }
-      this.comment="";
+      this.comment = "";
     },
     async delComment(item) {
       let params = {};
       params.t = 0;
       params.type = 0;
-      params.id=this.musicInfo.id;
-      params.commentId=item.commentId;
+      params.id = this.musicInfo.id;
+      params.commentId = item.commentId;
       console.log(item);
       let opComment = new operateComments(params);
       let res = await opComment.delComment();
-      if(res.status===200){
-        message("success","删除成功");
-        this.getComments();
+      if (res.status === 200) {
+        message("success", "删除成功");
+        this.getComments(1);
       }
     },
-    refreshComments(offsetY){
-      this.getComments();
-    },
-    async getComments() {
-      let res = await getComments(this.musicInfo.id);
-      // this.$store.commit("addMusicComments", {});
-      console.log(res.data);
+    async getComments(currentPage) {
+      let res = await getComments(
+        this.musicInfo.id,
+        (currentPage - 1) * 20
+      );
+      this.$store.commit("addMusicComments", {});
       this.$store.commit("addMusicComments", res.data);
     },
   },

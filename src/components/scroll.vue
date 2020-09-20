@@ -34,15 +34,16 @@ export default {
   mounted(){
     this.scroll=Scrollbar.init(document.querySelector(".container"));
   },
-  watch:{
-    scroll(){
-      if (this.scroll!==null) {
-        this.scroll.addListener(()=>{
-          this.$bus.$emit("scrolling",this.scroll.offset.y)
-        })
-      }
-    }
-  }
+  // watch:{
+  //   scroll(){
+  //     if (this.scroll!==null) {
+  //       this.scroll.addListener(()=>{
+  //         console.log(this.scroll.offset.y);
+  //         this.$bus.$emit("scrolling",this.scroll.offset.y)
+  //       })
+  //     }
+  //   }
+  // }
 }
 </script>
 <style scoped>

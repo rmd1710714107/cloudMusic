@@ -50,7 +50,8 @@ export default {
   data() {
     return {
       animation: null,
-      direction: ["100%", 0]
+      direction: ["100%", 0],
+      scroll:null
     };
   },
   components: {
@@ -64,7 +65,7 @@ export default {
     this.$bus.$on("showLyric", arg => {
       this.showLyric(arg);
     });
-    Scrollbar.init(this.$refs.lyricPanel.$el);
+    this.scroll=Scrollbar.init(this.$refs.lyricPanel.$el);
   },
   methods: {
     musicPanel() {
