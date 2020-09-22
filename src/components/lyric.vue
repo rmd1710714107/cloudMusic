@@ -33,6 +33,7 @@ export default {
   mounted() {
     this.$bus.$on("playing", (arg) => {
       if (this.lyricArray.length === 0) return;
+      this.switchLyc(arg);
     });
   },
   methods: {

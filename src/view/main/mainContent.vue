@@ -3,44 +3,29 @@
     <keep-alive>
       <router-view></router-view>
     </keep-alive>
-    <play-music @resize="aa"></play-music>
+    <play-music></play-music>
   </div>
 </template>
 
 <script>
-//import loopScroll from "../../components/loopScroll"
 import playMusic from "../../components/playMusic";
-import musicList from "../../components/musicList";
 var elementResizeDetectorMaker = require("element-resize-detector")
 export default {
   name: "mainContent",
   components: {
-    //loopScroll,
-    playMusic,
-    musicList
+    playMusic
   },
   data() {
     return {
-      //path:this.$store.state.path,
     };
   },
   methods: {
     Show() {
       this.ishow = !this.ishow;
-    },
-    aa() {
-      console.log("ok");
     }
   },
   mounted() {
     this.$bus.$emit("listHeight",this.$refs.main.offsetHeight)
-    let erd = elementResizeDetectorMaker()
-    erd.listenTo(this.$refs.main, (element)=>{
-      this.$nextTick(function () {
-        let height = element.offsetHeight
-        this.$bus.$emit("listHeight",height)
-      })
-    })
   }
 };
 </script>

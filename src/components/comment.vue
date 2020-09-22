@@ -152,6 +152,10 @@ export default {
         this.musicInfo.id,
         (currentPage - 1) * 20
       );
+      if(res.data.code!==200){
+        message("eoor","获取评论出错");
+        return;
+      }
       this.$store.commit("addMusicComments", {});
       this.$store.commit("addMusicComments", res.data);
     },

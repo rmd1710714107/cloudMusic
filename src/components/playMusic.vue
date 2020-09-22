@@ -259,15 +259,21 @@ export default {
     async musicInfo() {
       if (this.$store.state.musicInfo.id) {
         let lyric = await getLyric(this.$store.state.musicInfo.id);
-        this.$store.commit("addLyricInfo", lyric.data);
+        if(lyric.data.code!==200){
+            message("error","歌词获取出错");
+            return;
+          }
         if (JSON.stringify(this.$store.state.musicComments) === "{}") {
           if (this.musicInfo.path) return;
           this.$store.commit("addMusicComments", {});
           let comments = await getComments(this.musicInfo.id);
+          if(comments.data.code!==200){
+            message("error","评论论获取出错");
+            return;
+          }
           this.$store.commit("addMusicComments", comments.data);
         }
       } else {
-        console.log("local");
         this.$store.commit("addLyricInfo", {});
       }
     },

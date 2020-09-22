@@ -96,9 +96,7 @@ export default {
           }
           phone(this.form).then(res => {
             if (res.data.code !== 200) {
-              console.log(res.data);
               message("error", res.data.msg);
-              //this.$refs.SignInForm.resetFields();
             } else {
               this.$store.commit("addUserInfo",res.data.profile)
               this.getUsrInfo(res.data.account.id);

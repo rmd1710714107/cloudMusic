@@ -26,9 +26,6 @@ const mutations={
       Vue.set(state.musicTime,key,payload[key])
     }
   },
-  updateMicLisSta (state,payload) {
-    state.micLisSta=payload;
-  },
   addLyricInfo(state,payload){
     state.lyricInfo={};
     for (const key in payload) {

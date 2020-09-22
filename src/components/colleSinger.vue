@@ -41,6 +41,7 @@
 <script>
 import { getArtistList, getArtistContent } from "../netWork/request";
 import scroll from "./scroll";
+import {message} from "../utils/utils"
 export default {
   name: "singer",
   components: {
@@ -49,6 +50,10 @@ export default {
   created() {
     (async () => {
       this.artistList = await getArtistList();
+      if(this.artistList.data.code!==200){
+        message("error","获取歌手列表出错");
+        return;
+      }
     })();
     this.$nextTick(()=>{
       this.listHeight=document.documentElement.clientHeight-30-151;
@@ -64,6 +69,10 @@ export default {
   methods: {
     async getArtistContent(id) {
       let res = await getArtistContent(id);
+      if(res.data.code!==200){
+        message("error","获取歌手歌曲出错");
+        return;
+      }
       this.$store.commit("addMusic", res.data.hotSongs);
       this.$router.replace("/musicList");
     },

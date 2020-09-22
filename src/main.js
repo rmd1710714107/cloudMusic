@@ -10,7 +10,7 @@ import "./assets/basic.css"
 import './assets/material-icons.css'
 Vue.config.productionTip = false
 Vue.prototype.$bus=new Vue();
-Vue.prototype.update={}
+Vue.prototype.updateMusic=null;
 window.addEventListener("online",()=>{
   let option={
     title: "有网了!",

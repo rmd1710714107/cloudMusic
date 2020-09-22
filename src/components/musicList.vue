@@ -40,7 +40,6 @@
 import loopScroll from "./loopScroll";
 import { getmusicUrl, getmusicDetails,checkMusic } from "../netWork/request";
 import Vue from "vue";
-import { getLyric } from "../netWork/request";
 import scroll from "./scroll";
 import localMusic from "../Nedb/localMusic"
 import {message} from "../utils/utils"
@@ -85,6 +84,14 @@ export default {
         }
         let musicUrl = await getmusicUrl(music.id),
             picUrl = await getmusicDetails(music.id);
+        if(musicUrl.data.code!==200){
+          message("error","歌曲获取出错");
+          return;
+        }
+        if(picUrl.data.code!==200){
+          message("error","歌曲图片获取出错");
+          return;
+        }
         switch(musicUrl.data.data[0].fee){
           case 1:
             message("info","VIP可听");

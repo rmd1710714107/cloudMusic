@@ -51,7 +51,7 @@
 
 <script>
 import { getMvList, getVideoContent } from "../netWork/request";
-import { handleMusicTinme } from "../utils/utils";
+import { handleMusicTinme, message } from "../utils/utils";
 import Scrollbar from "smooth-scrollbar";
 const { shell: shell } = require("electron");
 import scroll from "./scroll"
@@ -60,6 +60,10 @@ export default {
   created() {
     (async () => {
       this.MvList = await getMvList();
+      if(this.MvList.data.code!==200){
+        message("error","获取视频列表出错");
+        return;
+      }
     })();
     this.$nextTick(()=>{
       this.listHeight=document.documentElement.clientHeight-30-151;
@@ -106,12 +110,18 @@ export default {
   methods: {
     async playVideo(id) {
       let res = await getVideoContent(id);
+      if(res.data.code!==200){
+        message("error","获取视频出错");
+        return;
+      }
       this.$confirm("是否使用默认浏览器观看视频", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "info"
       }).then(() => {
         shell.openExternal(res.data.urls[0].url);
+      }).catch(err=>{
+        
       });
     }
   }

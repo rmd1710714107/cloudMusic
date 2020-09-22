@@ -10,7 +10,6 @@ const state={
   playList:[],
   musicInfo:{},
   musicTime:{},
-  micLisSta:"",
   lyricInfo:{},
   musicComments:{}
 }

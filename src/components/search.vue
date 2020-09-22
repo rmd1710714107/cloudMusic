@@ -1,24 +1,29 @@
 <template>
-<!-- 搜索组件 -->
+  <!-- 搜索组件 -->
   <div class="search">
-    <el-input v-model="music" :clearable="true" >
+    <el-input v-model="music" :clearable="true" @input="searchTips">
       <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
     </el-input>
-    <search-sug :suggestItem="suggestItem" v-if="showSugg" @closeSugg="showSugg = false" :searVal="music"></search-sug>
+    <search-sug
+      :suggestItem="suggestItem"
+      v-if="showSugg"
+      @closeSugg="showSugg = false"
+      :searVal="music"
+    ></search-sug>
   </div>
 </template>
 
 <script>
 import { searchMusic, searchSuggest } from "../netWork/request";
 import searchSug from "./searchSug";
-import { debounce } from "../utils/utils";
+import { debounce, message } from "../utils/utils";
 export default {
   name: "search",
   data() {
     return {
       music: "",
       suggest: {},
-      showSugg: false
+      showSugg: false,
     };
   },
   computed: {
@@ -30,34 +35,40 @@ export default {
           { title: "歌曲", icon: "songs.svg", category: "songs" },
           { title: "专辑", icon: "album.svg", category: "albums" },
           { title: "艺术家", icon: "artist.svg", category: "artists" },
-          { title: "MV", icon: "video.svg", category: "mvs" }
+          { title: "MV", icon: "video.svg", category: "mvs" },
         ];
       }
-    }
+    },
   },
   components: {
-    searchSug
+    searchSug,
   },
   methods: {
     async search() {
-      let res=await searchMusic(this.music);
-      console.log(res);
-      this.music="";
+      let res = await searchMusic(this.music);
+      if (res.data.code !== 200) {
+        message("error", "程序出错，请联系开发者");
+        return;
+      }
+      this.music = "";
       this.showSugg = false;
-      this.$store.commit("addMusic",res.data.result.songs)
+      this.$store.commit("addMusic", res.data.result.songs);
     },
     searchTips() {
-        debounce(() => {
-          if (this.music==="") return;
-          searchSuggest(this.music).then(res => {
-            if (!res.data) return;
-            this.suggest = res.data.result;
-            this.$store.commit("showSuggest", this.suggest);
-            this.showSugg = true;
-          });
-        }, 2000)();
+      debounce(() => {
+        if (this.music === "") return;
+        searchSuggest(this.music).then((res) => {
+          if (!res.data) return;
+          if (res.data.code !== 200) {
+            message("error", "程序出错，请联系开发者");
+          }
+          this.suggest = res.data.result;
+          this.$store.commit("showSuggest", this.suggest);
+          this.showSugg = true;
+        });
+      }, 2000)();
       this.showSugg = false;
-    }
+    },
   },
 };
 </script>

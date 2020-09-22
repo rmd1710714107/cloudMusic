@@ -66,7 +66,6 @@ export default {
     }
   },
   mounted() {
-    this.update.getMusic = this.getMusic;
   },
   data() {
     return {
@@ -97,19 +96,12 @@ export default {
       });
     },
     getMusic(id) {
-      localSetting.insert({ songMenuId: id });
       getPlayListDetails(id).then(res => {
-        localSetting.find({ micLisSta: "online" }).then(
-          doc => {
-            if (doc.length === 0) {
-              this.$store.commit("updateMicLisSta", "online");
-            }
-          },
-          err => {
-            message("error", err);
-          }
-        );
-        this.$store.commit("updateMicLisSta", "online");
+        if (res.data.code!==200) {
+          message("error","获取歌单歌曲出错");
+          return;
+        }
+        console.log(res);
         this.$store.commit("addMusic", res.data.playlist.tracks);
       });
     },

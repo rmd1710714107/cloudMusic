@@ -41,6 +41,7 @@
 <script>
 import { getAlbumList, getAlbumContent } from "../netWork/request";
 import scroll from "./scroll";
+import {message} from "../utils/utils"
 export default {
   name: "albums",
   components: {
@@ -49,6 +50,10 @@ export default {
   created() {
     (async () => {
       this.albumList = await getAlbumList();
+      if(this.albumList.data.code!==200){
+        message("error","获取专辑列表出错");
+        return;
+      }
     })();
     this.$nextTick(() => {
       this.listHeight = document.documentElement.clientHeight - 30 - 151;
@@ -69,6 +74,10 @@ export default {
   methods: {
     async getAlbumContent(id) {
       let res = await getAlbumContent(id);
+      if(res.data.cod!==200){
+        message("error","获取专辑歌曲出错");
+        return;
+      }
       this.$store.commit("addMusic", res.data.songs);
       this.$router.replace("/musicList");
     },

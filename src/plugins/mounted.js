@@ -16,13 +16,15 @@ const mounted = {
       doc => {
         if (doc.length === 0) {//设定一些默认配置
           localSetting.insert({ micLisSta: "localMusic" });
+          return;
         }
-        if (doc[0].micLisSta === "localMusic") {
-          db.localMusic.loadDatabase((err) => {
-          })
-          this.update.localMusic = this.getLocalMusic;
-          this.getLocalMusic();
-        }
+        db.localMusic.loadDatabase((err) => {
+          if(err!==null){
+            message("error","本地数据库加载出错，请联系开发者");
+            return ;
+          }
+        })
+        this.getLocalMusic();
       }, err => {
         message("error", err);
       });
@@ -48,7 +50,6 @@ const mounted = {
   methods: {
     getLocalMusic() {
       localMusic.find().then(res => {
-        //console.log(res);
         if (res.length !== 0) {
           this.$store.commit("addMusic", res);
         }
