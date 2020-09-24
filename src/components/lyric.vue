@@ -26,7 +26,7 @@ export default {
       lyricArray: [],
       lyricIndex: -1,
       scroll: null,
-      activeIndex: -1,
+      activeIndex: 0,
       animation: null,
     };
   },
@@ -60,6 +60,7 @@ export default {
           }
         }
       });
+      this.activeIndex=0;
     },
     switchLyc(time = 0) {
       if (this.lyricArray.length !== 0) {

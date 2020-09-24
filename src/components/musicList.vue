@@ -1,7 +1,7 @@
 <template>
 <!-- 歌单列表组件 -->
   <div class="musicList">
-    <el-row v-if="musicList">
+    <el-row v-if="musicList.length!==0">
       <el-col :span="6">
         <el-button size="mini" @click="importLocalMusic">导入本地歌曲</el-button>
       </el-col>

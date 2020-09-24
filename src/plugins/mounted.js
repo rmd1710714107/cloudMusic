@@ -10,13 +10,15 @@ const mounted = {
       this.$store.commit("addPlayInfo",res[0]);
     })
     localSetting.find({ currentTime: { $exists: true }, duration: { $exists: true }, }).then(res=>{
+      if(res.length===0){
+        res[0]={ currentTime:0, duration:0};
+      }
       this.$store.commit("setMusicTime",res[0]);
     })
     localSetting.find({ micLisSta: /[a-zA-Z]+/ }).then(
       doc => {
         if (doc.length === 0) {//设定一些默认配置
           localSetting.insert({ micLisSta: "localMusic" });
-          return;
         }
         db.localMusic.loadDatabase((err) => {
           if(err!==null){
@@ -32,16 +34,15 @@ const mounted = {
       let musicInfo=await localSetting.find({name: { $exists: true }, });
       (async (resolve,reject)=>{
         if (musicInfo.length === 0) {
-          localSetting.insert([this.$store.state.musicInfo, this.$store.state.musicTime]);
+          await localSetting.insert([this.$store.state.musicInfo, this.$store.state.musicTime]);
+          ipc.send("closed");
         } else {
           let time = await localSetting.find({ currentTime: { $exists: true }, duration: { $exists: true }, })
-          delete this.$store.state.musicInfo._id
-          delete this.$store.state.musicTime._id
-          localSetting.update(musicInfo[0], this.$store.state.musicInfo).then(()=>{
-            localSetting.update(time[0], this.$store.state.musicTime)
-          }).then(()=>{
-            ipc.send("closed");
-          })
+          delete this.$store.state.musicInfo._id;
+          delete this.$store.state.musicTime._id;
+          await localSetting.update(musicInfo[0], this.$store.state.musicInfo);
+          await localSetting.update(time[0], this.$store.state.musicTime);
+          ipc.send("closed");
         }
       })()
       

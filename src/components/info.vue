@@ -21,7 +21,6 @@ export default {
   },
   data() {
     return {
-      flag: false,
       content: [
         { name: "我的歌单", list: true },
         { name: "我的收藏", list: false },
@@ -32,85 +31,81 @@ export default {
   },
   computed: {
     msg() {
-      if (this.flag) {
+      if (this.musicListLen !== 0) {
         return "本地歌曲";
       } else {
         return "导入本地歌曲";
       }
     },
+    musicListLen() {
+      return this.$store.state.musicList.length;
+    },
   },
   mounted() {
-    localSetting.find({ flag: { $exists: true } }).then((res) => {
-      if (res.length === 0) {
-        localSetting.insert({ flag: this.flag });
-      } else {
-        this.flag = res[0].flag;
-      }
-    });
     this.$bus.$on("importLocalMusic", this.importMusicFn);
   },
   methods: {
-    async importMusic() {
-      if (!this.flag) {
-        await this.importMusicFn();
-        this.flag = !this.flag;
-      }
+    importMusic() {
+      if (this.musicListLen === 0) this.importMusicFn();
       if (this.$route.path !== "/musicList") {
         this.$router.replace("/musicList");
       }
     },
-    insertMusic(data) {
-      localMusic.insert(data).then(
-        (res) => {
-          message("success", "歌曲导入成功");
-        },
-      ).catch(
-        (err) => {
-          message("error", "歌曲导入失败");
-        }
-      );
-    },
     importMusicFn() {
-      dialog.showOpenDialog({
-        filters: [{ name: "music", extensions: ["mp3", "m4a", "flac"] }],
-        properties: ["openFile", "multiSelections"],
-      }).then((res) => {
-        if (res.canceled) return;
-        this.LocalMusic = res.filePaths.map((item, index) => {
-          let music = {};
-          music.index = this.$store.state.musicList.length || index;
-          music.path = item.replace(/\\/g, "/");
-          music.name = path.basename(item).replace(/\.mp3/g, "");
-          music.type = "local";
-          return music;
-        });
-        if (this.$store.state.musicList.length !== 0) {
-          this.LocalMusic.forEach((item) => {
-            localMusic.find({ name: item.name }).then((res) => {
-              if (res.length !== 0) {
-                message("info", "此歌曲已导入");
-                return;
-              } else {
-                this.insertMusic(this.LocalMusic);
-              }
-            });
+      dialog
+        .showOpenDialog({
+          filters: [{ name: "music", extensions: ["mp3", "m4a", "flac"] }],
+          properties: ["openFile", "multiSelections"],
+        })
+        .then((res) => {
+          if (res.canceled) return;
+          this.LocalMusic = res.filePaths.map((item, index) => {
+            let music = {};
+            music.index = this.musicListLen || index;
+            music.path = item.replace(/\\/g, "/");
+            music.name = path.basename(item).replace(/\.mp3/g, "");
+            music.type = "local";
+            return music;
           });
-          localSetting.insert({ flag: true }).catch(()=>{
-            message("error","默认配置加载出错")
-          })
-        } else {
-          this.insertMusic(this.LocalMusic);
-        }
-        this.getLocalMusic();
-      });
+          if (this.musicListLen !== 0) {
+            let music = [];
+            this.LocalMusic.forEach((item) => {
+              localMusic.find({ name: item.name }).then((res) => {
+                if (res.length === 0) {
+                  music.push(item);
+                }
+              });
+            });
+            this.LocalMusic = music;
+            localMusic
+              .insert(this.LocalMusic)
+              .then((res) => {
+                message("success", "歌曲导入成功");
+                this.getLocalMusic();
+              })
+              .catch((err) => {
+                message("error", "歌曲导入失败");
+              });
+          } else {
+            localMusic
+              .insert(this.LocalMusic)
+              .then((res) => {
+                message("success", "歌曲导入成功");
+                this.getLocalMusic();
+              })
+              .catch((err) => {
+                message("error", "歌曲导入失败");
+              });
+          }
+        });
     },
     getLocalMusic() {
-      localMusic.find().then(res => {
+      localMusic.find().then((res) => {
         if (res.length !== 0) {
           this.$store.commit("addMusic", res);
         }
-      })
-    }
+      });
+    },
   },
 };
 </script>

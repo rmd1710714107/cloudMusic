@@ -12,11 +12,11 @@ class localMusicDb{
   }
   insert(data){
     return new Promise((resolve,reject)=>{
-      db.localMusic.insert(data, (err, inserData) => {
+      db.localMusic.insert(data, (err, insertData) => {
         if(err){
           return reject(err);
         }
-        resolve(inserData)
+        resolve(insertData)
       })
     })
   }

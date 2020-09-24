@@ -263,6 +263,7 @@ export default {
             message("error","歌词获取出错");
             return;
           }
+        this.$store.commit("addLyricInfo",lyric.data)
         if (JSON.stringify(this.$store.state.musicComments) === "{}") {
           if (this.musicInfo.path) return;
           this.$store.commit("addMusicComments", {});
