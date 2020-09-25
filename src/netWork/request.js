@@ -20,10 +20,9 @@ instance.interceptors.response.use((response)=>{
 })
 function phone(arg){
   let time=+new Date();
-  return instance.post("/login/cellphone",{
+  return instance.post("/login/cellphone?timestamp="+time,{
     phone:arg.phone,
-    password:arg.pwd,
-    timestamp:time
+    password:arg.pwd
   })
 }
 function searchMusic(arg){

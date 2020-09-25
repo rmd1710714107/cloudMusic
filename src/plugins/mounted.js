@@ -2,7 +2,6 @@ import db from "../Nedb/Nedb"
 import localMusic from "../Nedb/localMusic"
 import localSetting from "../Nedb/setting"
 import { message } from "../utils/utils"
-//import { decode } from "../utils/encode"
 const { ipcRenderer: ipc } = require("electron");
 const mounted = {
   mounted() {
