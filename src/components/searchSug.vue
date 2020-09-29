@@ -57,14 +57,20 @@ export default {
   data() {
     return {};
   },
+  mounted(){
+    this.$bus.$on("refresh",this.refresh);
+  },
   methods: {
-    selectedMusic(type, data) {
+    selectedMusic(type, data,isClear=true) {
+      if(isClear){
+        this.$store.commit("clearMusicList");
+      }
       switch (type) {
         case "songs":
           (async () => {
             let musicInfo = {},
-              musicUrl = await getmusicUrl(data.id),
-              picUrl = await getmusicDetails(data.id);
+                musicUrl = await getmusicUrl(data.id),
+                picUrl = await getmusicDetails(data.id);
             if (musicUrl.data.code !== 200) {
               message("error", "音乐获取出错请检查网络或联系开发者");
               reutrn;
@@ -84,7 +90,6 @@ export default {
         case "albums":
           (async () => {
             let res = await getAlbumContent(data.id);
-            console.log(res);
             if (res.data.code !== 200) {
               message("error", "专辑内容获取出错，请联系开发者");
               return;
@@ -98,7 +103,6 @@ export default {
         case "artists":
           (async () => {
             let res = await getArtistContent(data.id);
-            console.log(res);
             if (res.data.code !== 200) {
               message("error", "专辑内容获取出错，请联系开发者");
               return;
@@ -113,7 +117,7 @@ export default {
           async () => {
             let res = await getVideoContent(data.id);
             if (res.data.code !== 200) {
-              message("error", "专辑内容获取出错，请联系开发者");
+              message("error", "视频内容获取出错，请联系开发者");
               return;
             }
             this.$confirm("是否使用默认浏览器观看视频", {
@@ -131,7 +135,13 @@ export default {
           break;
       }
       this.$emit("closeSugg");
+      this.$store.commit("changeSearchType",{searchFn:"selectedMusic",params:{type,data}});
     },
+    async refresh(arg){
+      if(arg.searchFn==="selectedMusic"){
+        this.selectedMusic(arg.params.type,arg.params.data,false);
+      }
+    }
   },
 };
 </script>

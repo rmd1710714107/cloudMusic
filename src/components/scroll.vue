@@ -1,9 +1,13 @@
 <template>
 <!-- 滚动组件 -->
     <div class="scroll">
-      <div class="container" :style="{height:height,width:width}">
-        <slot></slot>
+      <div class="container" ref="container" :style="{height:height,width:width}">
+        <div class="content" ref="content">
+          <slot></slot>
+        </div>
+        
       </div>
+      
     </div>
 </template>
 
@@ -34,16 +38,24 @@ export default {
   mounted(){
     this.scroll=Scrollbar.init(document.querySelector(".container"));
   },
-  // watch:{
-  //   scroll(){
-  //     if (this.scroll!==null) {
-  //       this.scroll.addListener(()=>{
-  //         console.log(this.scroll.offset.y);
-  //         this.$bus.$emit("scrolling",this.scroll.offset.y)
-  //       })
-  //     }
-  //   }
-  // }
+  methods:{
+    pullDown(offsetY){
+      let scrollDis = offsetY + this.$refs.container.clientHeight,
+          scrollHeight = this.$refs.content.scrollHeight;
+      if (scrollDis >=scrollHeight) {
+        this.$emit("pullDown")
+      }
+    }
+  },
+  watch:{
+    scroll(){
+      if (this.scroll!==null) {
+        this.scroll.addListener(()=>{
+          this.pullDown(this.scroll.offset.y)
+        })
+      }
+    }
+  }
 }
 </script>
 <style scoped>

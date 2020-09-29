@@ -161,8 +161,9 @@ export default {
       this.$bus.$emit("showLyric", "left");
     },
     changeTime(rate) {
+      this.audioDom.currentTime=(this.audioDom.duration * rate).toFixed(2);
       this.$store.commit("setMusicTime", {
-        currentTime: this.audioDom.duration * rate,
+        currentTime: Number(this.audioDom.duration) * rate
       });
     },
     changeValume(rate) {
@@ -230,7 +231,7 @@ export default {
     },
     musicList() {
       if (this.typeIndex === 2) {
-        this.randomArr;
+        return this.randomArr;
       }
       return this.$store.state.musicList;
     },
@@ -245,6 +246,8 @@ export default {
         this.$store.state.musicTime.currentTime /
         this.$store.state.musicTime.duration;
       rate = parseFloat(rate).toFixed(4);
+      if(rate<0) rate=0;
+      if(rate>1) rate=1;
       return +rate;
     },
     volumeSrc(){
@@ -276,6 +279,7 @@ export default {
         }
       } else {
         this.$store.commit("addLyricInfo", {});
+        this.$store.commit("addMusicComments", {});
       }
     },
     time() {
@@ -286,9 +290,9 @@ export default {
 </script>
 <style scoped>
 .playMusic {
-  width: calc(100% - 150px);
+  width: 100%;
   height: 70px;
-  position: fixed;
+  position: absolute;
   background-color: #fff;
   bottom: 0;
   display: flex;
@@ -298,7 +302,6 @@ export default {
   width: 80px;
   height: 100%;
   position: absolute;
-  z-index: 1;
 }
 .playMusic .holder {
   width: 80px;
@@ -416,7 +419,6 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
-  z-index: 9999;
   color: #fff;
   font-size: 50px;
   text-align: center;

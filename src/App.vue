@@ -5,8 +5,8 @@
         <header-info></header-info>
       </el-header>
       <router-view></router-view>
+    <!-- <el-footer height="15px"></el-footer> -->
     </el-container>
-    
   </div>
 </template>
 
@@ -30,6 +30,7 @@ export default {
 <style>
 #app {
   height: 100%;
+  overflow: initial;
 }
 *{
   margin: 0;
@@ -55,5 +56,8 @@ export default {
 }
 #app .el-container {
   height: 100%;
+}
+#app .el-footer{
+  background-color: #efefef;
 }
 </style>

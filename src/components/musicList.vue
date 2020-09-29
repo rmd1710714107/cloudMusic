@@ -1,9 +1,11 @@
 <template>
-<!-- 歌单列表组件 -->
+  <!-- 歌单列表组件 -->
   <div class="musicList">
-    <el-row v-if="musicList.length!==0">
+    <el-row v-if="musicList.length !== 0">
       <el-col :span="6">
-        <el-button size="mini" @click="importLocalMusic">导入本地歌曲</el-button>
+        <el-button size="mini" @click="importLocalMusic"
+          >导入本地歌曲</el-button
+        >
       </el-col>
       <el-col :span="6" :offset="12">
         <el-input
@@ -15,39 +17,40 @@
         ></el-input>
       </el-col>
     </el-row>
-    <scroll :height="listHeight+'px'">
-        <mu-data-table
+    <scroll :height="listHeight + 'px'" @pullDown="refresh" ref="scroll">
+      <mu-data-table
         :columns="columns"
-        :data="searRes.length===0?musicList:searRes"
+        :data="searRes.length === 0 ? musicList : searRes"
         :min-col-width="60"
         ref="table"
       >
         <template slot-scope="scope">
-          <td>{{scope.$index+1}}</td>
+          <td>{{ scope.$index + 1 }}</td>
           <td @click="play(scope.$index)">
             <loop-scroll :content="scope.row" :searVal="musicKey"></loop-scroll>
           </td>
-          <td>{{scope.row.artists?scope.row.artists[0].name:"未知"}}</td>
-          <td class="album">{{scope.row.album?scope.row.album.name:"未知"}}</td>
+          <td>{{ scope.row.artists ? scope.row.artists[0].name : "未知" }}</td>
+          <td class="album">
+            {{ scope.row.album ? scope.row.album.name : "未知" }}
+          </td>
         </template>
       </mu-data-table>
-      
     </scroll>
   </div>
 </template>
 
 <script>
 import loopScroll from "./loopScroll";
-import { getmusicUrl, getmusicDetails,checkMusic } from "../netWork/request";
+import { getmusicUrl, getmusicDetails, checkMusic } from "../netWork/request";
 import Vue from "vue";
 import scroll from "./scroll";
-import localMusic from "../Nedb/localMusic"
-import {message} from "../utils/utils"
+import localMusic from "../Nedb/localMusic";
+import { message } from "../utils/utils";
 export default {
   name: "musicList",
   components: {
     loopScroll,
-    scroll
+    scroll,
   },
   data() {
     return {
@@ -60,7 +63,8 @@ export default {
       listHeight: 450,
       musicKey: "",
       sugArr: 0,
-      searRes:[]
+      searRes: [],
+      hasRendered: true,
     };
   },
   mounted() {
@@ -77,36 +81,36 @@ export default {
       let music = this.$store.state.musicList[arg];
       if (!music.path) {
         let musicInfo = {},
-          checkRes=await checkMusic(music.id);
-        if(!checkRes.data.success){
-          message("error",checkRes.data.message);
-          return ;
+          checkRes = await checkMusic(music.id);
+        if (!checkRes.data.success) {
+          message("error", checkRes.data.message);
+          return;
         }
         let musicUrl = await getmusicUrl(music.id),
-            picUrl = await getmusicDetails(music.id);
-        if(musicUrl.data.code!==200){
-          message("error","歌曲获取出错");
+          picUrl = await getmusicDetails(music.id);
+        if (musicUrl.data.code !== 200) {
+          message("error", "歌曲获取出错");
           return;
         }
-        if(picUrl.data.code!==200){
-          message("error","歌曲图片获取出错");
+        if (picUrl.data.code !== 200) {
+          message("error", "歌曲图片获取出错");
           return;
         }
-        switch(musicUrl.data.data[0].fee){
+        switch (musicUrl.data.data[0].fee) {
           case 1:
-            message("info","VIP可听");
-            return ;
+            message("info", "VIP可听");
+            return;
             break;
           case 4:
-            message("info","所在专辑需单独付费");
-            return ;
+            message("info", "所在专辑需单独付费");
+            return;
             break;
           default:
             musicInfo.url = musicUrl.data.data[0].url;
-          break;
+            break;
         }
         musicInfo.id = music.id;
-        musicInfo.type="online";
+        musicInfo.type = "online";
         musicInfo.name = music.name;
         musicInfo.picUrl = picUrl.data.songs[0].al.picUrl;
         musicInfo.index = arg;
@@ -119,20 +123,24 @@ export default {
       this.$store.commit("setMusicTime", {});
     },
     importLocalMusic() {
-      this.$bus.$emit("importLocalMusic",false);
+      this.$bus.$emit("importLocalMusic", false);
     },
-    search(){
-      if(this.musicKey==="") this.searRes=[];
-      localMusic.find({name:new RegExp(this.musicKey, "g")}).then(res=>{
-        this.searRes=res;
-      })
+    search() {
+      if (this.musicKey === "") this.searRes = [];
+      localMusic.find({ name: new RegExp(this.musicKey, "g") }).then((res) => {
+        this.searRes = res;
+      });
+    },
+    refresh() {
+      console.log("刷新");
+      this.$bus.$emit("refresh", this.$store.state.searchType);
     }
   },
   computed: {
     musicList() {
       return this.$store.state.musicList;
     },
-  }
+  },
 };
 </script>
 <style>

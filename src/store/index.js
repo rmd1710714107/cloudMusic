@@ -11,8 +11,9 @@ const state={
   musicInfo:{},
   musicTime:{},
   lyricInfo:{},
-  musicComments:{}
-}
+  musicComments:{},
+  searchType:{}
+};
 const store=new Vuex.Store({
   state,
   mutations

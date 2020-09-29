@@ -120,6 +120,7 @@ export default {
   overflow: auto;
   left: 100%;
   background: linear-gradient(-45deg, #333545, #070708, #333540);
+  z-index: 999;
 }
 .lyricPanel .back {
   position: absolute;

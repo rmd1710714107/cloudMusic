@@ -1,6 +1,5 @@
 export const mixin={
-  methods: {
-    
+  methods: {   
     changePosition(dis) {
       let rate;
       if(this.allowMove){
@@ -41,7 +40,6 @@ export const mixin={
         let targetRight=this.top.getBoundingClientRect().right;
         this.changePosition(targetRight);
       }
-          
     },
     changTopWidth(rate){
       this.topWidth=this.bottom.offsetWidth*rate;

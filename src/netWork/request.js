@@ -25,10 +25,12 @@ function phone(arg){
     password:arg.pwd
   })
 }
-function searchMusic(arg){
+function searchMusic(arg,offset=0,limit=100){
   return instance.get("/search",{
     params:{
-      keywords:arg
+      keywords:arg,
+      limit,
+      offset
     }
   })
 }

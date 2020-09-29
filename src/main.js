@@ -8,10 +8,11 @@ import "./plugins/muse"
 import "normalize.css"
 import "./assets/basic.css"
 import './assets/material-icons.css'
+import InfiniteLoading from 'vue-infinite-loading';
 Vue.config.productionTip = false
 Vue.prototype.$bus=new Vue();
 Vue.prototype.updateMusic=null;
-
+Vue.use(InfiniteLoading)
 new Vue({
   render: h => h(App),
   store,

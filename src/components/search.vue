@@ -24,7 +24,12 @@ export default {
       music: "",
       suggest: {},
       showSugg: false,
+      offset:0,
+      count:0
     };
+  },
+  mounted(){
+    this.$bus.$on("refresh",this.refresh);
   },
   computed: {
     suggestItem() {
@@ -39,36 +44,62 @@ export default {
         ];
       }
     },
+    isSearch(){
+      if(this.music===""){
+        return false;
+      }else{
+        return true;
+      }
+    },
+    searchType(){
+      return ;
+    }
   },
   components: {
     searchSug,
   },
   methods: {
     async search() {
+      if(!this.isSearch) return;
       let res = await searchMusic(this.music);
+      this.$store.commit("changeSearchType",{searchFn:"search",params:{keyWords:this.music}});
       if (res.data.code !== 200) {
         message("error", "程序出错，请联系开发者");
         return;
       }
-      this.music = "";
       this.showSugg = false;
+      this.count=res.data.result.songCount;
+      // console.log(res);
+      this.$store.commit("clearMusicList");
       this.$store.commit("addMusic", res.data.result.songs);
     },
     searchTips() {
-      debounce(() => {
-        if (this.music === "") return;
-        searchSuggest(this.music).then((res) => {
+      debounce(async () => {
+        if(!this.isSearch) return
+          let res=await searchSuggest(this.music)
           if (!res.data) return;
           if (res.data.code !== 200) {
             message("error", "程序出错，请联系开发者");
           }
           this.suggest = res.data.result;
-          this.$store.commit("showSuggest", this.suggest);
+          await this.$store.commit("showSuggest", this.suggest);
           this.showSugg = true;
-        });
       }, 2000)();
       this.showSugg = false;
     },
+    async refresh(arg){
+      if(arg.searchFn==="search"){
+        this.offset+=100;
+        console.log(this.count,this.offset);
+        if(this.count<=this.offset){
+          message("info","没有更多歌曲了")
+          return;
+        };
+        console.log(this.offset);
+        let res = await searchMusic(arg.params.keyWords,this.offset);
+        this.$store.commit("addMusic", res.data.result.songs);
+      }
+    }
   },
 };
 </script>

@@ -84,7 +84,12 @@ export default {
   },
   computed: {
     comments() {
-      return this.$store.state.musicComments;
+      if(JSON.stringify(this.$store.state.musicComments)!=={}){
+        return this.$store.state.musicComments;
+      }else{
+        return {total:0}
+      }
+      
     },
     commentTime() {
       return (arg) => {

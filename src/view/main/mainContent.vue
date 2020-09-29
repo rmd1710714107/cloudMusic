@@ -9,7 +9,6 @@
 
 <script>
 import playMusic from "../../components/playMusic";
-var elementResizeDetectorMaker = require("element-resize-detector")
 export default {
   name: "mainContent",
   components: {
@@ -33,6 +32,7 @@ export default {
 .main{
   height: 100%;
   overflow: hidden;
+  position: relative;
 }
 .demo-list-wrap {
   width: 100%;

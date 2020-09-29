@@ -16,7 +16,6 @@
     "axios": "^0.19.2",
     "babel-polyfill": "^6.26.0",
     "core-js": "^3.6.4",
-    "element-resize-detector": "^1.2.1",
     "element-ui": "^2.13.2",
     "is-online": "^8.4.0",
     "moment": "^2.29.0",
@@ -25,6 +24,7 @@
     "normalize.css": "^8.0.1",
     "smooth-scrollbar": "^8.5.3",
     "vue": "^2.6.12",
+    "vue-infinite-loading": "^2.4.5",
     "vue-router": "^3.4.3",
     "vuex": "^3.5.1"
   },

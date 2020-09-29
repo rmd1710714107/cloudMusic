@@ -4,7 +4,14 @@ const mutations={
     state.userInfo=payload;
   },
   addMusic(state,payload){
-    state.musicList=payload;
+    console.log(payload);
+    payload.forEach(item=>{
+      state.musicList.push(item);
+    })
+  },
+  clearMusicList(state,payload){
+    state.musicList=[];
+    console.log("clear");
   },
   showSuggest(state,payload){
     state.suggest=payload
@@ -36,6 +43,9 @@ const mutations={
     for (const key in payload) {
       Vue.set(state.musicComments,key,payload[key])
     }
+  },
+  changeSearchType(state,payload){
+    state.searchType=payload;
   }
 }
 export default mutations;
