@@ -50,9 +50,6 @@ export default {
       }else{
         return true;
       }
-    },
-    searchType(){
-      return ;
     }
   },
   components: {
@@ -62,16 +59,16 @@ export default {
     async search() {
       if(!this.isSearch) return;
       let res = await searchMusic(this.music);
-      this.$store.commit("changeSearchType",{searchFn:"search",params:{keyWords:this.music}});
+      this.$store.commit("saveSearchKey",{params:this.music});
       if (res.data.code !== 200) {
         message("error", "程序出错，请联系开发者");
         return;
       }
       this.showSugg = false;
       this.count=res.data.result.songCount;
-      // console.log(res);
       this.$store.commit("clearMusicList");
       this.$store.commit("addMusic", res.data.result.songs);
+      this.music=""
     },
     searchTips() {
       debounce(async () => {
@@ -88,17 +85,15 @@ export default {
       this.showSugg = false;
     },
     async refresh(arg){
-      if(arg.searchFn==="search"){
-        this.offset+=100;
-        console.log(this.count,this.offset);
-        if(this.count<=this.offset){
-          message("info","没有更多歌曲了")
-          return;
-        };
-        console.log(this.offset);
-        let res = await searchMusic(arg.params.keyWords,this.offset);
-        this.$store.commit("addMusic", res.data.result.songs);
-      }
+      if(this.count===0) return;
+      if(this.offset>=(this.count-100)){
+        message("info","没有更多歌曲了",true)
+        return;
+      };
+      this.offset+=100;
+      let res = await searchMusic(this.$store.state.searchKey.params,this.offset);
+      console.log(this.offset,res);
+      this.$store.commit("addMusic", res.data.result.songs);
     }
   },
 };

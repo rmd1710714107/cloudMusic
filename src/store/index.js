@@ -12,7 +12,7 @@ const state={
   musicTime:{},
   lyricInfo:{},
   musicComments:{},
-  searchType:{}
+  searchKey:{}
 };
 const store=new Vuex.Store({
   state,

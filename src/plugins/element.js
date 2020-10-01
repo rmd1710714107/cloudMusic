@@ -23,7 +23,8 @@ import {
   Col,
   Row,
   MessageBox,
-  Pagination} from "element-ui";
+  Pagination,
+  Loading} from "element-ui";
 Vue.use(Container)
 Vue.use(Footer)
 Vue.use(Aside)
@@ -47,4 +48,6 @@ Vue.use(BreadcrumbItem)
 Vue.use(Col)
 Vue.use(Row)
 Vue.use(Pagination)
+Vue.use(Loading.directive);
 Vue.prototype.$confirm = MessageBox.confirm;
+Vue.prototype.$loading = Loading.service;

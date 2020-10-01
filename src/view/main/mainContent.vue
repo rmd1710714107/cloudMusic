@@ -24,7 +24,10 @@ export default {
     }
   },
   mounted() {
-    this.$bus.$emit("listHeight",this.$refs.main.offsetHeight)
+    window.addEventListener("resize",()=>{
+      this.$bus.$emit("listHeight",this.$refs.main.offsetHeight)
+    })
+    
   }
 };
 </script>

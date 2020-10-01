@@ -18,23 +18,38 @@
       </el-col>
     </el-row>
     <scroll :height="listHeight + 'px'" @pullDown="refresh" ref="scroll">
-      <mu-data-table
-        :columns="columns"
-        :data="searRes.length === 0 ? musicList : searRes"
-        :min-col-width="60"
-        ref="table"
-      >
-        <template slot-scope="scope">
-          <td>{{ scope.$index + 1 }}</td>
-          <td @click="play(scope.$index)">
-            <loop-scroll :content="scope.row" :searVal="musicKey"></loop-scroll>
-          </td>
-          <td>{{ scope.row.artists ? scope.row.artists[0].name : "未知" }}</td>
-          <td class="album">
-            {{ scope.row.album ? scope.row.album.name : "未知" }}
-          </td>
-        </template>
-      </mu-data-table>
+      <template>
+        <el-table :data="searRes.length === 0 ? musicList : searRes" style="width: 100%" :cell-class-name="cellClassName">
+          <el-table-column type="index" width="80" align="center"></el-table-column>
+          <el-table-column label="歌曲" width="300" align="left">
+            <template slot-scope="scope">
+              <loop-scroll :content="scope.row" :searVal="musicKey" @click.native="play(scope.$index)"></loop-scroll>
+            </template>
+          </el-table-column>
+          <el-table-column label="歌手" align="center">
+            <template slot-scope="scope">
+              <el-tooltip v-if="scope.row.hasOwnProperty('artists')" :content="scope.row.artists[0].name" effect="dark" placement="top">
+                <p>{{scope.row.artists[0].name}}</p>
+              </el-tooltip>
+              <el-tooltip v-else-if="scope.row.hasOwnProperty('ar')"  :content="scope.row.ar[0].name" effect="dark" placement="top">
+                <p>{{scope.row.ar[0].name}}</p>
+              </el-tooltip>
+              <p v-else>未知</p>
+            </template>
+          </el-table-column>
+          <el-table-column label="专辑" align="center">
+            <template slot-scope="scope">
+              <el-tooltip v-if="scope.row.hasOwnProperty('album')" :content="scope.row.album.name" effect="dark" placement="top">
+                <p>{{scope.row.album.name}}</p>
+              </el-tooltip>
+              <el-tooltip v-else-if="scope.row.hasOwnProperty('al')"  :content="scope.row.al.name" effect="dark" placement="top">
+                <p>{{scope.row.al.name}}</p>
+              </el-tooltip>
+              <p v-else>未知</p>
+            </template>
+          </el-table-column>
+        </el-table>
+      </template>
     </scroll>
   </div>
 </template>
@@ -45,7 +60,7 @@ import { getmusicUrl, getmusicDetails, checkMusic } from "../netWork/request";
 import Vue from "vue";
 import scroll from "./scroll";
 import localMusic from "../Nedb/localMusic";
-import { message } from "../utils/utils";
+import { message,loading } from "../utils/utils";
 export default {
   name: "musicList",
   components: {
@@ -54,12 +69,6 @@ export default {
   },
   data() {
     return {
-      columns: [
-        { title: "", name: "name", align: "center", width: 80 },
-        { title: "歌曲", name: "calories", width: 300, align: "left" },
-        { title: "歌手", name: "fat", align: "center" },
-        { title: "专辑", name: "carbs", align: "center" },
-      ],
       listHeight: 450,
       musicKey: "",
       sugArr: 0,
@@ -75,6 +84,7 @@ export default {
     this.$bus.$on("listHeight", (arg) => {
       this.listHeight = arg - 70 - 35;
     });
+    
   },
   methods: {
     async play(arg) {
@@ -132,8 +142,12 @@ export default {
       });
     },
     refresh() {
-      console.log("刷新");
-      this.$bus.$emit("refresh", this.$store.state.searchType);
+      this.$bus.$emit("refresh");
+    },
+    cellClassName({row, column, rowIndex, columnIndex}){
+      if(columnIndex!==1){
+        return "newCellStyle"
+      }
     }
   },
   computed: {
@@ -145,24 +159,20 @@ export default {
 </script>
 <style>
 .musicList {
-  height: auto;
+  height: 100%;
   overflow-x: hidden;
 }
-.musicList .mu-table td {
+.musicList .el-table td {
   text-align: center;
 }
-.musicList .mu-table th,
-.musicList .mu-table td {
+.musicList .el-table th,
+.musicList .el-table td {
   padding: 1px 14px;
 }
-.musicList .mu-table td {
-  height: 48px;
+.musicList .el-table .cell {
+  height: 45px;
 }
-.musicList .mu-checkbox {
-  width: 24px;
-  margin: 0 auto;
-  display: block;
-}
+
 .musicList .album {
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -171,11 +181,23 @@ export default {
 .musicList tr {
   max-height: 48px;
 }
-.musicList .mu-table .mu-table-body-wrapper tr {
+.musicList .el-table .el-table__body-wrapper .el-table__row {
   cursor: pointer;
 }
 
 .musicList .el-row {
   padding: 5px;
 }
+.newCellStyle .cell{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+}
+.newCellStyle .cell p{
+  white-space: nowrap;
+  text-overflow:ellipsis;
+  overflow: hidden;
+}
+
 </style>

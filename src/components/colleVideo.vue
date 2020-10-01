@@ -35,7 +35,7 @@
               <p class="duration">{{duration(item.durationms)}}</p>
             </div>
             <div style="padding: 14px;">
-              <el-tooltip class="item" effect="dark" :content="item.title" placement="bottom">
+              <el-tooltip effect="dark" :content="item.title" placement="bottom">
                 <span class="mvTitle">{{item.title}}</span>
               </el-tooltip>
               <div class="bottom clearfix">

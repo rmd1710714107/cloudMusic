@@ -57,9 +57,6 @@ export default {
   data() {
     return {};
   },
-  mounted(){
-    this.$bus.$on("refresh",this.refresh);
-  },
   methods: {
     selectedMusic(type, data,isClear=true) {
       if(isClear){
@@ -137,11 +134,6 @@ export default {
       this.$emit("closeSugg");
       this.$store.commit("changeSearchType",{searchFn:"selectedMusic",params:{type,data}});
     },
-    async refresh(arg){
-      if(arg.searchFn==="selectedMusic"){
-        this.selectedMusic(arg.params.type,arg.params.data,false);
-      }
-    }
   },
 };
 </script>

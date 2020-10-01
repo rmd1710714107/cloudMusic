@@ -7,6 +7,7 @@ const instance = axios.create({
   timeoutErrorMessage:"请求时间太长"
 });
 instance.interceptors.request.use((config)=>{
+  console.log(config);
   return config;
 },(err)=>{
   message("error","请求出错,请联系开发者"+err);

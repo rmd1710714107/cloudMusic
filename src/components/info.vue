@@ -46,7 +46,12 @@ export default {
   },
   methods: {
     importMusic() {
-      if (this.musicListLen === 0) this.importMusicFn();
+      if (this.musicListLen === 0){
+        this.importMusicFn();
+      }else{
+        this.getLocalMusic();
+      }
+      
       if (this.$route.path !== "/musicList") {
         this.$router.replace("/musicList");
       }
@@ -100,6 +105,7 @@ export default {
         });
     },
     getLocalMusic() {
+      this.$store.commit("clearMusicList")
       localMusic.find().then((res) => {
         if (res.length !== 0) {
           this.$store.commit("addMusic", res);

@@ -1,6 +1,6 @@
 <template>
 <!-- 水平循环滚动组件 -->
-  <div class="loopScroll" ref="loopScroll">
+  <div class="loopScroll" ref="loopScroll" v-if="content.name!==''">
     <div class="div1" ref="div1">
       <p class="p" v-for="(item,index) in number" :key="index" :ref="'p'+index" v-html="res"></p>
     </div>
@@ -42,9 +42,9 @@ export default {
     };
   },
   mounted() {
-    if (JSON.stringify(this.content) == "{}") return;
+    if (this.content.name==='') return;
     new Promise((resolve, reject) => {
-      if(!this.$refs.p0[0].offsetWidth){
+      if(!this.$refs.p0[0].hasOwnProperty("offsetWidth")){
         return;
       }
       this.timer = setInterval(() => {

@@ -54,10 +54,21 @@ function shuffle(musicList) {
   }
   return resArr
 }
+function loading({target,lock,text}){
+  return Loading.service({
+    target,
+    lock,
+    text,
+    spinner: 'el-icon-loading',
+    background: 'rgba(0, 0, 0, 0.7)',
+    fullscreen:false
+  })
+}
 export {
   debounce,
   handleMusicTinme,
   message,
   processsRate,
-  shuffle
+  shuffle,
+  loading
 };
