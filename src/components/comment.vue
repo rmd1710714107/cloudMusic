@@ -63,6 +63,7 @@
     <el-pagination
       layout="total,prev, pager, next"
       :total="comments.total"
+       v-if="comments.total!==0"
       :page-size="20"
       @current-change="getComments"
     ></el-pagination>
@@ -84,12 +85,12 @@ export default {
   },
   computed: {
     comments() {
-      if(JSON.stringify(this.$store.state.musicComments)!=={}){
+      console.log(this.$store.state.musicComments);
+      if(this.$store.state.musicComments.hasOwnProperty("comments")){
         return this.$store.state.musicComments;
       }else{
         return {total:0}
       }
-      
     },
     commentTime() {
       return (arg) => {
@@ -161,7 +162,7 @@ export default {
         message("eoor","获取评论出错");
         return;
       }
-      this.$store.commit("addMusicComments", {});
+      this.$store.commit("clearComents");
       this.$store.commit("addMusicComments", res.data);
     },
   },
