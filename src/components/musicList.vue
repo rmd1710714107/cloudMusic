@@ -17,7 +17,7 @@
         ></el-input>
       </el-col>
     </el-row>
-    <scroll :height="listHeight + 'px'" @pullDown="refresh" ref="scroll">
+    <scroll :height="listHeight + 'px'" @pullDown="refresh">
       <template>
         <el-table :data="searRes.length === 0 ? musicList : searRes" style="width: 100%" :cell-class-name="cellClassName">
           <el-table-column type="index" width="80" align="center"></el-table-column>
@@ -28,10 +28,10 @@
           </el-table-column>
           <el-table-column label="歌手" align="center">
             <template slot-scope="scope">
-              <el-tooltip v-if="scope.row.hasOwnProperty('artists')" :content="scope.row.artists[0].name" effect="dark" placement="top">
+              <el-tooltip v-if="scope.row.hasOwnProperty('artists')" :content="scope.row.artists[0].name" effect="dark" placement="top" :enterable="false">
                 <p>{{scope.row.artists[0].name}}</p>
               </el-tooltip>
-              <el-tooltip v-else-if="scope.row.hasOwnProperty('ar')"  :content="scope.row.ar[0].name" effect="dark" placement="top">
+              <el-tooltip v-else-if="scope.row.hasOwnProperty('ar')"  :content="scope.row.ar[0].name" effect="dark" placement="top" :enterable="false">
                 <p>{{scope.row.ar[0].name}}</p>
               </el-tooltip>
               <p v-else>未知</p>
@@ -39,10 +39,10 @@
           </el-table-column>
           <el-table-column label="专辑" align="center">
             <template slot-scope="scope">
-              <el-tooltip v-if="scope.row.hasOwnProperty('album')" :content="scope.row.album.name" effect="dark" placement="top">
+              <el-tooltip v-if="scope.row.hasOwnProperty('album')" :content="scope.row.album.name" effect="dark" placement="top" :enterable="false">
                 <p>{{scope.row.album.name}}</p>
               </el-tooltip>
-              <el-tooltip v-else-if="scope.row.hasOwnProperty('al')"  :content="scope.row.al.name" effect="dark" placement="top">
+              <el-tooltip v-else-if="scope.row.hasOwnProperty('al')"  :content="scope.row.al.name" effect="dark" placement="top" :enterable="false">
                 <p>{{scope.row.al.name}}</p>
               </el-tooltip>
               <p v-else>未知</p>

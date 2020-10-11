@@ -38,9 +38,14 @@ const mutations={
     }
   },
   addMusicComments(state,payload){
-    for (const key in payload) {
-      Vue.set(state.musicComments,key,payload[key])
+    let keys=Object.keys(payload),
+        keyLen=keys.length;
+    for(let i=0;i<keyLen;i++){
+      Vue.set(state.musicComments,keys[i],payload[keys[i]])
     }
+  },
+  clearComents(state){
+    state.musicComments={};
   },
   saveSearchKey(state,payload){
     state.searchKey=payload;

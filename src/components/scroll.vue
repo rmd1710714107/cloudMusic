@@ -5,7 +5,6 @@
         <div class="content" ref="content">
           <slot></slot>
         </div>
-        
       </div>
       
     </div>
@@ -27,6 +26,12 @@ export default {
       type:String,
       default(){
         return "100%"
+      }
+    },
+    isReInit:{
+      type:Boolean,
+      default(){
+        return false;
       }
     }
   },
@@ -53,6 +58,12 @@ export default {
         this.scroll.addListener(()=>{
           this.pullDown(this.scroll.offset.y)
         })
+      }
+    },
+    reInit(){
+      if(this.isReInit){
+        console.log(this.isReInit);
+        this.scroll=Scrollbar.init(document.querySelector(".container"));
       }
     }
   }

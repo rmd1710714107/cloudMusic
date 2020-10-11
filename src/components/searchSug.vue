@@ -132,7 +132,6 @@ export default {
           break;
       }
       this.$emit("closeSugg");
-      this.$store.commit("changeSearchType",{searchFn:"selectedMusic",params:{type,data}});
     },
   },
 };

@@ -2,7 +2,7 @@
 <!-- 登录组件 -->
   <div class="SignInForm">
     <el-dialog
-      title="登录"
+      title="登录网易云账号"
       :visible.sync="dialogVisible"
       width="50%"
       :center="true"
@@ -22,11 +22,6 @@
         <el-form-item label="密码" prop="pwd">
           <el-input  @keyup.enter.native="signIn" v-model="form.pwd" type="password" :show-password="true" clearable></el-input>
         </el-form-item>
-        <!-- <el-form-item>
-          <el-checkbox-group v-model="checked">
-            <el-checkbox @change="hanlde">自动登录</el-checkbox>
-          </el-checkbox-group>
-        </el-form-item> -->
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="close">取消</el-button>
@@ -39,7 +34,6 @@
 <script>
 import { phone, getUsrInfo } from "../netWork/request";
 import { message } from "../utils/utils";
-//import {encode,decode} from "../utils/encode"
 import localSetting from "../Nedb/setting"
 export default {
   name: "SignInForm",
@@ -72,14 +66,6 @@ export default {
       },
       checked: false
     };
-  },
-  mounted(){
-    // this.$bus.$on("autoSign",(arg)=>{
-    //   this.form.phone=arg.phone;
-    //   this.form.pwd=arg.pwd;
-    //   console.log(this.form);
-    //   //this.signIn()
-    // })
   },
   methods: {
     handleClose() {

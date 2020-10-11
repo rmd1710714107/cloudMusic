@@ -1,13 +1,13 @@
 import axios from "axios"
 import {message} from "../utils/utils"
 const instance = axios.create({
-  baseURL: 'http://60.205.249.128:3000',
+  //baseURL: 'http://60.205.249.128:3000',
+  baseURL:"http://localhost:3000",
   withCredentials: true,
   timeout:5000,
   timeoutErrorMessage:"请求时间太长"
 });
 instance.interceptors.request.use((config)=>{
-  console.log(config);
   return config;
 },(err)=>{
   message("error","请求出错,请联系开发者"+err);

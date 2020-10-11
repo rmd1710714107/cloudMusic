@@ -80,7 +80,6 @@ export default {
         duration: this.audioDom.duration,
       });
       this.flag = true;
-
       this.$bus.$emit("play");
     },
     playMusic() {
@@ -260,26 +259,22 @@ export default {
   },
   watch: {
     async musicInfo() {
-      if (this.$store.state.musicInfo.id) {
+      if (this.$store.state.musicInfo.hasOwnProperty("id")) {
         let lyric = await getLyric(this.$store.state.musicInfo.id);
         if(lyric.data.code!==200){
             message("error","歌词获取出错");
             return;
           }
         this.$store.commit("addLyricInfo",lyric.data)
-        if (JSON.stringify(this.$store.state.musicComments) === "{}") {
-          if (this.musicInfo.path) return;
-          this.$store.commit("addMusicComments", {});
-          let comments = await getComments(this.musicInfo.id);
-          if(comments.data.code!==200){
-            message("error","评论论获取出错");
-            return;
-          }
-          this.$store.commit("addMusicComments", comments.data);
+        let comments = await getComments(this.musicInfo.id);
+        if(comments.data.code!==200){
+          message("error","评论论获取出错");
+          return;
         }
+        this.$store.commit("addMusicComments", comments.data);
       } else {
         this.$store.commit("addLyricInfo", {});
-        this.$store.commit("addMusicComments", {});
+        this.$store.commit("clearComents");
       }
     },
     time() {
