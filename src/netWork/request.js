@@ -10,13 +10,13 @@ const instance = axios.create({
 instance.interceptors.request.use((config)=>{
   return config;
 },(err)=>{
-  message("error","请求出错,请联系开发者"+err);
+  message("error","请求出错,请联系开发者");
   return Promise.reject(err);
 })
 instance.interceptors.response.use((response)=>{
   return response;
 },(err)=>{
-  message("error","响应出错,请联系开发者"+err);
+  message("error","响应出错,请联系开发者");
   return Promise.reject(err);
 })
 function phone(arg){

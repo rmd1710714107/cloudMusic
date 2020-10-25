@@ -101,7 +101,7 @@ export default {
           message("error","获取歌单歌曲出错");
           return;
         }
-        console.log(res);
+        this.$store.commit("clearMusicList");
         this.$store.commit("addMusic", res.data.playlist.tracks);
       });
     },

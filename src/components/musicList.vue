@@ -28,10 +28,10 @@
           </el-table-column>
           <el-table-column label="歌手" align="center">
             <template slot-scope="scope">
-              <el-tooltip v-if="scope.row.hasOwnProperty('artists')" :content="scope.row.artists[0].name" effect="dark" placement="top" :enterable="false">
+              <el-tooltip v-if="scope.row.hasOwnProperty('artists')&&(scope.row.artists[0].name!==null)" :content="scope.row.artists[0].name" effect="dark" placement="top" :enterable="false">
                 <p>{{scope.row.artists[0].name}}</p>
               </el-tooltip>
-              <el-tooltip v-else-if="scope.row.hasOwnProperty('ar')"  :content="scope.row.ar[0].name" effect="dark" placement="top" :enterable="false">
+              <el-tooltip v-else-if="scope.row.hasOwnProperty('ar')&&(scope.row.ar[0].name!==null)"  :content="scope.row.ar[0].name" effect="dark" placement="top" :enterable="false">
                 <p>{{scope.row.ar[0].name}}</p>
               </el-tooltip>
               <p v-else>未知</p>
@@ -39,10 +39,10 @@
           </el-table-column>
           <el-table-column label="专辑" align="center">
             <template slot-scope="scope">
-              <el-tooltip v-if="scope.row.hasOwnProperty('album')" :content="scope.row.album.name" effect="dark" placement="top" :enterable="false">
+              <el-tooltip v-if="scope.row.hasOwnProperty('album')&&(scope.row.album.name!==null)" :content="scope.row.album.name" effect="dark" placement="top" :enterable="false">
                 <p>{{scope.row.album.name}}</p>
               </el-tooltip>
-              <el-tooltip v-else-if="scope.row.hasOwnProperty('al')"  :content="scope.row.al.name" effect="dark" placement="top" :enterable="false">
+              <el-tooltip v-else-if="scope.row.hasOwnProperty('al')&&(scope.row.al.name!==null)"  :content="scope.row.al.name" effect="dark" placement="top" :enterable="false">
                 <p>{{scope.row.al.name}}</p>
               </el-tooltip>
               <p v-else>未知</p>
@@ -98,6 +98,7 @@ export default {
         }
         let musicUrl = await getmusicUrl(music.id),
           picUrl = await getmusicDetails(music.id);
+        console.log(musicUrl);
         if (musicUrl.data.code !== 200) {
           message("error", "歌曲获取出错");
           return;

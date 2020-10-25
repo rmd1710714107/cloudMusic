@@ -85,7 +85,6 @@ export default {
   },
   computed: {
     comments() {
-      console.log(this.$store.state.musicComments);
       if(this.$store.state.musicComments.hasOwnProperty("comments")){
         return this.$store.state.musicComments;
       }else{
