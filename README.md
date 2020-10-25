@@ -16,11 +16,11 @@
 
 ### 预览
 
-![主页](C:\Users\Martin\Desktop\cloudMusic\preview\home.png)
+![主页](./preview/home.png)
 
-![歌词](C:\Users\Martin\Desktop\cloudMusic\preview\lyric.png)
+![歌词](./preview/lyric.png)
 
-![收藏](C:\Users\Martin\Desktop\cloudMusic\preview\Favorites.png)
+![收藏](./preview/Favorites.png)
 
 ## 安装
 
