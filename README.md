@@ -16,9 +16,9 @@
 
 ### 预览
 
-![主页](https://github.com/Martin730913/cloudMusic/row/master/preview/home.png)
+![主页](https://github.com/Martin730913/cloudMusic/raw/master/preview/home.png)
 
-![歌词](https://github.com/Martin730913/cloudMusic/row/master/preview/lyric.png)
+![歌词](https://github.com/Martin730913/cloudMusic/raw/master/preview/lyric.png)
 
 ![收藏](preview/Favorites.png)
 
