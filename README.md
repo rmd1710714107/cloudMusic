@@ -20,7 +20,7 @@
 
 ![歌词](https://github.com/Martin730913/cloudMusic/row/master/preview/lyric.png)
 
-![收藏](https://github.com/Martin730913/cloudMusic/row/master/preview/Favorites.png)
+![收藏](preview/Favorites.png)
 
 ## 安装
 
